@@ -10,4 +10,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="SharedLibs">
+      <HintPath>..\SharedLibs\bin\Release\netstandard2.1\SharedLibs.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
