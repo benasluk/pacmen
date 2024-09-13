@@ -4,6 +4,10 @@ namespace Server.Hubs
 {
     public class GameHub : Hub
     {
-        public GameHub() { }
+        public async Task UpdateMovementDirection(Direction dir)
+        {
+
+        }
+        public async Task
     }
 }
