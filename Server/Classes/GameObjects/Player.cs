@@ -2,5 +2,6 @@
 {
     public class Player : GameObject
     {
+
     }
 }

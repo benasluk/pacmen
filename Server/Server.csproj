@@ -16,4 +16,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Classes\Events\" />
+  </ItemGroup>
+
 </Project>
