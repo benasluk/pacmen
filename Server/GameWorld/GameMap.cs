@@ -7,26 +7,66 @@ namespace Server.GameWorld
         TileStatus[,] _tileStatus;
         int rows;
         int cols;
-        public GameMap()
+        public GameMap(int rowC, int colC)
         {
+            rows= rowC;
+            cols= colC;
             _tileStatus = new TileStatus[rows, cols];
             InitializeMap();
         }
-        private void SetBorders()
+        private void InitializeMap()
         {
-
-
-            Enumerable.Range(0, rows).ToList().ForEach(i =>
+            int[,] pacmanLayout = new int[,]
             {
-                _tileStatus[i, 0] = TileStatus.Wall; // Left border
-                _tileStatus[i, cols - 1] = TileStatus.Wall; // Right border
-            });
+                //please fix nezinau koks tiksliai yra pacmano layoutas, turetu sutapt su tuo kas yra for real, cia tiesiog bad
+                //0  empty ,1 siena, 2 pelletas
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 1, 2, 2, 1},
+                {1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1},
+                {1, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1},
+                {1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1},
+                {1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1},
+                {1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1},
+                {1, 2, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1},
+                {1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1},
+                {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1},
+                {1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1},
+                {1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+            };
 
-            Enumerable.Range(0, cols).ToList().ForEach(j =>
+            for (int i = 0; i < rows; i++)
             {
-                _tileStatus[0, j] = TileStatus.Wall; // Top border
-                _tileStatus[rows - 1, j] = TileStatus.Wall; // Bottom border
-            });
+                for (int j = 0; j < cols; j++)
+                {
+                    switch (pacmanLayout[i, j])
+                    {
+                        case 1:
+                            _tileStatus[i, j] = TileStatus.Wall;
+                            break;
+                        case 0:
+                            _tileStatus[i, j] = TileStatus.Empty;
+                            break;
+                        case 2:
+                            _tileStatus[i, j] = TileStatus.Pellet;
+                            break;
+                    }
+                }
+            }
+        }
+
+        // Method for getting tile status
+        public TileStatus GetTileStatus(int row, int col)
+        {
+            if (row < 0 || row >= rows || col < 0 || col >= cols)
+                throw new ArgumentOutOfRangeException("Row or column is out of bounds.");
+
+            return _tileStatus[row, col];
+        }
+        public TileStatus[,] GetAllTiles() { return _tileStatus; }
+        public void UpdateTile(int row, int col, TileStatus status)
+        {
+            _tileStatus[row, col] = status;
         }
     }
 }

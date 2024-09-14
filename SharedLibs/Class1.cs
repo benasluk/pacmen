@@ -38,7 +38,10 @@ namespace SharedLibs
         Pellet,
         Ghost,
         PelletAndGhost,
-        Pacman
+        Pacman1,
+        Pacman2,
+        Pacmman3,
+        Pacman4 // holy fuck this is terrible
     }
     public class Positions
     {
