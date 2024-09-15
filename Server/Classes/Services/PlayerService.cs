@@ -1,4 +1,5 @@
 ﻿using Server.Classes.GameObjects;
+using SharedLibs;
 
 namespace Server.Classes.Services
 {
@@ -20,12 +21,18 @@ namespace Server.Classes.Services
         }
         public void RemovePlayer (string playerId) { 
             if (_players.TryGetValue(playerId, out Player player))
-                {
+            {
                 player.Destroy();
             }
 
-
             _players.Remove(playerId);
+        }
+
+        public void UpdatePlayerLocation(PacmanMovement input)
+        {
+            var player = GetPlayerById(input.PlayerId);
+            player.UpdateDirection(input.Direction);
+            player.HandleMovement();
         }
     }
 }

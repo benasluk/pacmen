@@ -35,7 +35,7 @@ namespace Server.Classes.GameLogic
             var inputs = _messageService.GetPlayerInputs();
             foreach (var input in inputs)
             {
-                //_playerService
+                _playerService.UpdatePlayerLocation(input.Value);
             }
         }
         private void HandleObjectMovement()

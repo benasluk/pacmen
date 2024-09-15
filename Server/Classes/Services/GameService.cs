@@ -10,5 +10,10 @@ namespace Server.Classes.Services
             _playerService = playerSerivce;
             _gameMap = new GameMap(28,36);
         }
+
+        public GameMap GetGameMap()
+        {
+            return _gameMap;
+        }
     }
 }

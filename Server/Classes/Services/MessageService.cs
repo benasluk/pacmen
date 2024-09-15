@@ -7,13 +7,17 @@ namespace Server.Classes.Services
     {
         private readonly Dictionary<string, PacmanMovement> _playerInputs = new Dictionary<string, PacmanMovement>();
         private GameMap _gameMap = null;
+        private object lockObj;
         public MessageService(GameService gameService, PlayerService playerService) {
 
         }
 
         public void StorePlayerInput(string playerId, PacmanMovement input)
         {
-            _playerInputs.Add(playerId, input);
+            lock (lockObj)
+            {
+                _playerInputs.Add(playerId, input);
+            }
         }
         public Dictionary<string, PacmanMovement> GetPlayerInputs()
         {
