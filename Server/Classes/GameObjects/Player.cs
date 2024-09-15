@@ -8,6 +8,7 @@ namespace Server.Classes.GameObjects
 {
     public class Player : GameObject
     {
+        public string color;
         public Player(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
         {
         }

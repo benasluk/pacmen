@@ -1,10 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Classes\Events\**" />
+    <Content Remove="Classes\Events\**" />
+    <EmbeddedResource Remove="Classes\Events\**" />
+    <None Remove="Classes\Events\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -14,10 +21,6 @@
     <Reference Include="SharedLibs">
       <HintPath>..\SharedLibs\bin\Release\netstandard2.1\SharedLibs.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Classes\Events\" />
   </ItemGroup>
 
 </Project>
