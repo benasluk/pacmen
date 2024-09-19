@@ -20,6 +20,8 @@ public class SignalRConnector : MonoBehaviour
             .WithUrl("https://localhost:7255/Server")
             .Build();
 
+        connection.On<SharedLibs.Positions>("ReceiveMap", ReceiveMap);
+
         await connection.StartAsync();
         Debug.Log("Connection started");
         connectButton.SetActive(false);
@@ -37,5 +39,17 @@ public class SignalRConnector : MonoBehaviour
         {
             Debug.LogError("Error sending message: " + ex.Message);
         }
+    }
+
+    public async void ReceiveMap(SharedLibs.Positions map)
+    {
+        Debug.Log("Map received.");
+        Debug.Log(map.Grid[5,11]);
+        Debug.Log("First value of map: " + map.Grid[0, 0].ToString());
+    }
+
+    private void UpdateMap(SharedLibs.Positions newMap)
+    {
+
     }
 }

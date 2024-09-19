@@ -12,6 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<GameLoop>();
+builder.Services.AddSingleton<GameHub>();
 builder.Services.AddSingleton<PlayerService>();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<MessageService>();

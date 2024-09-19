@@ -85,7 +85,7 @@ namespace Server.GameWorld
 
             return _tileStatus[row, col];
         }
-        public TileStatus[,] GetAllTiles() { return _tileStatus; }
+        public Positions GetAllTiles() { return new Positions(_tileStatus); }
         public void UpdateTile(int row, int col, TileStatus status)
         {
             _tileStatus[row, col] = status;

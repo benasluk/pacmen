@@ -11,15 +11,17 @@ namespace Server.Classes.GameLogic
         private readonly GameService _gameService;
         private readonly PlayerService _playerService;
         private readonly MessageService _messageService;
+        private readonly IHubContext<GameHub> _hubContext;
         private Timer _timer;
         public delegate void MovevementHandler();
         public event MovevementHandler Movevement;
         private bool _gameStarted = false;
-        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService)
+        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext)
         {
             _gameService = gameService;
             _playerService = playerService;
             _messageService = messageService;
+            _hubContext = hubContext;
         }
         public void Start()
         {
@@ -29,6 +31,9 @@ namespace Server.Classes.GameLogic
         {
             HandlePlayerInputs();
             HandleObjectMovement();
+            Positions test = updateMapInClient();
+            //Atkomentavus apatine eilute suluzta, nes bando siust positions object, bet negali i JSON serializint direction
+            //_hubContext.Clients.All.SendAsync("receiveMap", test);
         }
         private void HandlePlayerInputs()
         {
@@ -41,6 +46,10 @@ namespace Server.Classes.GameLogic
         private void HandleObjectMovement()
         {
             Movevement?.Invoke();
+        }
+        public Positions updateMapInClient()
+        {
+            return _gameService.GetGameMap().GetAllTiles();
         }
 
     }

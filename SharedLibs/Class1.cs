@@ -46,5 +46,10 @@ namespace SharedLibs
     public class Positions
     {
         public TileStatus[,] Grid { get; set; }
+
+        public Positions(TileStatus[,] grid)
+        {
+            Grid = grid;
+        }
     }
 }
