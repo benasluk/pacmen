@@ -28,19 +28,6 @@ public class SignalRConnector : MonoBehaviour
         cover.SetActive(false);
     }
 
-    public async void SendSomeMessage()
-    {
-        string message = "This message is from connection " + connection.ConnectionId.ToString();
-        try
-        {
-            await connection.InvokeAsync("ReceivedMessage", message);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError("Error sending message: " + ex.Message);
-        }
-    }
-
     public async void ReceiveMap(SharedLibs.Positions map)
     {
         Debug.Log("Map received.");
