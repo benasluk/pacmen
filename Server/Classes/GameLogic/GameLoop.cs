@@ -25,16 +25,15 @@ namespace Server.Classes.GameLogic
         }
         public void Start()
         {
-            _timer = new Timer(Update, null, 0, 1000 / 60);
+            _timer = new Timer(Update, null, 0, 1000);
         }
         public void Update(object state)
         {
             HandlePlayerInputs();
             HandleObjectMovement();
             Positions test = updateMapInClient();
-            //Atkomentavus apatine eilute suluzta, nes bando siust positions object, bet negali i JSON serializint direction
             Console.WriteLine("Sending new map status");
-            _hubContext.Clients.All.SendAsync("receiveMap", test);
+            _hubContext.Clients.All.SendAsync("ReceiveMap", test);
         }
         private void HandlePlayerInputs()
         {
