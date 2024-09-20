@@ -33,7 +33,8 @@ namespace Server.Classes.GameLogic
             HandleObjectMovement();
             Positions test = updateMapInClient();
             //Atkomentavus apatine eilute suluzta, nes bando siust positions object, bet negali i JSON serializint direction
-            //_hubContext.Clients.All.SendAsync("receiveMap", test);
+            Console.WriteLine("Sending new map status");
+            _hubContext.Clients.All.SendAsync("receiveMap", test);
         }
         private void HandlePlayerInputs()
         {

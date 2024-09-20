@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SharedLibs
 {
@@ -46,10 +47,37 @@ namespace SharedLibs
     public class Positions
     {
         public TileStatus[,] Grid { get; set; }
+        public List<PositionUpdate> MovedObjects { get; set; } = new List<PositionUpdate>();
 
         public Positions(TileStatus[,] grid)
         {
             Grid = grid;
         }
+
+        public void AddMovement(string id, int previousX, int previousY, int newX, int newY, bool isPlayer)
+        {
+            MovedObjects.Add(new PositionUpdate
+            {
+                Id = id,
+                PreviousX = previousX,
+                PreviousY = previousY,
+                NewX = newX,
+                NewY = newY,
+                IsPlayer = isPlayer
+            });
+        }
+    }
+    public class PositionUpdate
+    {
+        public string Id { get; set; }  //
+        public int PreviousX { get; set; }
+        public int PreviousY { get; set; }
+        public int NewX { get; set; }
+        public int NewY { get; set; }
+        public bool IsPlayer { get; set; }  
+    }
+    public class HandShake
+    {
+        public string PlayerName { get; set; } //cia turetum atsiust savo nick, bet uhh galimai reiktu ir return objekto, kuris patvirtintu statusa or something idfk
     }
 }

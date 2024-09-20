@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Server.Classes.GameLogic;
+using Server.Classes.GameObjects;
 using Server.Classes.Services;
 using Server.GameWorld;
 using SharedLibs;
@@ -26,10 +27,24 @@ namespace Server.Hubs
         public override Task OnConnectedAsync()
         {
             var playerid = Context.ConnectionId;
-            _playerService.AddPlayer(playerid, new Classes.GameObjects.Player(_gameLoop, _gameService));
             Console.WriteLine("Got a connection from Player ID " + playerid + " !");
 
             return base.OnConnectedAsync();
+        }
+        public async Task Handshake(HandShake handshake)
+        {
+            if (string.IsNullOrEmpty(handshake.PlayerName))
+            {
+                await Clients.Caller.SendAsync("HandshakeFailed", "Invalid player name.");
+                return;
+
+            }
+            var playerid = Context.ConnectionId;
+
+            _playerService.AddPlayer(playerid, new Classes.GameObjects.Player(_gameLoop, _gameService));
+
+
+            await Clients.Caller.SendAsync("HandshakeReceived", $"Welcome, {handshake.PlayerName}");
         }
         public override Task OnDisconnectedAsync(Exception? exception)
         {
