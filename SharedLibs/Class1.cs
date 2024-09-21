@@ -79,5 +79,10 @@ namespace SharedLibs
     public class HandShake
     {
         public string PlayerName { get; set; } //cia turetum atsiust savo nick, bet uhh galimai reiktu ir return objekto, kuris patvirtintu statusa or something idfk
+
+        public HandShake(string playerName)
+        {
+            PlayerName = playerName;
+        }
     }
 }

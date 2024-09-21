@@ -34,5 +34,10 @@ namespace Server.Classes.Services
             player.UpdateDirection(input.Direction);
             player.HandleMovement();
         }
+
+        public int GetPlayerCount()
+        {
+            return _players.Count;
+        }
     }
 }
