@@ -1,3 +1,4 @@
+using SharedLibs;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,12 @@ public class PacmanScript : MonoBehaviour
 
     [Header("Attributes")]
     [SerializeField] private float speed = 0.5f;
+    private SignalRConnector signalRConnector;
 
-
+    private void Start()
+    {
+        signalRConnector = FindObjectOfType<SignalRConnector>();
+    }
     private void Awake()
     {
         //Snappinam pacmana tiesiai i grid block
@@ -32,9 +37,26 @@ public class PacmanScript : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        Direction dir = Direction.None;
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
-            //Debug.Log(tileMap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition)));
+            dir = Direction.Up;
+        }
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            dir = Direction.Down;
+        }
+        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            dir = Direction.Left;
+        }
+        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            dir = Direction.Right;
+        }
+        if (dir != Direction.None)
+        {
+            signalRConnector.SendDirection(dir);
         }
     }
 
@@ -43,12 +65,12 @@ public class PacmanScript : MonoBehaviour
         switch (direction)
         {
             case "Right":
-                if(!tileMap.GetTile(tileMap.WorldToCell(transform.position) + Vector3Int.right).name.Contains("Wall"))
+                if (!tileMap.GetTile(tileMap.WorldToCell(transform.position) + Vector3Int.right).name.Contains("Wall"))
                 {
                     transform.position = tileMap.CellToWorld(tileMap.WorldToCell(transform.position) + Vector3Int.right) + tileMap.layoutGrid.transform.lossyScale / 2;
                 }
                 break;
-            default: 
+            default:
                 break;
         }
     }

@@ -21,8 +21,10 @@ namespace Server.Hubs
         }
         public async Task ReceivedDirection(SharedLibs.PacmanMovement movement)
         {
-            Console.WriteLine(movement.Direction.ToString());
-             _messageService.StorePlayerInput(Context.ConnectionId, movement);
+            await Console.Out.WriteLineAsync(movement.PlayerId);
+            await Console.Out.WriteLineAsync(movement.Direction.ToString());
+            await Console.Out.WriteLineAsync(_messageService.ToString());
+            _messageService.StorePlayerInput(Context.ConnectionId, movement);
         }
         public override Task OnConnectedAsync()
         {
