@@ -21,9 +21,13 @@ namespace Server.Classes.Services
         }
         public Dictionary<string, PacmanMovement> GetPlayerInputs()
         {
-            var inputs = new Dictionary<string, PacmanMovement>(_playerInputs);
-            _playerInputs.Clear();
-            return _playerInputs;
+            Dictionary<string, PacmanMovement> inputs; 
+            lock (lockObj)
+            {
+                inputs = new Dictionary<string, PacmanMovement>(_playerInputs);
+                _playerInputs.Clear();
+            }
+            return inputs;
         }
         public GameMap StoreMap(GameMap map)
         {
