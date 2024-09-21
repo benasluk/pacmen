@@ -31,9 +31,15 @@ namespace Server.Classes.GameLogic
         {
             HandlePlayerInputs();
             HandleObjectMovement();
-            Positions test = updateMapInClient();
-            Console.WriteLine("Sending new map status");
-            _hubContext.Clients.All.SendAsync("ReceiveMap", test);
+            
+            if (_playerService.GetPlayerCount() > 0)
+            {
+                Positions test = updateMapInClient();
+                Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                //Kazkas su serialization blogai, nes apatinis sendasync isivykdo, virsutinis ne:)
+                _hubContext.Clients.All.SendAsync("ReceiveMap", test);
+                _hubContext.Clients.All.SendAsync("Test", "Hello from c#");
+            }
         }
         private void HandlePlayerInputs()
         {

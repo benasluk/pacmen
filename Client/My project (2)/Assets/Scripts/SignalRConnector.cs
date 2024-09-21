@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR.Client;
+using SharedLibs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class SignalRConnector : MonoBehaviour
@@ -14,13 +16,14 @@ public class SignalRConnector : MonoBehaviour
     [SerializeField] private GameObject coverCanvas;
     [SerializeField] private TextMeshProUGUI usernameField;
     [SerializeField] private GameObject invalidText;
+    [SerializeField] private GameObject tileMap;
     
 
     private HubConnection connection;
 
-    private void Awake()
+    private void OnApplicationQuit()
     {
-        //coverCanvas.SetActive(false);
+        connection.StopAsync();
     }
 
     public async void ConnectToServer()
@@ -34,19 +37,19 @@ public class SignalRConnector : MonoBehaviour
             .WithUrl("https://localhost:7255/Server")
             .Build();
 
-        connection.On<SharedLibs.Positions>("ReceiveMap", ReceiveMap);
+        connection.On<Positions?>("ReceiveMap", ReceiveMap);
         connection.On<string>("HandshakeReceived", HandshakeReceived);
         connection.On<string>("HandshakeFailed", HandshakeFailed);
+        connection.On<string>("Test", (test) => Debug.Log(test));
 
         await connection.StartAsync();
         await connection.SendAsync("Handshake", handshake);
     }
 
-    public async void ReceiveMap(SharedLibs.Positions map)
+    public void ReceiveMap(SharedLibs.Positions map)
     {
         Debug.Log("Map received.");
-        Debug.Log(map.Grid[5,11]);
-        Debug.Log("First value of map: " + map.Grid[0, 0].ToString());
+        //Debug.Log("First value of map: " + map.Grid[0, 0].ToString());
     }
 
     private void UpdateMap(SharedLibs.Positions newMap)
