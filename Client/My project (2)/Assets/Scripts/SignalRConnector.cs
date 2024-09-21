@@ -13,6 +13,7 @@ public class SignalRConnector : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject coverCanvas;
     [SerializeField] private TextMeshProUGUI usernameField;
+    [SerializeField] private GameObject invalidText;
     
 
     private HubConnection connection;
@@ -24,9 +25,10 @@ public class SignalRConnector : MonoBehaviour
 
     public async void ConnectToServer()
     {
-        var handshake = new SharedLibs.HandShake();
-
-        handshake.PlayerName = usernameField.text;
+        var handshake = new SharedLibs.HandShake
+        {
+            PlayerName = usernameField.text.Trim((char)8203) //Trim reikia, nes unity dadeda sita char gale, o ten empty char
+        };
 
         connection = new HubConnectionBuilder()
             .WithUrl("https://localhost:7255/Server")
@@ -56,18 +58,19 @@ public class SignalRConnector : MonoBehaviour
     {
         Debug.Log("Failed to connect to server!");
         Debug.Log("Error: " + error);
-    }
-
-    private void DisableObject(GameObject toDisable)
-    {
-        toDisable.SetActive(false);
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            invalidText.SetActive(true);
+        });
+        await connection.StopAsync();
     }
 
     private void HandshakeReceived(string welcomeMessage)
     {
-        //Debug.Log("Connection started");
         Debug.Log(welcomeMessage);
-        DisableObject(coverCanvas);
-        //Debug.Log("Test");
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            coverCanvas.SetActive(false);
+        });
     }
 }

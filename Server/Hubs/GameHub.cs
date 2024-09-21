@@ -33,7 +33,8 @@ namespace Server.Hubs
         }
         public async Task Handshake(HandShake handshake)
         {
-            if (string.IsNullOrEmpty(handshake.PlayerName))
+
+            if (string.IsNullOrEmpty(handshake.PlayerName) || handshake.PlayerName.Length < 4)
             {
                 await Clients.Caller.SendAsync("HandshakeFailed", "Invalid player name.");
                 return;

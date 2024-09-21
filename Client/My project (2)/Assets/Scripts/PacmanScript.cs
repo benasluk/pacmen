@@ -52,9 +52,4 @@ public class PacmanScript : MonoBehaviour
                 break;
         }
     }
-
-    private Vector3 GetCurrentBlock()
-    {
-        return new Vector3();
-    }
 }
