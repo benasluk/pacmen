@@ -9,14 +9,14 @@ namespace Server.Classes.Services
         private GameMap _gameMap = null;
         private object lockObj;
         public MessageService(GameService gameService, PlayerService playerService) {
-
+            lockObj = new object();
         }
 
         public void StorePlayerInput(string playerId, PacmanMovement input)
         {
             lock (lockObj)
             {
-                _playerInputs.Add(playerId, input);
+                _playerInputs[playerId] = input;
             }
         }
         public Dictionary<string, PacmanMovement> GetPlayerInputs()
