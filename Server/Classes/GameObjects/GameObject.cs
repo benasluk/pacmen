@@ -12,6 +12,7 @@ namespace Server
         protected Direction direction = Direction.None;
         private readonly GameLoop _gameLoop;
         private readonly GameService _gameService;
+        
         public GameObject(GameLoop gameLoop, GameService gameService)
         {
             _gameLoop = gameLoop;
@@ -24,11 +25,19 @@ namespace Server
         }
         public abstract void HandleMovement();
 
-        public abstract void UpdateDirection(Direction newDirection);
+        public void UpdateDirection(Direction newDirection)
+        {
+            this.direction = newDirection;
+        }
 
         protected GameService GetGameService()
         {
             return _gameService;
+        }
+
+        public (int x, int y) GetCurrentLocation()
+        {
+            return (x, y);
         }
     }
 }

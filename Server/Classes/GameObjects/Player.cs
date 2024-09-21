@@ -9,6 +9,7 @@ namespace Server.Classes.GameObjects
     public class Player : GameObject
     {
         public string color;
+        public TileStatus pacmanNo = TileStatus.Empty;
         public Player(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
         {
         }
@@ -46,15 +47,10 @@ namespace Server.Classes.GameObjects
             }
         }
 
-        public override void UpdateDirection(Direction newDirection)
-        {
-            this.direction = newDirection;
-        }
-
         private static bool ValidMove(GameMap map, int x, int y)
         {
             var tile = map.GetTileStatus(y, x);
-            return !tile.Equals(TileStatus.Wall) && !tile.Equals(TileStatus.Empty);
+            return !tile.Equals(TileStatus.Wall);
         }
     }
 }

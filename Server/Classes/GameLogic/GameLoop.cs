@@ -12,16 +12,18 @@ namespace Server.Classes.GameLogic
         private readonly PlayerService _playerService;
         private readonly MessageService _messageService;
         private readonly IHubContext<GameHub> _hubContext;
+        private readonly MovementTimerService _movementTimerService;
         private Timer _timer;
         public delegate void MovevementHandler();
         public event MovevementHandler Movevement;
         private bool _gameStarted = false;
-        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext)
+        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, MovementTimerService movementTimerService)
         {
             _gameService = gameService;
             _playerService = playerService;
             _messageService = messageService;
             _hubContext = hubContext;
+            _movementTimerService = movementTimerService;
         }
         public void Start()
         {
@@ -29,8 +31,13 @@ namespace Server.Classes.GameLogic
         }
         public void Update(object state)
         {
-            HandlePlayerInputs();
-            HandleObjectMovement();
+            // laikinai nera svarbu sitas, nes dabar 1fps, bet kaip bus tarkim 10fps, galesim padaryt kad judetu tik 2 kartus per sec
+            _movementTimerService.UpdateElapsedTime(1000);
+            if (_movementTimerService.CanMove())
+            {
+                HandlePlayerInputs();
+                HandleObjectMovement();
+            }
             
             if (_playerService.GetPlayerCount() > 0)
             {
@@ -47,6 +54,8 @@ namespace Server.Classes.GameLogic
             foreach (var input in inputs)
             {
                 _playerService.UpdatePlayerLocation(input.Value);
+                (int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
+                _gameService.GetGameMap().UpdateTile(currentY, currentX, _playerService.GetPlayerById(input.Key).pacmanNo);
             }
         }
         private void HandleObjectMovement()
