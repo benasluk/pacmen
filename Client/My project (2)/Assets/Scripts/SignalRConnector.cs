@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
