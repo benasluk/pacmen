@@ -83,6 +83,10 @@ namespace Server.Classes.GameLogic
         {
             return _gameService.GetGameMap().GetAllTiles();
         }
+        public void RestartTimer()
+        {
+            gameTimer = 0;
+        }
 
     }
 }

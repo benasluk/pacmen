@@ -58,6 +58,11 @@ namespace Server.Hubs
             _playerService.RemovePlayer(playerId);
             Console.WriteLine("Connection stopped from " + playerId + " !");
             Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
+            if (_playerService.GetPlayerCount() == 0)
+            {
+                _gameService.RestartMap();
+                _gameLoop.RestartTimer();
+            }
             return base.OnDisconnectedAsync(exception);
         }
     }

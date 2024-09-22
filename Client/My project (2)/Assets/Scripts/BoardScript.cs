@@ -25,7 +25,7 @@ public class BoardScript : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            Debug.Log(tileMap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition)) - topLeftCellPosition);
+            //Debug.Log(tileMap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition)) - topLeftCellPosition);
         }
     }
 

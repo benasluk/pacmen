@@ -12939,6 +12939,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Client Pacman
       objectReference: {fileID: 0}
+    - target: {fileID: 853561486402133357, guid: 9f3263d39d8b80e4ea61988945e8efc8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1907359675180000334, guid: 9f3263d39d8b80e4ea61988945e8efc8, type: 3}
       propertyPath: m_LocalScale.z
       value: 0
