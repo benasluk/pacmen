@@ -40,7 +40,6 @@ public class SignalRConnector : MonoBehaviour
         connection.On<Positions>("ReceiveMap", ReceiveMap);
         connection.On<string>("HandshakeReceived", HandshakeReceived);
         connection.On<string>("HandshakeFailed", HandshakeFailed);
-        connection.On<string>("Test", (test) => Debug.Log(test));
 
         await connection.StartAsync();
         await connection.SendAsync("Handshake", handshake);
@@ -60,12 +59,11 @@ public class SignalRConnector : MonoBehaviour
     public void ReceiveMap(SharedLibs.Positions map)
     {
         Debug.Log("Map received.");
-        //Debug.Log("First value of map: " + map.Grid[0, 0].ToString());
-    }
-
-    private void UpdateMap(SharedLibs.Positions newMap)
-    {
-
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            tileMap.GetComponent<BoardScript>().UpdateMap(map);
+        });    
+        Debug.Log("Map hopefully updated!");
     }
 
     public async void HandshakeFailed(string error)

@@ -31,13 +31,13 @@ namespace Server.Classes.GameLogic
         public void Start()
         {
 
-            _timer = new Timer(Update, null, 0, 1000 / 60);
-
+            //_timer = new Timer(Update, null, 0, 1000 / 60);
+            _timer = new Timer(Update, null, 0, 1000);
 
         }
         public void Update(object state)
         {
-            if (_playerService.GetPlayerCount() >= 2)
+            if (_playerService.GetPlayerCount() >= 1)
             {
                 _movementTimerService.UpdateElapsedTime(1000 / 60);
                 HandlePlayerInputs();
@@ -55,7 +55,6 @@ namespace Server.Classes.GameLogic
                     Positions test = updateMapInClient();
                     Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
                     _hubContext.Clients.All.SendAsync("ReceiveMap", test);
-                    _hubContext.Clients.All.SendAsync("Test", "Hello from c#");
                 }
             }
         }
