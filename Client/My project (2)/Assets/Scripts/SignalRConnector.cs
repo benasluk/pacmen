@@ -32,7 +32,7 @@ public class SignalRConnector : MonoBehaviour
         var handshake = new SharedLibs.HandShake(usernameField.text.Trim((char)8203));
 
         connection = new HubConnectionBuilder()
-            .WithUrl("http://192.168.0.174:7255/Server").AddNewtonsoftJsonProtocol(options =>
+            .WithUrl("https://localhost:7255/Server").AddNewtonsoftJsonProtocol(options =>
             {
                 options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             }).Build();
