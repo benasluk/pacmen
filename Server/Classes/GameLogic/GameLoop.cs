@@ -15,8 +15,10 @@ namespace Server.Classes.GameLogic
         private readonly IHubContext<GameHub> _hubContext;
         private readonly MovementTimerService _movementTimerService;
         private Timer _timer;
-        public delegate void MovevementHandler();
-        public event MovevementHandler Movevement;
+        public delegate void PacmanMovevementHandler();
+        public event PacmanMovevementHandler PacmanMovevement;
+        public delegate void GhostMovevementHandler();
+        public event GhostMovevementHandler GhostMovevement;
         private bool _gameStarted = false;
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, MovementTimerService movementTimerService)
         {
@@ -28,25 +30,33 @@ namespace Server.Classes.GameLogic
         }
         public void Start()
         {
-            _timer = new Timer(Update, null, 0, 1000);
+
+            _timer = new Timer(Update, null, 0, 1000 / 60);
+
+
         }
         public void Update(object state)
         {
-            // laikinai nera svarbu sitas, nes dabar 1fps, bet kaip bus tarkim 10fps, galesim padaryt kad judetu tik 2 kartus per sec
-            _movementTimerService.UpdateElapsedTime(1000);
-            if (_movementTimerService.CanMove())
+            if (_playerService.GetPlayerCount() >= 2)
             {
+                _movementTimerService.UpdateElapsedTime(1000 / 60);
                 HandlePlayerInputs();
-                HandleObjectMovement();
-            }
-            
-            if (_playerService.GetPlayerCount() > 0)
-            {
-                Positions test = updateMapInClient();
-                Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
-                //Kazkas su serialization blogai, nes apatinis sendasync isivykdo, virsutinis ne:)
-                _hubContext.Clients.All.SendAsync("ReceiveMap", test);
-                _hubContext.Clients.All.SendAsync("Test", "Hello from c#");
+                if (_movementTimerService.PacmanCanMove())
+                {
+                    HandlePacmanMovement();
+                }
+                //if (_movementTimerService.EnemyCanMove())
+                //{
+                //    HandleGhostMovement();
+                //}
+
+                if (_playerService.GetPlayerCount() > 0)
+                {
+                    Positions test = updateMapInClient();
+                    Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                    _hubContext.Clients.All.SendAsync("ReceiveMap", test);
+                    _hubContext.Clients.All.SendAsync("Test", "Hello from c#");
+                }
             }
         }
         private void HandlePlayerInputs()
@@ -56,12 +66,15 @@ namespace Server.Classes.GameLogic
             {
                 _playerService.UpdatePlayerLocation(input.Value);
                 (int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
-                _gameService.GetGameMap().UpdateTile(currentY, currentX, _playerService.GetPlayerById(input.Key).pacmanNo);
             }
         }
-        private void HandleObjectMovement()
+        private void HandlePacmanMovement()
         {
-            Movevement?.Invoke();
+            PacmanMovevement?.Invoke();
+        }
+        private void HandleGhostMovement()
+        {
+            GhostMovevement?.Invoke();
         }
         public Positions updateMapInClient()
         {

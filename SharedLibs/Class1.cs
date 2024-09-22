@@ -41,13 +41,14 @@ namespace SharedLibs
         PelletAndGhost,
         Pacman1,
         Pacman2,
-        Pacmman3,
-        Pacman4 // holy fuck this is terrible
+        Pacman3,
+        Pacman4 
     }
     public class Positions
     {
         public TileStatus[,] Grid { get; set; }
         public List<PositionUpdate> MovedObjects { get; set; } = new List<PositionUpdate>();
+        public int secondsElapsed { get; set; } = 0;
 
         public Positions(TileStatus[,] grid)
         {

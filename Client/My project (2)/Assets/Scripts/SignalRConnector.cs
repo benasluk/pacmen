@@ -29,13 +29,10 @@ public class SignalRConnector : MonoBehaviour
     }
     public async void ConnectToServer()
     {
-        var handshake = new SharedLibs.HandShake
-        {
-            PlayerName = usernameField.text.Trim((char)8203) //Trim reikia, nes unity dadeda sita char gale, o ten empty char
-        };
+        var handshake = new SharedLibs.HandShake(usernameField.text.Trim((char)8203));
 
         connection = new HubConnectionBuilder()
-            .WithUrl("https://localhost:7255/Server").AddNewtonsoftJsonProtocol(options =>
+            .WithUrl("http://192.168.0.174:7255/Server").AddNewtonsoftJsonProtocol(options =>
             {
                 options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             }).Build();

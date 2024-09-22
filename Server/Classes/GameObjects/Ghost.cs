@@ -10,6 +10,7 @@ public class Ghost : GameObject
     public string Color;
     public Ghost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {
+
     }
 
     public override void HandleMovement()
@@ -135,7 +136,7 @@ public class Ghost : GameObject
         var tileStatus = map.GetTileStatus(y, x);
         return tileStatus.Equals(TileStatus.Pacman1)
                || tileStatus.Equals(TileStatus.Pacman2)
-               || tileStatus.Equals(TileStatus.Pacmman3)
+               || tileStatus.Equals(TileStatus.Pacman3)
                || tileStatus.Equals(TileStatus.Pacman4);
     }
     

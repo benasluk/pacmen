@@ -10,18 +10,16 @@ namespace Server
         protected int x;
         protected int y;
         protected Direction direction = Direction.None;
-        private readonly GameLoop _gameLoop;
-        private readonly GameService _gameService;
+        protected readonly GameLoop _gameLoop;
+        protected readonly GameService _gameService;
         
         public GameObject(GameLoop gameLoop, GameService gameService)
         {
             _gameLoop = gameLoop;
             _gameService = gameService;
-            _gameLoop.Movevement += HandleMovement;
         }
-        public void Destroy()
+        public virtual void Destroy()
         {
-            _gameLoop.Movevement -= HandleMovement;
         }
         public abstract void HandleMovement();
 

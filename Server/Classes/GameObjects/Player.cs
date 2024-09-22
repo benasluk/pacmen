@@ -10,8 +10,15 @@ namespace Server.Classes.GameObjects
     {
         public string color;
         public TileStatus pacmanNo = TileStatus.Empty;
+        private int score = 0;
         public Player(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
         {
+            _gameLoop.PacmanMovevement += HandleMovement;
+        }
+        public override void Destroy()
+        {
+            _gameLoop.PacmanMovevement -= HandleMovement;
+            base.Destroy();
         }
 
         public override void HandleMovement()
@@ -42,8 +49,17 @@ namespace Server.Classes.GameObjects
 
             if (ValidMove(gameMap, projectedY, projectedY))
             {
+                var map = GetGameService().GetGameMap();
+
+                map.UpdateTile(x, y, TileStatus.Empty);
                 x = projectedX;
                 y = projectedY;
+                var tile = map.GetTileStatus(x, y);
+                if (tile == TileStatus.Pellet)
+                {
+                    score++;
+                }
+                map.UpdateTile(x, y, pacmanNo);
             }
         }
 

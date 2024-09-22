@@ -454,6 +454,10 @@
       <HintPath>Assets\Plugins\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson">
+      <HintPath>Assets\Plugins\Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
       <HintPath>Assets\Plugins\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
       <Private>False</Private>
@@ -506,6 +510,10 @@
       <HintPath>Assets\Plugins\Microsoft.Extensions.DependencyInjection.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>Assets\Plugins\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="SharedLibs">
       <HintPath>Assets\Plugins\SharedLibs.dll</HintPath>
       <Private>False</Private>
@@ -520,14 +528,6 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions">
       <HintPath>Assets\Plugins\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>Assets\Plugins\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson">
-      <HintPath>Assets\Plugins\Microsoft.AspNetCore.SignalR.Protocols.NewtonsoftJson.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="netstandard">
