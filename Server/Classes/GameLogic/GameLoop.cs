@@ -45,10 +45,10 @@ namespace Server.Classes.GameLogic
                 _movementTimerService.UpdateElapsedTime(1000);
                 _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
                 HandlePlayerInputs();
-                if (_movementTimerService.PacmanCanMove())
-                {
-                    HandlePacmanMovement();
-                }
+                //if (_movementTimerService.PacmanCanMove())
+                //{
+                //    HandlePacmanMovement();
+                //}
                 //if (_movementTimerService.EnemyCanMove())
                 //{
                 //    HandleGhostMovement();

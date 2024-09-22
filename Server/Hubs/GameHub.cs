@@ -23,7 +23,6 @@ namespace Server.Hubs
         {
             await Console.Out.WriteLineAsync(movement.PlayerId);
             await Console.Out.WriteLineAsync(movement.Direction.ToString());
-            await Console.Out.WriteLineAsync(_messageService.ToString());
             _messageService.StorePlayerInput(Context.ConnectionId, movement);
         }
         public override Task OnConnectedAsync()
@@ -50,6 +49,8 @@ namespace Server.Hubs
 
 
             await Clients.Caller.SendAsync("HandshakeReceived", $"Welcome, {handshake.PlayerName}");
+            var thisPlayerPacman = _playerService.GetPlayerById(playerid).pacmanNo;
+            await Clients.Caller.SendAsync("ReceivePacman", thisPlayerPacman);
         }
         public override Task OnDisconnectedAsync(Exception? exception)
         {

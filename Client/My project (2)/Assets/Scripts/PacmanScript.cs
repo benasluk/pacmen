@@ -9,40 +9,35 @@ using UnityEngine.Tilemaps;
 public class PacmanScript : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject pacman;
     [SerializeField] private Tilemap tileMap;
-    [SerializeField] private GameObject spawnPoint;
+    [SerializeField] private List<Sprite> pacmen;
 
     [Header("Attributes")]
     [SerializeField] private float speed = 0.5f;
     private SignalRConnector signalRConnector;
+    private GameObject spawnPoint;
 
     private void Start()
     {
         signalRConnector = FindObjectOfType<SignalRConnector>();
     }
-    private void Awake()
-    {
-        //Snappinam pacmana tiesiai i grid block
-        pacman.transform.position = tileMap.CellToWorld(tileMap.WorldToCell(transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
-    }
 
     private void Update()
     {
         Direction dir = Direction.None;
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow))
         {
             dir = Direction.Up;
         }
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.DownArrow))
         {
             dir = Direction.Down;
         }
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow))
         {
             dir = Direction.Left;
         }
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        else if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
         {
             dir = Direction.Right;
         }
@@ -52,18 +47,29 @@ public class PacmanScript : MonoBehaviour
         }
     }
 
-    private void HandleMovement(string direction)
+    public void SetPacmanNumber(int num)
     {
-        switch (direction)
+        Debug.Log($"Setting pacman to number{num}");
+        switch (num)
         {
-            case "Right":
-                if (!tileMap.GetTile(tileMap.WorldToCell(transform.position) + Vector3Int.right).name.Contains("Wall"))
-                {
-                    transform.position = tileMap.CellToWorld(tileMap.WorldToCell(transform.position) + Vector3Int.right) + tileMap.layoutGrid.transform.lossyScale / 2;
-                }
+            case 1:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Green"));
+                spawnPoint = GameObject.Find("GreenSpawn");
                 break;
-            default:
+            case 2:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Red"));
+                spawnPoint = GameObject.Find("RedSpawn");
+                break;
+            case 3:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Yellow"));
+                spawnPoint = GameObject.Find("YellowSpawn");
+                break;
+            case 4:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Purple"));
+                spawnPoint = GameObject.Find("PurpleSpawn");
                 break;
         }
+
+        transform.position = tileMap.CellToWorld(tileMap.WorldToCell(spawnPoint.transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
     }
 }

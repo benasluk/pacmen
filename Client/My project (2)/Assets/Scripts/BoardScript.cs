@@ -1,4 +1,5 @@
 using SharedLibs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,14 @@ public class BoardScript : MonoBehaviour
         topLeftCellPosition = tileMap.WorldToCell(topLeft.transform.position);
     }
 
+    private void Update()
+    {
+        if(Input.GetMouseButtonDown(0))
+        {
+            Debug.Log(tileMap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition)) - topLeftCellPosition);
+        }
+    }
+
     public void UpdateMap(SharedLibs.Positions newMap)
     {
         for (int i = 0; i < 36; i++)
@@ -36,6 +45,18 @@ public class BoardScript : MonoBehaviour
                         break;
                     case TileStatus.Wall:
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Wall")));
+                        break;
+                    case TileStatus.Pacman1:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Green")));
+                        break;
+                    case TileStatus.Pacman2:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Red")));
+                        break;
+                    case TileStatus.Pacman3:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Yellow")));
+                        break;
+                    case TileStatus.Pacman4:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Purple")));
                         break;
                 }
             }
