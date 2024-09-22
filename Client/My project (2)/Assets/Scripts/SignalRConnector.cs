@@ -19,7 +19,9 @@ public class SignalRConnector : MonoBehaviour
     [SerializeField] private TextMeshProUGUI usernameField;
     [SerializeField] private GameObject invalidText;
     [SerializeField] private GameObject tileMap;
-    
+    [SerializeField] private TextMeshProUGUI connectedPlayers;
+    [SerializeField] private TextMeshProUGUI timer;
+
 
     private HubConnection connection;
 
@@ -40,6 +42,8 @@ public class SignalRConnector : MonoBehaviour
         connection.On<Positions>("ReceiveMap", ReceiveMap);
         connection.On<string>("HandshakeReceived", HandshakeReceived);
         connection.On<string>("HandshakeFailed", HandshakeFailed);
+        connection.On<int>("UpdatePlayerCount", UpdatePlayerCount);
+        connection.On<int>("UpdateTimer", UpdateTimer);
 
         await connection.StartAsync();
         await connection.SendAsync("Handshake", handshake);
@@ -63,7 +67,26 @@ public class SignalRConnector : MonoBehaviour
         {
             tileMap.GetComponent<BoardScript>().UpdateMap(map);
         });    
-        Debug.Log("Map hopefully updated!");
+    }
+
+    public void UpdatePlayerCount(int newCount)
+    {
+        string newText = connectedPlayers.text.ToString().Substring(0, connectedPlayers.text.Length - 1) + newCount.ToString();
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            connectedPlayers.text = newText;
+        });
+    }
+
+    public void UpdateTimer(int newTime)
+    {
+        newTime /= 1000;
+        string newText = timer.text.ToString().Substring(0, timer.text.Length - 5) + (newTime/60).ToString("00") + ':' + (newTime%60).ToString("00");
+        Debug.Log(newText);
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            timer.text = newText;
+        });
     }
 
     public async void HandshakeFailed(string error)

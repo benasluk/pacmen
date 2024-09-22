@@ -10,17 +10,14 @@ public class BoardScript : MonoBehaviour
 {
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private GameObject topLeft;
-    [SerializeField] private GameObject bottomRight;
     [SerializeField] private List<TileBase> tiles;
 
     private Vector3Int topLeftCellPosition;
-    private Vector3Int bottomRightCellPosition;
 
     private void Awake()
     {
         tileMap.CompressBounds();
         topLeftCellPosition = tileMap.WorldToCell(topLeft.transform.position);
-        bottomRightCellPosition = tileMap.WorldToCell(bottomRight.transform.position);
     }
 
     public void UpdateMap(SharedLibs.Positions newMap)

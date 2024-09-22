@@ -13,10 +13,6 @@ public class PacmanScript : MonoBehaviour
     [SerializeField] private Tilemap tileMap;
     [SerializeField] private GameObject spawnPoint;
 
-    //Kampu reikia pacmano pozicijos nustatymui
-    [SerializeField] private GameObject topLeft;
-    [SerializeField] private GameObject bottomRight;
-
     [Header("Attributes")]
     [SerializeField] private float speed = 0.5f;
     private SignalRConnector signalRConnector;
@@ -29,10 +25,6 @@ public class PacmanScript : MonoBehaviour
     {
         //Snappinam pacmana tiesiai i grid block
         pacman.transform.position = tileMap.CellToWorld(tileMap.WorldToCell(transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
-
-        //Snappinam kampus tiesiai i grid blockus
-        topLeft.transform.position = tileMap.CellToWorld(tileMap.WorldToCell(topLeft.transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
-        bottomRight.transform.position = tileMap.CellToWorld(tileMap.WorldToCell(bottomRight.transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
     }
 
     private void Update()

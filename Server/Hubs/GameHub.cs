@@ -46,6 +46,8 @@ namespace Server.Hubs
 
             _playerService.AddPlayer(playerid, new Classes.GameObjects.Player(_gameLoop, _gameService));
 
+            Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
+
 
             await Clients.Caller.SendAsync("HandshakeReceived", $"Welcome, {handshake.PlayerName}");
         }
@@ -54,6 +56,7 @@ namespace Server.Hubs
             var playerId = Context.ConnectionId;
             _playerService.RemovePlayer(playerId);
             Console.WriteLine("Connection stopped from " + playerId + " !");
+            Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
             return base.OnDisconnectedAsync(exception);
         }
     }

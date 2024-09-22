@@ -20,6 +20,7 @@ namespace Server.Classes.GameLogic
         public delegate void GhostMovevementHandler();
         public event GhostMovevementHandler GhostMovevement;
         private bool _gameStarted = false;
+        private int gameTimer;
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, MovementTimerService movementTimerService)
         {
             _gameService = gameService;
@@ -27,6 +28,7 @@ namespace Server.Classes.GameLogic
             _messageService = messageService;
             _hubContext = hubContext;
             _movementTimerService = movementTimerService;
+            gameTimer = 0;
         }
         public void Start()
         {
@@ -39,7 +41,9 @@ namespace Server.Classes.GameLogic
         {
             if (_playerService.GetPlayerCount() >= 1)
             {
-                _movementTimerService.UpdateElapsedTime(1000 / 60);
+                gameTimer += 1000;
+                _movementTimerService.UpdateElapsedTime(1000);
+                _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
                 HandlePlayerInputs();
                 if (_movementTimerService.PacmanCanMove())
                 {
