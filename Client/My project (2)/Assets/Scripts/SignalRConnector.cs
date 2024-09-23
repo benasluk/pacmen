@@ -79,6 +79,7 @@ public class SignalRConnector : MonoBehaviour
         MainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (int.Parse(newText[newText.Length - 1].ToString()) >= 4) waitingForPlayersText.SetActive(false);
+            else waitingForPlayersText.SetActive(true);
             connectedPlayers.text = newText;
         });
     }
