@@ -21,39 +21,44 @@ public class PacmanScript : MonoBehaviour
     private GameObject spawnPoint;
     private string pacmanColor;
     private Quaternion rotation;
+    private bool canMove;
 
     private void Start()
     {
         signalRConnector = FindObjectOfType<SignalRConnector>();
         rotation = transform.rotation;
+        canMove = false;
     }
 
     private void Update()
     {
-        Direction dir = Direction.None;
-        if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow))
+        if(canMove)
         {
-            dir = Direction.Up;
-            rotation.eulerAngles = new Vector3(0, 0, 90);
-        }
-        else if (Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.DownArrow))
-        {
-            dir = Direction.Down;
-            rotation.eulerAngles = new Vector3(0, 0, 270);
-        }
-        else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            dir = Direction.Left;
-            rotation.eulerAngles = new Vector3(0, 0, 180);
-        }
-        else if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            dir = Direction.Right;
-            rotation.eulerAngles = new Vector3(0, 0, 0);
-        }
-        if (dir != Direction.None)
-        {
-            signalRConnector.SendDirection(dir);
+            Direction dir = Direction.None;
+            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow))
+            {
+                dir = Direction.Up;
+                rotation.eulerAngles = new Vector3(0, 0, 90);
+            }
+            else if (Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                dir = Direction.Down;
+                rotation.eulerAngles = new Vector3(0, 0, 270);
+            }
+            else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                dir = Direction.Left;
+                rotation.eulerAngles = new Vector3(0, 0, 180);
+            }
+            else if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                dir = Direction.Right;
+                rotation.eulerAngles = new Vector3(0, 0, 0);
+            }
+            if (dir != Direction.None)
+            {
+                signalRConnector.SendDirection(dir);
+            }
         }
     }
 
@@ -61,6 +66,11 @@ public class PacmanScript : MonoBehaviour
     {
         transform.rotation = rotation;
         rotation = transform.rotation;
+    }
+
+    public void SetCanMove(bool can)
+    {
+        canMove = can;
     }
 
     public void SetPacmanNumber(int num)
