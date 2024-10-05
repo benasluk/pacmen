@@ -1,11 +1,26 @@
-﻿using Server.Classes.GameObjects;
+﻿using Server.Classes.GameLogic;
+using Server.Classes.GameObjects;
+using Server.Classes.Services.Factory;
 using SharedLibs;
 
 namespace Server.Classes.Services
 {
     public class PlayerService
     {
+        // #NEW
+        private readonly AbstractLevelFactory _levelFactory;
+        private readonly GameLoop _gameLoop;
+        private readonly GameService _gameService;
+        
         private Dictionary<string, Player> _players = new Dictionary<string, Player>();
+
+        // #NEW
+        public PlayerService(AbstractLevelFactory levelFactory, GameLoop gameLoop, GameService gameService)
+        {
+            _levelFactory = levelFactory;
+            _gameLoop = gameLoop;
+            _gameService = gameService;
+        }
 
         public Player GetPlayerById(string playerId)
         {
@@ -16,8 +31,10 @@ namespace Server.Classes.Services
             }
             return null;
         }
-        public void AddPlayer (string playerId, Player player)
+        public void AddPlayer (string playerId)
         {
+            // #NEW
+            Player player = _levelFactory.CreatePacman(_gameLoop, _gameService);
             var dictionaryCount = _players.Count;
             player.pacmanNo = (TileStatus)(dictionaryCount + 5);
             
@@ -48,6 +65,16 @@ namespace Server.Classes.Services
         public int GetPlayerCount()
         {
             return _players.Count;
+        }
+
+        // #NEW
+        public void UpdatePlayers()
+        {
+            foreach (var (playerId, _) in _players)
+            {
+                Player player = _levelFactory.CreatePacman(_gameLoop, _gameService);
+                _players[playerId] = player;
+            }
         }
     }
 }

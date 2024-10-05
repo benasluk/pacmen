@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
+using Server.Classes.GameObjects;
 using Server.Classes.Services;
+using Server.Classes.Services.Factory;
 using Server.GameWorld;
 using Server.Hubs;
 using SharedLibs;
@@ -20,6 +22,11 @@ namespace Server.Classes.GameLogic
         public delegate void GhostMovevementHandler();
         public event GhostMovevementHandler GhostMovevement;
         private bool _gameStarted = false;
+
+        // #NEW
+        private AbstractLevelFactory _levelFactory;
+        private List<Item> ItemList;
+        
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext)
         {
             _gameService = gameService;
@@ -27,13 +34,17 @@ namespace Server.Classes.GameLogic
             _messageService = messageService;
             _hubContext = hubContext;
             _movementTimerService = MovementTimerServiceSingleton.getInstance();
+            // #NEW
+            ItemList = new List<Item>();
         }
         public void Start()
         {
-
             _timer = new Timer(Update, null, 0, 1000 / 60);
-
-
+            
+            // #NEW
+            _levelFactory = new LevelOneFactory();
+            ItemList = _levelFactory.CreateItems(this, _gameService);
+            LoadLevelMap();
         }
         public void Update(object state)
         {
@@ -49,6 +60,15 @@ namespace Server.Classes.GameLogic
                 //{
                 //    HandleGhostMovement();
                 //}
+
+                // #NEW
+                // if (onInitialLevel2)
+                // {
+                //     _levelFactory = new LevelTwoFactory();
+                //     ItemList = _levelFactory.CreateItems(this, _gameService);
+                //     _playerService.UpdatePlayers();
+                //     LoadLevelMap();
+                // }
 
                 if (_playerService.GetPlayerCount() > 0)
                 {
@@ -81,5 +101,11 @@ namespace Server.Classes.GameLogic
             return _gameService.GetGameMap().GetAllTiles();
         }
 
+        // #NEW
+        private void LoadLevelMap()
+        {
+            GameMap map = _levelFactory.CreateMap();
+            _gameService.SetGameMap(map);
+        }
     }
 }
