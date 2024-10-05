@@ -13,20 +13,20 @@ namespace Server.Classes.GameLogic
         private readonly PlayerService _playerService;
         private readonly MessageService _messageService;
         private readonly IHubContext<GameHub> _hubContext;
-        private readonly MovementTimerService _movementTimerService;
+        private readonly MovementTimerServiceSingleton _movementTimerService;
         private Timer _timer;
         public delegate void PacmanMovevementHandler();
         public event PacmanMovevementHandler PacmanMovevement;
         public delegate void GhostMovevementHandler();
         public event GhostMovevementHandler GhostMovevement;
         private bool _gameStarted = false;
-        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, MovementTimerService movementTimerService)
+        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext)
         {
             _gameService = gameService;
             _playerService = playerService;
             _messageService = messageService;
             _hubContext = hubContext;
-            _movementTimerService = movementTimerService;
+            _movementTimerService = MovementTimerServiceSingleton.getInstance();
         }
         public void Start()
         {

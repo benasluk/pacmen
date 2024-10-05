@@ -15,7 +15,6 @@ builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
-builder.Services.AddSingleton<MovementTimerService>();
 builder.Services.AddSingleton<GameLoop>();
 builder.Services.AddSingleton<GameHub>();
 builder.Services.AddSingleton<PlayerService>();

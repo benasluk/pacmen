@@ -1,7 +1,17 @@
 ﻿namespace Server.Classes.Services;
 
-public class MovementTimerService
+public class MovementTimerServiceSingleton
 {
+    private static class SingletonHolder
+    {
+        public static readonly MovementTimerServiceSingleton instance = new MovementTimerServiceSingleton();
+    }
+
+    public static MovementTimerServiceSingleton getInstance()
+    {
+        return SingletonHolder.instance;
+    }
+    
     private int _elapsedTime = 0;
     private readonly int _pacmanMovementInterval = 500;
     private readonly int _enemyMovementInterval = 500;
