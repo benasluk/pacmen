@@ -24,18 +24,20 @@ namespace Server.Classes.GameObjects
         public override void HandleMovement()
         {
             var gameMap = GetGameService().GetGameMap();
-            int projectedX = x;
-            int projectedY = y;
+            int projectedX = col;
+            int projectedY = row;
 
             switch (direction)
             {
+                //Reikejo sukeist vietom kur plius kur minus, nes pas mus Y values atvirksciai - i apacia dideja Y
+
                 case Direction.None:
                     break;
                 case Direction.Up:
-                    projectedY += 1;
+                    projectedY -= 1;
                     break;
                 case Direction.Down:
-                    projectedY -= 1;
+                    projectedY += 1;
                     break;
                 case Direction.Left:
                     projectedX -= 1;
@@ -47,26 +49,33 @@ namespace Server.Classes.GameObjects
                     throw new ArgumentOutOfRangeException();
             }
 
-            if (ValidMove(gameMap, projectedY, projectedY))
+            if (ValidMove(gameMap, projectedX, projectedY))
             {
                 var map = GetGameService().GetGameMap();
 
-                map.UpdateTile(x, y, TileStatus.Empty);
-                x = projectedX;
-                y = projectedY;
-                var tile = map.GetTileStatus(x, y);
+                map.UpdateTile(row, col, TileStatus.Empty);
+                col = projectedX;
+                row = projectedY;
+                var tile = map.GetTileStatus(row, col);
                 if (tile == TileStatus.Pellet)
                 {
                     score++;
                 }
-                map.UpdateTile(x, y, pacmanNo);
+                map.UpdateTile(row, col, pacmanNo);
             }
         }
 
         private static bool ValidMove(GameMap map, int x, int y)
         {
             var tile = map.GetTileStatus(y, x);
+            Console.WriteLine($"Tile pacman wants to move to is row {y} and column {x} and is ${tile}");
             return !tile.Equals(TileStatus.Wall);
+        }
+
+        public void SetXY(int columnToSet, int rowToSet)
+        {
+            col = columnToSet;
+            row = rowToSet;
         }
     }
 }

@@ -7,9 +7,9 @@ namespace Server
     public abstract class GameObject //Update constructor logic or something
     {
         protected int ID;
-        protected int x;
-        protected int y;
-        protected Direction direction = Direction.None;
+        protected int col;
+        protected int row;
+        protected Direction direction = Direction.Up;
         protected readonly GameLoop _gameLoop;
         protected readonly GameService _gameService;
         
@@ -33,9 +33,9 @@ namespace Server
             return _gameService;
         }
 
-        public (int x, int y) GetCurrentLocation()
+        public (int col, int row) GetCurrentLocation()
         {
-            return (x, y);
+            return (col, row);
         }
     }
 }

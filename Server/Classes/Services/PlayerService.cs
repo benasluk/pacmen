@@ -40,6 +40,21 @@ namespace Server.Classes.Services
             Player player = _levelFactory.CreatePacman(gameLoop, _gameService);
             var dictionaryCount = _players.Count;
             player.pacmanNo = (TileStatus)(dictionaryCount + 5);
+            switch (player.pacmanNo)
+            {
+                case TileStatus.Pacman1:
+                    player.SetXY(1, 4);
+                    break;
+                case TileStatus.Pacman2:
+                    player.SetXY(26, 4);
+                    break;
+                case TileStatus.Pacman3:
+                    player.SetXY(1, 32);
+                    break;
+                case TileStatus.Pacman4:
+                    player.SetXY(26, 32);
+                    break;
+            }
             
             _players.Add(playerId, player);
         }

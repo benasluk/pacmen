@@ -16,5 +16,9 @@ namespace Server.Classes.Services
         {
             _gameMap = map;
         }
+        public void RestartMap()
+        {
+            _gameMap = new GameMap(36, 28);
+        }
     }
 }

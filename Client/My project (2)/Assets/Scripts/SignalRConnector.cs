@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -20,7 +19,12 @@ public class SignalRConnector : MonoBehaviour
     [SerializeField] private TextMeshProUGUI usernameField;
     [SerializeField] private TextMeshProUGUI serverField;
     [SerializeField] private GameObject invalidText;
-    
+    [SerializeField] private GameObject tileMap;
+    [SerializeField] private TextMeshProUGUI connectedPlayers;
+    [SerializeField] private GameObject waitingForPlayersText;
+    [SerializeField] private TextMeshProUGUI timer;
+    [SerializeField] private GameObject clientPacman;
+
 
     private HubConnection connection;
 
@@ -38,15 +42,21 @@ public class SignalRConnector : MonoBehaviour
         else serverIP = serverField.text.Trim((char)8203);
 
         connection = new HubConnectionBuilder()
+<<<<<<< HEAD
             .WithUrl(serverIP).AddNewtonsoftJsonProtocol(options =>
+=======
+            .WithUrl("https://localhost:7255/Server").AddNewtonsoftJsonProtocol(options =>
+>>>>>>> main
             {
                 options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             }).Build();
 
         connection.On<Positions>("ReceiveMap", ReceiveMap);
         connection.On<string>("HandshakeReceived", HandshakeReceived);
+        connection.On<TileStatus>("ReceivePacman", SetPacman);
         connection.On<string>("HandshakeFailed", HandshakeFailed);
-        connection.On<string>("Test", (test) => Debug.Log(test));
+        connection.On<int>("UpdatePlayerCount", UpdatePlayerCount);
+        connection.On<int>("UpdateTimer", UpdateTimer);
 
         await connection.StartAsync();
         await connection.SendAsync("Handshake", handshake);
@@ -66,12 +76,72 @@ public class SignalRConnector : MonoBehaviour
     public void ReceiveMap(SharedLibs.Positions map)
     {
         Debug.Log("Map received.");
-        //Debug.Log("First value of map: " + map.Grid[0, 0].ToString());
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            tileMap.GetComponent<BoardScript>().UpdateMap(map);
+            clientPacman.GetComponent<PacmanScript>().SnapToMapLocation();
+        });    
     }
 
-    private void UpdateMap(SharedLibs.Positions newMap)
+    public void UpdatePlayerCount(int newCount)
     {
+        string newText = connectedPlayers.text.ToString().Substring(0, connectedPlayers.text.Length - 1) + newCount.ToString();
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            if (newCount >= 2)
+            {
+                waitingForPlayersText.SetActive(false);
+                clientPacman.GetComponent<PacmanScript>().SetCanMove(true);
+            }
+            else
+            {
+                waitingForPlayersText.SetActive(true);
+                clientPacman.GetComponent<PacmanScript>().SetCanMove(false);
+            }
+            connectedPlayers.text = newText;
+        });
+    }
 
+    public void UpdateTimer(int newTime)
+    {
+        newTime /= 1000;
+        string newText = timer.text.ToString().Substring(0, timer.text.Length - 5) + (newTime/60).ToString("00") + ':' + (newTime%60).ToString("00");
+        MainThreadDispatcher.Instance().Enqueue(() =>
+        {
+            timer.text = newText;
+        });
+    }
+
+    public void SetPacman(TileStatus pacman)
+    {
+        Debug.Log("Received pacman");
+        switch (pacman)
+        {
+            case TileStatus.Pacman1:
+                MainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    clientPacman.GetComponent<PacmanScript>().SetPacmanNumber(1);
+                });
+                break;
+            case TileStatus.Pacman2:
+                MainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    clientPacman.GetComponent<PacmanScript>().SetPacmanNumber(2);
+                });
+                break;
+            case TileStatus.Pacman3:
+                MainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    clientPacman.GetComponent<PacmanScript>().SetPacmanNumber(3);
+                });
+                break;
+            case TileStatus.Pacman4:
+                MainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    clientPacman.GetComponent<PacmanScript>().SetPacmanNumber(4);
+                });
+                break;
+        }
     }
 
     public async void HandshakeFailed(string error)

@@ -2,6 +2,8 @@ using SharedLibs;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -9,69 +11,110 @@ using UnityEngine.Tilemaps;
 public class PacmanScript : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private GameObject pacman;
     [SerializeField] private Tilemap tileMap;
-    [SerializeField] private GameObject spawnPoint;
-
-    //Kampu reikia pacmano pozicijos nustatymui
-    [SerializeField] private GameObject topLeft;
-    [SerializeField] private GameObject bottomRight;
+    [SerializeField] private List<Sprite> pacmen;
+    [SerializeField] private GameObject pacmanColorText;
 
     [Header("Attributes")]
     [SerializeField] private float speed = 0.5f;
     private SignalRConnector signalRConnector;
+    private GameObject spawnPoint;
+    private string pacmanColor;
+    private Quaternion rotation;
+    private bool canMove;
 
     private void Start()
     {
         signalRConnector = FindObjectOfType<SignalRConnector>();
-    }
-    private void Awake()
-    {
-        //Snappinam pacmana tiesiai i grid block
-        pacman.transform.position = tileMap.CellToWorld(tileMap.WorldToCell(transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
-
-        //Snappinam kampus tiesiai i grid blockus
-        topLeft.transform.position = tileMap.CellToWorld(tileMap.WorldToCell(topLeft.transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
-        bottomRight.transform.position = tileMap.CellToWorld(tileMap.WorldToCell(bottomRight.transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
+        rotation = transform.rotation;
+        canMove = false;
     }
 
     private void Update()
     {
-        Direction dir = Direction.None;
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if(canMove)
         {
-            dir = Direction.Up;
-        }
-        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
-        {
-            dir = Direction.Down;
-        }
-        else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
-        {
-            dir = Direction.Left;
-        }
-        else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
-        {
-            dir = Direction.Right;
-        }
-        if (dir != Direction.None)
-        {
-            signalRConnector.SendDirection(dir);
+            Direction dir = Direction.None;
+            if (Input.GetKeyUp(KeyCode.W) || Input.GetKeyUp(KeyCode.UpArrow))
+            {
+                dir = Direction.Up;
+                rotation.eulerAngles = new Vector3(0, 0, 90);
+            }
+            else if (Input.GetKeyUp(KeyCode.S) || Input.GetKeyUp(KeyCode.DownArrow))
+            {
+                dir = Direction.Down;
+                rotation.eulerAngles = new Vector3(0, 0, 270);
+            }
+            else if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.LeftArrow))
+            {
+                dir = Direction.Left;
+                rotation.eulerAngles = new Vector3(0, 0, 180);
+            }
+            else if (Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.RightArrow))
+            {
+                dir = Direction.Right;
+                rotation.eulerAngles = new Vector3(0, 0, 0);
+            }
+            if (dir != Direction.None)
+            {
+                signalRConnector.SendDirection(dir);
+            }
         }
     }
 
-    private void HandleMovement(string direction)
+    public void RotatePacman()
     {
-        switch (direction)
+        transform.rotation = rotation;
+        rotation = transform.rotation;
+    }
+
+    public void SetCanMove(bool can)
+    {
+        canMove = can;
+    }
+
+    public void SetPacmanNumber(int num)
+    {
+        Debug.Log($"Setting pacman to number{num}");
+        switch (num)
         {
-            case "Right":
-                if (!tileMap.GetTile(tileMap.WorldToCell(transform.position) + Vector3Int.right).name.Contains("Wall"))
-                {
-                    transform.position = tileMap.CellToWorld(tileMap.WorldToCell(transform.position) + Vector3Int.right) + tileMap.layoutGrid.transform.lossyScale / 2;
-                }
+            case 1:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Green"));
+                spawnPoint = GameObject.Find("GreenSpawn");
+                pacmanColor = "Green";
                 break;
-            default:
+            case 2:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Red"));
+                spawnPoint = GameObject.Find("RedSpawn");
+                pacmanColor = "Red";
                 break;
+            case 3:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Yellow"));
+                spawnPoint = GameObject.Find("YellowSpawn");
+                pacmanColor = "Yellow";
+                break;
+            case 4:
+                GetComponent<SpriteRenderer>().sprite = pacmen.First(p => p.name.Contains("Purple"));
+                spawnPoint = GameObject.Find("PurpleSpawn");
+                pacmanColor = "Purple";
+                break;
+        }
+
+        transform.position = tileMap.CellToWorld(tileMap.WorldToCell(spawnPoint.transform.position)) + tileMap.layoutGrid.transform.lossyScale / 2;
+        pacmanColorText.GetComponent<TextMeshProUGUI>().text += pacmanColor;
+        pacmanColorText.GetComponent<TextMeshProUGUI>().color = (Color)typeof(Color).GetProperty(pacmanColor.ToLowerInvariant()).GetValue(null, null); //Stack overflow magic
+    }
+
+    public void SnapToMapLocation()
+    {
+        foreach (var pos in tileMap.cellBounds.allPositionsWithin)
+        {
+            TileBase tile = tileMap.GetTile(pos);
+            if (tile.name.Contains(pacmanColor))
+            {
+                transform.position = tileMap.CellToWorld(pos) + tileMap.layoutGrid.transform.lossyScale / 2;
+                RotatePacman();
+            }
         }
     }
 }

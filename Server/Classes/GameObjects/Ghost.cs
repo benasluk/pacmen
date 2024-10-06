@@ -19,8 +19,8 @@ public class Ghost : GameObject
         var newDirection = FindPacManDirection(gameMap);
         UpdateDirection(newDirection);
 
-        int projectedX = x;
-        int projectedY = y;
+        int projectedX = col;
+        int projectedY = row;
 
         switch (direction)
         {
@@ -44,8 +44,8 @@ public class Ghost : GameObject
 
         if (ValidMove(gameMap, projectedY, projectedY))
         {
-            x = projectedX;
-            y = projectedY;
+            col = projectedX;
+            row = projectedY;
         }
         
     }
@@ -61,10 +61,10 @@ public class Ghost : GameObject
     private Direction FindPacManDirection(GameMap gameMap)
     {
         Queue<(int yc, int xc, List<(int, int)> path)> queue = new();
-        queue.Enqueue((y, x, new List<(int, int)>{(y, x)}));
+        queue.Enqueue((row, col, new List<(int, int)>{(row, col)}));
 
         bool[,] visited = new bool[36, 28];
-        visited[y, x] = true;
+        visited[row, col] = true;
 
         while (queue.Count > 0)
         {
@@ -74,7 +74,7 @@ public class Ghost : GameObject
             {
                 (int projectedY, int projectedX) = path.First();
 
-                switch (projectedX - x)
+                switch (projectedX - col)
                 {
                     case > 0:
                         return Direction.Right;
@@ -82,7 +82,7 @@ public class Ghost : GameObject
                         return Direction.Left;
                 }
 
-                switch (projectedY - y)
+                switch (projectedY - row)
                 {
                     case > 0:
                         return Direction.Up;

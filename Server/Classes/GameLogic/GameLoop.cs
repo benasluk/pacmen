@@ -49,14 +49,16 @@ namespace Server.Classes.GameLogic
         }
         public void Update(object state)
         {
-            if (_playerService.GetPlayerCount() >= 2)
+            if (_playerService.GetPlayerCount() >= 1)
             {
-                _movementTimerService.UpdateElapsedTime(1000 / 60);
+                gameTimer += 1000;
+                _movementTimerService.UpdateElapsedTime(1000);
+                _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
                 HandlePlayerInputs();
-                if (_movementTimerService.PacmanCanMove())
-                {
-                    HandlePacmanMovement();
-                }
+                //if (_movementTimerService.PacmanCanMove())
+                //{
+                //    HandlePacmanMovement();
+                //}
                 //if (_movementTimerService.EnemyCanMove())
                 //{
                 //    HandleGhostMovement();
@@ -77,7 +79,6 @@ namespace Server.Classes.GameLogic
                     Positions test = updateMapInClient();
                     Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
                     _hubContext.Clients.All.SendAsync("ReceiveMap", test);
-                    _hubContext.Clients.All.SendAsync("Test", "Hello from c#");
                 }
             }
         }
@@ -101,6 +102,10 @@ namespace Server.Classes.GameLogic
         public Positions updateMapInClient()
         {
             return _gameService.GetGameMap().GetAllTiles();
+        }
+        public void RestartTimer()
+        {
+            gameTimer = 0;
         }
 
         // #NEW
