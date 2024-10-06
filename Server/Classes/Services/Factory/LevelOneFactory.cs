@@ -2,7 +2,7 @@
 using Server.Classes.GameObjects;
 using Server.Classes.GameObjects.LevelOneObjects;
 using Server.GameWorld;
-using Server.GameWorld.LevelOneMap;
+using Server.GameWorld.LevelMap;
 
 namespace Server.Classes.Services.Factory;
 

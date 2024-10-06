@@ -9,6 +9,6 @@ public class L1Item : Item
     public string Icon;
     public L1Item(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {
-        Icon = "BluePellet";
+        Icon = "Apple";
     }
 }

@@ -1,6 +1,6 @@
 ﻿using SharedLibs;
 
-namespace Server.GameWorld.LevelOneMap;
+namespace Server.GameWorld.LevelMap;
 
 // #NEW
 public class L1GameMap : GameMap

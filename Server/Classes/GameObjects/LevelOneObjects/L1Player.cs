@@ -10,7 +10,7 @@ public class L1Player : Player
     
     public L1Player(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {
-        BackgroundColor = "Blue";
+        BackgroundColor = "Pink";
     }
     
 }

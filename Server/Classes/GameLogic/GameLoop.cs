@@ -67,7 +67,8 @@ namespace Server.Classes.GameLogic
                 // {
                 //     _levelFactory = new LevelTwoFactory();
                 //     ItemList = _levelFactory.CreateItems(this, _gameService);
-                //     _playerService.UpdatePlayers();
+                //     _playerService.SetPlayerFactory(_levelFactory);
+                //     _playerService.UpdatePlayers(this);
                 //     LoadLevelMap();
                 // }
 
