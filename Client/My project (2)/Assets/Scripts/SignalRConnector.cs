@@ -77,7 +77,16 @@ public class SignalRConnector : MonoBehaviour
         string newText = connectedPlayers.text.ToString().Substring(0, connectedPlayers.text.Length - 1) + newCount.ToString();
         MainThreadDispatcher.Instance().Enqueue(() =>
         {
-            if (int.Parse(newText[newText.Length - 1].ToString()) >= 4) waitingForPlayersText.SetActive(false);
+            if (newCount >= 2)
+            {
+                waitingForPlayersText.SetActive(false);
+                clientPacman.GetComponent<PacmanScript>().SetCanMove(true);
+            }
+            else
+            {
+                waitingForPlayersText.SetActive(true);
+                clientPacman.GetComponent<PacmanScript>().SetCanMove(false);
+            }
             connectedPlayers.text = newText;
         });
     }
