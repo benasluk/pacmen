@@ -18,7 +18,7 @@ namespace Server.Classes.Services
         }
         public void RestartMap()
         {
-            _gameMap = new GameMap(36, 28);
+            _gameMap.RestartMap();
         }
     }
 }

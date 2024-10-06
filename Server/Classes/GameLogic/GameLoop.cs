@@ -17,6 +17,7 @@ namespace Server.Classes.GameLogic
         private readonly IHubContext<GameHub> _hubContext;
         private readonly MovementTimerServiceSingleton _movementTimerService;
         private Timer _timer;
+        private int gameTimer;
         public delegate void PacmanMovevementHandler();
         public event PacmanMovevementHandler PacmanMovevement;
         public delegate void GhostMovevementHandler();
@@ -26,6 +27,8 @@ namespace Server.Classes.GameLogic
         // #NEW
         private AbstractLevelFactory _levelFactory;
         private List<Item> ItemList;
+
+        private int gameSpeed = 1000 / 10;
         
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext)
         {
@@ -34,15 +37,16 @@ namespace Server.Classes.GameLogic
             _messageService = messageService;
             _hubContext = hubContext;
             _movementTimerService = MovementTimerServiceSingleton.getInstance();
+            gameTimer = 0;
             // #NEW
             ItemList = new List<Item>();
         }
         public void Start()
         {
-            _timer = new Timer(Update, null, 0, 1000 / 60);
+            _timer = new Timer(Update, null, 0, gameSpeed);
             
             // #NEW
-            _levelFactory = new LevelOneFactory();
+            _levelFactory = new LevelTwoFactory();
             _playerService.SetPlayerFactory(_levelFactory);
             ItemList = _levelFactory.CreateItems(this, _gameService);
             LoadLevelMap();
@@ -51,8 +55,8 @@ namespace Server.Classes.GameLogic
         {
             if (_playerService.GetPlayerCount() >= 1)
             {
-                gameTimer += 1000;
-                _movementTimerService.UpdateElapsedTime(1000);
+                _movementTimerService.UpdateElapsedTime(gameSpeed);
+                gameTimer += gameSpeed;
                 _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
                 HandlePlayerInputs();
                 //if (_movementTimerService.PacmanCanMove())

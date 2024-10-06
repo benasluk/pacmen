@@ -38,18 +38,16 @@ public class SignalRConnector : MonoBehaviour
 
         string serverIP;
 
-        if (isDefault) serverIP = "http://127.0.0.1:5026/Server";
+        if (isDefault) serverIP = "http://127.0.0.1:5076/Server";
         else serverIP = serverField.text.Trim((char)8203);
 
+        Debug.Log(serverIP);
+
         connection = new HubConnectionBuilder()
-<<<<<<< HEAD
-            .WithUrl(serverIP).AddNewtonsoftJsonProtocol(options =>
-=======
-            .WithUrl("https://localhost:7255/Server").AddNewtonsoftJsonProtocol(options =>
->>>>>>> main
-            {
-                options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            }).Build();
+        .WithUrl(serverIP).AddNewtonsoftJsonProtocol(options =>
+        {
+            options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        }).Build();
 
         connection.On<Positions>("ReceiveMap", ReceiveMap);
         connection.On<string>("HandshakeReceived", HandshakeReceived);
@@ -78,6 +76,11 @@ public class SignalRConnector : MonoBehaviour
         Debug.Log("Map received.");
         MainThreadDispatcher.Instance().Enqueue(() =>
         {
+            if (!tileMap.activeInHierarchy)
+            {
+                tileMap.SetActive(true);
+                clientPacman.SetActive(true);
+            }
             tileMap.GetComponent<BoardScript>().UpdateMap(map);
             clientPacman.GetComponent<PacmanScript>().SnapToMapLocation();
         });    
@@ -88,9 +91,11 @@ public class SignalRConnector : MonoBehaviour
         string newText = connectedPlayers.text.ToString().Substring(0, connectedPlayers.text.Length - 1) + newCount.ToString();
         MainThreadDispatcher.Instance().Enqueue(() =>
         {
-            if (newCount >= 2)
+            if (newCount >= 1)
             {
+                Debug.Log("Setting pacman canMove to True");
                 waitingForPlayersText.SetActive(false);
+                if (!clientPacman.GetComponent<SpriteRenderer>().enabled) clientPacman.GetComponent<SpriteRenderer>().enabled = true;
                 clientPacman.GetComponent<PacmanScript>().SetCanMove(true);
             }
             else
