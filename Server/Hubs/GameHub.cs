@@ -23,7 +23,6 @@ namespace Server.Hubs
         {
             await Console.Out.WriteLineAsync(movement.PlayerId);
             await Console.Out.WriteLineAsync(movement.Direction.ToString());
-            await Console.Out.WriteLineAsync(_messageService.ToString());
             _messageService.StorePlayerInput(Context.ConnectionId, movement);
         }
         public override Task OnConnectedAsync()
@@ -46,14 +45,24 @@ namespace Server.Hubs
 
             _playerService.AddPlayer(playerid, new Classes.GameObjects.Player(_gameLoop, _gameService));
 
+            Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
+
 
             await Clients.Caller.SendAsync("HandshakeReceived", $"Welcome, {handshake.PlayerName}");
+            var thisPlayerPacman = _playerService.GetPlayerById(playerid).pacmanNo;
+            await Clients.Caller.SendAsync("ReceivePacman", thisPlayerPacman);
         }
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             var playerId = Context.ConnectionId;
             _playerService.RemovePlayer(playerId);
             Console.WriteLine("Connection stopped from " + playerId + " !");
+            Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
+            if (_playerService.GetPlayerCount() == 0)
+            {
+                _gameService.RestartMap();
+                _gameLoop.RestartTimer();
+            }
             return base.OnDisconnectedAsync(exception);
         }
     }
