@@ -8,18 +8,21 @@ namespace Server.Classes.Services
     public class PlayerService
     {
         // #NEW
-        private readonly AbstractLevelFactory _levelFactory;
-        private readonly GameLoop _gameLoop;
+        private AbstractLevelFactory _levelFactory;
+        //private readonly GameLoop _gameLoop;
         private readonly GameService _gameService;
         
         private Dictionary<string, Player> _players = new Dictionary<string, Player>();
 
         // #NEW
-        public PlayerService(AbstractLevelFactory levelFactory, GameLoop gameLoop, GameService gameService)
+        public PlayerService(GameService gameService)
         {
-            _levelFactory = levelFactory;
-            _gameLoop = gameLoop;
             _gameService = gameService;
+        }
+
+        public void SetPlayerFactory(AbstractLevelFactory levelFactory) 
+        { 
+            _levelFactory = levelFactory;
         }
 
         public Player GetPlayerById(string playerId)
@@ -31,10 +34,10 @@ namespace Server.Classes.Services
             }
             return null;
         }
-        public void AddPlayer (string playerId)
+        public void AddPlayer (string playerId, GameLoop gameLoop)
         {
             // #NEW
-            Player player = _levelFactory.CreatePacman(_gameLoop, _gameService);
+            Player player = _levelFactory.CreatePacman(gameLoop, _gameService);
             var dictionaryCount = _players.Count;
             player.pacmanNo = (TileStatus)(dictionaryCount + 5);
             
@@ -68,11 +71,11 @@ namespace Server.Classes.Services
         }
 
         // #NEW
-        public void UpdatePlayers()
+        public void UpdatePlayers(GameLoop gameLoop)
         {
             foreach (var (playerId, _) in _players)
             {
-                Player player = _levelFactory.CreatePacman(_gameLoop, _gameService);
+                Player player = _levelFactory.CreatePacman(gameLoop, _gameService);
                 _players[playerId] = player;
             }
         }

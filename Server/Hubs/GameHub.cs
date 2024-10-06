@@ -45,7 +45,7 @@ namespace Server.Hubs
             var playerid = Context.ConnectionId;
 
             // #NEW
-            _playerService.AddPlayer(playerid);
+            _playerService.AddPlayer(playerid, _gameLoop);
 
 
             await Clients.Caller.SendAsync("HandshakeReceived", $"Welcome, {handshake.PlayerName}");

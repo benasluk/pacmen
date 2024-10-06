@@ -4,6 +4,7 @@ using SharedLibs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
@@ -17,8 +18,8 @@ public class SignalRConnector : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject coverCanvas;
     [SerializeField] private TextMeshProUGUI usernameField;
+    [SerializeField] private TextMeshProUGUI serverField;
     [SerializeField] private GameObject invalidText;
-    [SerializeField] private GameObject tileMap;
     
 
     private HubConnection connection;
@@ -27,12 +28,17 @@ public class SignalRConnector : MonoBehaviour
     {
         connection.StopAsync();
     }
-    public async void ConnectToServer()
+    public async void ConnectToServer(bool isDefault)
     {
         var handshake = new SharedLibs.HandShake(usernameField.text.Trim((char)8203));
 
+        string serverIP;
+
+        if (isDefault) serverIP = "http://127.0.0.1:5026/Server";
+        else serverIP = serverField.text.Trim((char)8203);
+
         connection = new HubConnectionBuilder()
-            .WithUrl("http://192.168.0.174:7255/Server").AddNewtonsoftJsonProtocol(options =>
+            .WithUrl(serverIP).AddNewtonsoftJsonProtocol(options =>
             {
                 options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             }).Build();

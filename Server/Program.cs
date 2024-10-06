@@ -1,5 +1,6 @@
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
+using Server.Classes.Services.Factory;
 using Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.WebHost.UseUrls("http://192.168.0.174:7255");
+builder.WebHost.UseUrls("http://localhost:5026");
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
