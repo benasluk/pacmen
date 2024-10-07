@@ -44,9 +44,12 @@ namespace Server.Classes.GameLogic
         public void Start()
         {
             _timer = new Timer(Update, null, 0, gameSpeed);
-            
+
             // #NEW
-            _levelFactory = new LevelTwoFactory();
+
+            int whatLevel = new Random(DateTime.Now.Millisecond).Next() % 2;
+            if (whatLevel % 2 == 0) _levelFactory = new LevelOneFactory();
+            else _levelFactory = new LevelTwoFactory();
             _playerService.SetPlayerFactory(_levelFactory);
             ItemList = _levelFactory.CreateItems(this, _gameService);
             LoadLevelMap();
