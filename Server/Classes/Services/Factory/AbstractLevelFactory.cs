@@ -10,7 +10,6 @@ public abstract class AbstractLevelFactory
     public abstract GameMap CreateMap();
     public abstract Player CreatePacman(GameLoop gameLoop, GameService gameService);
     public abstract List<Item> CreateItems(GameLoop gameLoop, GameService gameService);
-    public abstract string GetItemIcon();
-
+ 
 
 }

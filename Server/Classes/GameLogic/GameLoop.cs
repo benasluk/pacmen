@@ -78,6 +78,10 @@ namespace Server.Classes.GameLogic
                 gameTimer += gameSpeed;
                 _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
                 HandlePlayerInputs();
+                if (CheckForLevelChange())
+                {
+                    RestartLoop();
+                }
                 //if (_movementTimerService.PacmanCanMove())
                 //{
                 //    HandlePacmanMovement();
@@ -114,9 +118,9 @@ namespace Server.Classes.GameLogic
                 }
             }
         }
-        private void CheckForLevelChange()
+        private bool CheckForLevelChange()
         {
-            var inputs =
+            return _messageService.IsLevelChange();
         }
         private void HandlePlayerInputs()
         {
