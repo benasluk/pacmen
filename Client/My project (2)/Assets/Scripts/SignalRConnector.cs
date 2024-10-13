@@ -83,6 +83,7 @@ public class SignalRConnector : MonoBehaviour
             }
             tileMap.GetComponent<BoardScript>().UpdateMap(map);
             clientPacman.GetComponent<PacmanScript>().SnapToMapLocation();
+
         });    
     }
 
