@@ -8,10 +8,42 @@ namespace Server.Classes.Services
         private readonly Dictionary<string, PacmanMovement> _playerInputs = new Dictionary<string, PacmanMovement>();
         private GameMap _gameMap = null;
         private object lockObj;
+        private object levelChangeLock; //None of the methods using this lock can be accessed if atleast one method using this is locked
+        private int newLevel = -1;
         public MessageService(GameService gameService, PlayerService playerService) {
             lockObj = new object();
         }
-
+        public void StoreLevelChange(int level)
+        {
+            lock(levelChangeLock)
+            {
+                if (newLevel == -1 && level > -1 && level < 2)
+                {
+                    newLevel = level;
+                }
+            }
+        }
+        public void ResetLevel()
+        {
+            lock(levelChangeLock)
+            {
+                newLevel = -1;
+            }
+        }
+        public bool IsLevelChange()
+        {
+            lock(levelChangeLock)
+            {
+                return newLevel != -1;
+            }
+        }
+        public int GetLevel()
+        {
+            lock (levelChangeLock)
+            {
+                return newLevel;
+            }
+        }
         public void StorePlayerInput(string playerId, PacmanMovement input)
         {
             lock (lockObj)

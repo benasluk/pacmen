@@ -32,6 +32,10 @@ namespace Server.Hubs
 
             return base.OnConnectedAsync();
         }
+        public async Task LevelChange(int num)
+        {
+            _messageService.StoreLevelChange(num);
+        }
         public async Task Handshake(HandShake handshake)
         {
 

@@ -24,7 +24,10 @@ namespace Server.Classes.Services
         { 
             _levelFactory = levelFactory;
         }
-
+        public string GetBackgroundName()
+        {
+            return _players.FirstOrDefault().Value?.color;
+        }
         public Player GetPlayerById(string playerId)
         {
             Player player = null;

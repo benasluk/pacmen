@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
+using Server.Classes.Services.Factory;
 using Server.GameWorld;
 using SharedLibs;
 
@@ -61,6 +62,7 @@ namespace Server.Classes.GameObjects
                 {
                     score++;
                 }
+                PlayerScoreSingleton.getInstance().SetScore((int)pacmanNo-5, score);
                 map.UpdateTile(row, col, pacmanNo);
             }
         }

@@ -49,6 +49,10 @@ namespace SharedLibs
         public TileStatus[,] Grid { get; set; }
         public List<PositionUpdate> MovedObjects { get; set; } = new List<PositionUpdate>();
         public int secondsElapsed { get; set; } = 0;
+        public int[] Scores { get; set; }
+        public bool SceneChange = false;
+        public string[] PlayerColors { get; set; }
+        public string[] ItemIcon { get; set; }
 
         public Positions(TileStatus[,] grid)
         {

@@ -6,6 +6,7 @@ using Server.Classes.Services.Factory;
 using Server.GameWorld;
 using Server.Hubs;
 using SharedLibs;
+using static Server.Classes.GameLogic.GameLoop;
 
 namespace Server.Classes.GameLogic
 {
@@ -23,13 +24,16 @@ namespace Server.Classes.GameLogic
         public delegate void GhostMovevementHandler();
         public event GhostMovevementHandler GhostMovevement;
         private bool _gameStarted = false;
+        public delegate void LevelRestart();
+        public event LevelRestart LevelRestartEvent;
+        private bool levelRestarted = false;
 
         // #NEW
         private AbstractLevelFactory _levelFactory;
         private List<Item> ItemList;
 
         private int gameSpeed = 1000 / 10;
-        
+
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext)
         {
             _gameService = gameService;
@@ -52,6 +56,18 @@ namespace Server.Classes.GameLogic
             else _levelFactory = new LevelTwoFactory();
             _playerService.SetPlayerFactory(_levelFactory);
             ItemList = _levelFactory.CreateItems(this, _gameService);
+            levelRestarted = true;
+            LoadLevelMap();
+        }
+        public void RestartLoop()
+        {
+            ItemList = new List<Item>();
+            int level = _messageService.GetLevel();
+            if (level % 2 == 0) _levelFactory = new LevelOneFactory();
+            else _levelFactory = new LevelTwoFactory();
+            _playerService.SetPlayerFactory(_levelFactory);
+            LevelRestartEvent?.Invoke();
+            levelRestarted = true;
             LoadLevelMap();
         }
         public void Update(object state)
@@ -85,9 +101,22 @@ namespace Server.Classes.GameLogic
                 {
                     Positions test = updateMapInClient();
                     Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                    if (levelRestarted)
+                    {
+                        test.PlayerColors = new string[1];
+                        test.PlayerColors[0] = _playerService.GetBackgroundName();
+                        test.ItemIcon = new string[1];
+                        test.ItemIcon[0] = ItemList.FirstOrDefault()?.Icon ?? " ";
+                        test.SceneChange = true;
+                        levelRestarted = false;
+                    }
                     _hubContext.Clients.All.SendAsync("ReceiveMap", test);
                 }
             }
+        }
+        private void CheckForLevelChange()
+        {
+            var inputs =
         }
         private void HandlePlayerInputs()
         {
@@ -108,7 +137,9 @@ namespace Server.Classes.GameLogic
         }
         public Positions updateMapInClient()
         {
-            return _gameService.GetGameMap().GetAllTiles();
+            var resultObj = _gameService.GetGameMap().GetAllTiles();
+            resultObj.Scores = PlayerScoreSingleton.getInstance().GetScore();
+            return resultObj;
         }
         public void RestartTimer()
         {

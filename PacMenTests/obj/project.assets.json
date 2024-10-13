@@ -1786,19 +1786,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\karol\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\karol\\Desktop\\KTU\\4 kursas\\pacmen\\PacMenTests\\PacMenTests.csproj",
+      "projectUniqueName": "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\PacMenTests.csproj",
       "projectName": "PacMenTests",
-      "projectPath": "C:\\Users\\karol\\Desktop\\KTU\\4 kursas\\pacmen\\PacMenTests\\PacMenTests.csproj",
-      "packagesPath": "C:\\Users\\karol\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\karol\\Desktop\\KTU\\4 kursas\\pacmen\\PacMenTests\\obj\\",
+      "projectPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\PacMenTests.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\karol\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1806,15 +1806,14 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\karol\\Desktop\\KTU\\4 kursas\\pacmen\\Server\\Server.csproj": {
-              "projectPath": "C:\\Users\\karol\\Desktop\\KTU\\4 kursas\\pacmen\\Server\\Server.csproj"
+            "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\Server.csproj": {
+              "projectPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\Server.csproj"
             }
           }
         }
@@ -1867,7 +1866,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
