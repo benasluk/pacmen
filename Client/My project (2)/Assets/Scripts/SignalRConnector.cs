@@ -24,6 +24,7 @@ public class SignalRConnector : MonoBehaviour
     [SerializeField] private GameObject waitingForPlayersText;
     [SerializeField] private TextMeshProUGUI timer;
     [SerializeField] private GameObject clientPacman;
+    [SerializeField] private LeaderboardScript leaderboard;
 
 
     private HubConnection connection;
@@ -83,6 +84,7 @@ public class SignalRConnector : MonoBehaviour
             }
             tileMap.GetComponent<BoardScript>().UpdateMap(map);
             clientPacman.GetComponent<PacmanScript>().SnapToMapLocation();
+            leaderboard.UpdateScoreboard(map.Scores);
 
         });    
     }

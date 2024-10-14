@@ -12,6 +12,7 @@ namespace Server.Classes.Services
         private int newLevel = -1;
         public MessageService(GameService gameService, PlayerService playerService) {
             lockObj = new object();
+            levelChangeLock = new object();
         }
         public void StoreLevelChange(int level)
         {
