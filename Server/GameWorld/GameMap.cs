@@ -102,6 +102,9 @@ namespace Server.GameWorld
 
             return _tileStatus[row, col];
         }
+
+        public (int rows, int col) GetMapSize() => (rows, cols);
+        
         public Positions GetAllTiles() { return new Positions(_tileStatus); }
         public void UpdateTile(int row, int col, TileStatus status)
         {
