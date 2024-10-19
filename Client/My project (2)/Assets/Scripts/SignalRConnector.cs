@@ -42,8 +42,6 @@ public class SignalRConnector : MonoBehaviour
         if (isDefault) serverIP = "http://127.0.0.1:5076/Server";
         else serverIP = serverField.text.Trim((char)8203);
 
-        Debug.Log(serverIP);
-
         connection = new HubConnectionBuilder()
         .WithUrl(serverIP).AddNewtonsoftJsonProtocol(options =>
         {
@@ -64,7 +62,6 @@ public class SignalRConnector : MonoBehaviour
     {
         if (connection != null && connection.State == HubConnectionState.Connected)
         {
-            Debug.Log("send movement" + dir.ToString());
             PacmanMovement pacmanMovement = new PacmanMovement();
             pacmanMovement.Direction = dir;
             pacmanMovement.PlayerId = connection.ConnectionId;
@@ -74,7 +71,6 @@ public class SignalRConnector : MonoBehaviour
 
     public void ReceiveMap(SharedLibs.Positions map)
     {
-        Debug.Log("Map received.");
         MainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (!tileMap.activeInHierarchy)
@@ -96,7 +92,6 @@ public class SignalRConnector : MonoBehaviour
         {
             if (newCount >= 1)
             {
-                Debug.Log("Setting pacman canMove to True");
                 waitingForPlayersText.SetActive(false);
                 if (!clientPacman.GetComponent<SpriteRenderer>().enabled) clientPacman.GetComponent<SpriteRenderer>().enabled = true;
                 clientPacman.GetComponent<PacmanScript>().SetCanMove(true);
@@ -122,7 +117,6 @@ public class SignalRConnector : MonoBehaviour
 
     public void SetPacman(TileStatus pacman)
     {
-        Debug.Log("Received pacman");
         switch (pacman)
         {
             case TileStatus.Pacman1:

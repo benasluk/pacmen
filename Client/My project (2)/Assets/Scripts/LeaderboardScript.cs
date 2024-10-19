@@ -7,20 +7,24 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static UnityEngine.Rendering.DebugUI;
 
 public class LeaderboardScript : MonoBehaviour
 {
     [SerializeField] private List<GameObject> panels;
 
-    private Dictionary<int, Vector3> panelPositions = new Dictionary<int, Vector3>();
+    private List<Vector3> panelPositions = new List<Vector3>();
+
+    private List<string> order;
 
     void Start()
     {
         for (int i = 0; i < panels.Count; i++)
         {
-            panelPositions.Add(i, panels[i].transform.position);
+            panelPositions.Add(panels[i].transform.position);
         }
+        order = panels.Select(p => p.name).ToList();
     }
 
     public void UpdateScoreboard(int[] newScores)
@@ -30,20 +34,20 @@ public class LeaderboardScript : MonoBehaviour
             UpdateScore(panels[i], newScores[i]);
         }
 
-        //for (int i = 0; i < panels.Count; i++)
-        //{
-            //if (int.Parse(panels[i].GetComponentInChildren<TextMeshProUGUI>().text.Split(' ')[1]) >= 10) UpdatePosition(panels[i], 2);
-        //}
+        order = panels.OrderByDescending(p => p.GetComponentInChildren<TextMeshProUGUI>().text.Split(' ')[1]).Select(p => p.name).ToList();
 
+        UpdatePositions();
     }
 
-    private void UpdatePosition(GameObject panel, int newPlace)
+    private void UpdatePositions()
     {
-        if (panel.transform.position != panelPositions[newPlace])
+        for(int i = 0; i < panels.Count; i++) 
         {
+            Vector3 newPos = panelPositions[order.IndexOf(panels[i].name)];
+            GameObject panelToUpdate = panels[i];
             MainThreadDispatcher.Instance().Enqueue(() =>
             {
-                 panel.transform.position = panelPositions[newPlace];
+                panelToUpdate.transform.position = newPos;
             });
         }
     }
