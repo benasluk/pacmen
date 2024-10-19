@@ -9,9 +9,10 @@ public class Ghost : GameObject
 {
     public string Color;
     private MovementStrategy _movementStrategy;
-    public Ghost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
+    public Ghost(GameLoop gameLoop, GameService gameService, string color) : base(gameLoop, gameService)
     {
-
+        Color = color;
+        _movementStrategy = new BFSStrategy();
     }
 
     public override void HandleMovement()

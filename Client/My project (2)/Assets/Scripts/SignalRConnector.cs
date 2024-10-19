@@ -25,8 +25,9 @@ public class SignalRConnector : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timer;
     [SerializeField] private GameObject clientPacman;
     [SerializeField] private LeaderboardScript leaderboard;
+    [SerializeField] private GameObject changeLevelButton;
 
-
+    private int currLevel;
     private HubConnection connection;
 
     private void OnApplicationQuit()
@@ -38,6 +39,8 @@ public class SignalRConnector : MonoBehaviour
         var handshake = new SharedLibs.HandShake(usernameField.text.Trim((char)8203));
 
         string serverIP;
+
+        currLevel = 1;
 
         if (isDefault) serverIP = "http://127.0.0.1:5076/Server";
         else serverIP = serverField.text.Trim((char)8203);
@@ -82,7 +85,7 @@ public class SignalRConnector : MonoBehaviour
             clientPacman.GetComponent<PacmanScript>().SnapToMapLocation();
             leaderboard.UpdateScoreboard(map.Scores);
 
-        });    
+        });
     }
 
     public void UpdatePlayerCount(int newCount)
@@ -93,12 +96,14 @@ public class SignalRConnector : MonoBehaviour
             if (newCount >= 1)
             {
                 waitingForPlayersText.SetActive(false);
+                changeLevelButton.SetActive(true);
                 if (!clientPacman.GetComponent<SpriteRenderer>().enabled) clientPacman.GetComponent<SpriteRenderer>().enabled = true;
                 clientPacman.GetComponent<PacmanScript>().SetCanMove(true);
             }
             else
             {
                 waitingForPlayersText.SetActive(true);
+                changeLevelButton.SetActive(false);
                 clientPacman.GetComponent<PacmanScript>().SetCanMove(false);
             }
             connectedPlayers.text = newText;
@@ -108,7 +113,7 @@ public class SignalRConnector : MonoBehaviour
     public void UpdateTimer(int newTime)
     {
         newTime /= 1000;
-        string newText = timer.text.ToString().Substring(0, timer.text.Length - 5) + (newTime/60).ToString("00") + ':' + (newTime%60).ToString("00");
+        string newText = timer.text.ToString().Substring(0, timer.text.Length - 5) + (newTime / 60).ToString("00") + ':' + (newTime % 60).ToString("00");
         MainThreadDispatcher.Instance().Enqueue(() =>
         {
             timer.text = newText;
@@ -164,5 +169,10 @@ public class SignalRConnector : MonoBehaviour
         {
             coverCanvas.SetActive(false);
         });
+    }
+
+    public void ChangeLevel()
+    {
+        connection.SendAsync("LevelChange", (++currLevel % 2) + 1);
     }
 }

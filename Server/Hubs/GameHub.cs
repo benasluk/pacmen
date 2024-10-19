@@ -4,6 +4,7 @@ using Server.Classes.GameObjects;
 using Server.Classes.Services;
 using Server.GameWorld;
 using SharedLibs;
+using System.Diagnostics;
 namespace Server.Hubs
 {
     public class GameHub : Hub
@@ -34,6 +35,7 @@ namespace Server.Hubs
         }
         public async Task LevelChange(int num)
         {
+            Console.WriteLine("Changing level");
             _messageService.StoreLevelChange(num);
         }
         public async Task Handshake(HandShake handshake)
