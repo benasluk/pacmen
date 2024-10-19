@@ -1,7 +1,14 @@
-﻿namespace Server.Classes.Services;
+﻿using Server.Classes.Services.Observer;
 
-public class MovementTimerServiceSingleton
+namespace Server.Classes.Services;
+
+public class MovementTimerServiceSingleton : IResetabbleLoop
 {
+    private MovementTimerServiceSingleton()
+    {
+        ((IResetabbleLoop)this).SubscriberToLevelChange();
+
+    }
     private static class SingletonHolder
     {
         public static readonly MovementTimerServiceSingleton instance = new MovementTimerServiceSingleton();
@@ -32,5 +39,10 @@ public class MovementTimerServiceSingleton
         if (_elapsedTime < _enemyMovementInterval) return false;
         _elapsedTime = 0;
         return true;
+    }
+
+    public void ResetAfterLevelChange()
+    {
+        _elapsedTime = 0;
     }
 }

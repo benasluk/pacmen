@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Server.Classes.GameObjects;
 using Server.Classes.Services;
 using Server.Classes.Services.Factory;
+using Server.Classes.Services.Observer;
 using Server.GameWorld;
 using Server.Hubs;
 using SharedLibs;
@@ -68,7 +69,9 @@ namespace Server.Classes.GameLogic
             _playerService.SetPlayerFactory(_levelFactory);
             LevelRestartEvent?.Invoke();
             levelRestarted = true;
+            ResetEvent.ResetLoop();
             LoadLevelMap();
+            //Console.WriteLine("Done restarting");
         }
         public void Update(object state)
         {
@@ -124,11 +127,12 @@ namespace Server.Classes.GameLogic
         }
         private void HandlePlayerInputs()
         {
+            Console.WriteLine("Handling inputs");
             var inputs = _messageService.GetPlayerInputs();
             foreach (var input in inputs)
             {
                 _playerService.UpdatePlayerLocation(input.Value);
-                (int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
+                //(int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
             }
         }
         private void HandlePacmanMovement()
@@ -154,6 +158,7 @@ namespace Server.Classes.GameLogic
         private void LoadLevelMap()
         {
             GameMap map = _levelFactory.CreateMap();
+            Console.WriteLine(_levelFactory.GetType());
             _gameService.SetGameMap(map);
         }
     }

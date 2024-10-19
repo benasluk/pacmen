@@ -1,8 +1,9 @@
-﻿using Server.GameWorld;
+﻿using Server.Classes.Services.Observer;
+using Server.GameWorld;
 
 namespace Server.Classes.Services
 {
-    public class GameService
+    public class GameService : IResetabbleLoop
     {
         private GameMap _gameMap;
 
@@ -19,6 +20,11 @@ namespace Server.Classes.Services
         public void RestartMap()
         {
             _gameMap.RestartMap();
+        }
+
+        public void ResetAfterLevelChange()
+        {
+            RestartMap();
         }
     }
 }

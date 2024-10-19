@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\PacMenTests.csproj": {}
+    "C:\\Users\\Admin\\source\\repos\\pacmen\\PacMenTests\\PacMenTests.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\PacMenTests.csproj": {
+    "C:\\Users\\Admin\\source\\repos\\pacmen\\PacMenTests\\PacMenTests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\PacMenTests.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\pacmen\\PacMenTests\\PacMenTests.csproj",
         "projectName": "PacMenTests",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\PacMenTests.csproj",
+        "projectPath": "C:\\Users\\Admin\\source\\repos\\pacmen\\PacMenTests\\PacMenTests.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\PacMenTests\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\source\\repos\\pacmen\\PacMenTests\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -28,8 +32,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\Server.csproj": {
-                "projectPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\Server.csproj"
+              "C:\\Users\\Admin\\source\\repos\\pacmen\\Server\\Server.csproj": {
+                "projectPath": "C:\\Users\\Admin\\source\\repos\\pacmen\\Server\\Server.csproj"
               }
             }
           }
@@ -82,21 +86,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\Server.csproj": {
+    "C:\\Users\\Admin\\source\\repos\\pacmen\\Server\\Server.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\Server.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\source\\repos\\pacmen\\Server\\Server.csproj",
         "projectName": "Server",
-        "projectPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\Server.csproj",
+        "projectPath": "C:\\Users\\Admin\\source\\repos\\pacmen\\Server\\Server.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Admin\\Desktop\\Pacmen\\Server\\obj\\",
+        "outputPath": "C:\\Users\\Admin\\source\\repos\\pacmen\\Server\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -159,7 +167,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

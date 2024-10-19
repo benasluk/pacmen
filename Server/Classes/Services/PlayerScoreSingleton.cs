@@ -1,10 +1,19 @@
-﻿namespace Server.Classes.Services.Factory
+﻿using Server.Classes.Services.Observer;
+
+namespace Server.Classes.Services.Factory
 {
-    public class PlayerScoreSingleton
+    public class PlayerScoreSingleton : IResetabbleLoop
     {
+        public PlayerScoreSingleton() 
+        {
+            ((IResetabbleLoop)this).SubscriberToLevelChange();
+
+        }
         private static class SingletonHolder
         {
             public static readonly PlayerScoreSingleton instance = new PlayerScoreSingleton();
+
+
         }
 
         public static PlayerScoreSingleton getInstance()
@@ -24,6 +33,15 @@
         public int[] GetScore()
         {
             return score;
+        }
+        public void ResetScore()
+        {
+            score = new int[4];
+        }
+
+        public void ResetAfterLevelChange()
+        {
+            ResetScore();
         }
     }
 }

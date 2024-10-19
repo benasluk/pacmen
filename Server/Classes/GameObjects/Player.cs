@@ -2,6 +2,7 @@
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Factory;
+using Server.Classes.Services.Observer;
 using Server.GameWorld;
 using SharedLibs;
 
@@ -71,6 +72,7 @@ namespace Server.Classes.GameObjects
         {
             var tile = map.GetTileStatus(y, x);
             Console.WriteLine($"Tile pacman wants to move to is row {y} and column {x} and is ${tile}");
+            Console.WriteLine("Tile is " + TileStatus.Wall);
             return !tile.Equals(TileStatus.Wall);
         }
 

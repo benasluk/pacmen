@@ -1,27 +1,30 @@
 ﻿using Server.Classes.GameLogic;
 using Server.Classes.GameObjects;
 using Server.Classes.Services.Factory;
+using Server.Classes.Services.Observer;
 using SharedLibs;
 
 namespace Server.Classes.Services
 {
-    public class PlayerService
+    public class PlayerService : IResetabbleLoop
     {
         // #NEW
         private AbstractLevelFactory _levelFactory;
         //private readonly GameLoop _gameLoop;
         private readonly GameService _gameService;
-        
+        private GameLoop _gameLoop;
+
         private Dictionary<string, Player> _players = new Dictionary<string, Player>();
 
         // #NEW
         public PlayerService(GameService gameService)
         {
             _gameService = gameService;
+            ((IResetabbleLoop)this).SubscriberToLevelChange();
         }
 
-        public void SetPlayerFactory(AbstractLevelFactory levelFactory) 
-        { 
+        public void SetPlayerFactory(AbstractLevelFactory levelFactory)
+        {
             _levelFactory = levelFactory;
         }
         public string GetBackgroundName()
@@ -31,13 +34,15 @@ namespace Server.Classes.Services
         public Player GetPlayerById(string playerId)
         {
             Player player = null;
+            Console.WriteLine("Player ID is " + playerId);
             if (_players.TryGetValue(playerId, out player))
             {
                 return player;
             }
+            //Console.WriteLine("Returning player id as null");
             return null;
         }
-        public void AddPlayer (string playerId, GameLoop gameLoop)
+        public void AddPlayer(string playerId, GameLoop gameLoop)
         {
             // #NEW
             Player player = _levelFactory.CreatePacman(gameLoop, _gameService);
@@ -58,10 +63,30 @@ namespace Server.Classes.Services
                     player.SetXY(26, 32);
                     break;
             }
-            
+            if (_gameLoop is null)
+            {
+                _gameLoop = gameLoop;
+            }
             _players.Add(playerId, player);
         }
-        public void RemovePlayer (string playerId) { 
+        private void ResetPlayers()
+        {
+            int index = 0;
+            string[] playerId = new string[_players.Count];
+            foreach (var player in _players)
+            {
+                playerId[index] = player.Key;
+                player.Value.Destroy();
+            }
+            _players.Clear();
+            //Console.WriteLine("lenght is " + playerId.Length);
+            for (int i = 0; i < playerId.Length; i++)
+            {
+                AddPlayer(playerId[i], _gameLoop);
+            }
+        }
+        public void RemovePlayer(string playerId)
+        {
             if (_players.TryGetValue(playerId, out Player player))
             {
                 player.Destroy();
@@ -96,6 +121,10 @@ namespace Server.Classes.Services
                 Player player = _levelFactory.CreatePacman(gameLoop, _gameService);
                 _players[playerId] = player;
             }
+        }
+        public void ResetAfterLevelChange()
+        {
+            ResetPlayers();
         }
     }
 }
