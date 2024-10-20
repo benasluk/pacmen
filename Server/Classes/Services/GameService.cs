@@ -6,7 +6,8 @@ namespace Server.Classes.Services
     public class GameService : IResetabbleLoop
     {
         private GameMap _gameMap;
-
+        string _pauser;
+        public bool paused { get; private set; }
         public GameMap GetGameMap()
         {
             return _gameMap;
@@ -25,6 +26,20 @@ namespace Server.Classes.Services
         public void ResetAfterLevelChange()
         {
             RestartMap();
+        }
+        public void Pause(string playerId)
+        {
+            _pauser = playerId;
+            paused = true;
+        }
+
+        public void Unpause(string playerId)
+        {
+            if (playerId.Equals(_pauser))
+            {
+                paused = false;
+                _pauser = null;
+            }
         }
     }
 }

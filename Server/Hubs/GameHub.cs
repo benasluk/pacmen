@@ -72,5 +72,15 @@ namespace Server.Hubs
             }
             return base.OnDisconnectedAsync(exception);
         }
+        public async Task Pause()
+        {
+            var playerId = Context.ConnectionId;
+            _gameService.Pause(playerId);
+        }
+        public async Task Unpause()
+        {
+            var playerId = Context.ConnectionId;
+            _gameService.Unpause(playerId);
+        }
     }
 }
