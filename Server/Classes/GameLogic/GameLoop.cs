@@ -75,49 +75,51 @@ namespace Server.Classes.GameLogic
         }
         public void Update(object state)
         {
-            if (_playerService.GetPlayerCount() >= 1)
-            {
-                _movementTimerService.UpdateElapsedTime(gameSpeed);
-                gameTimer += gameSpeed;
-                _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
-                HandlePlayerInputs();
-                if (CheckForLevelChange())
+            while(!_gameService.paused) {
+                if (_playerService.GetPlayerCount() >= 1)
                 {
-                    RestartLoop();
-                }
-                //if (_movementTimerService.PacmanCanMove())
-                //{
-                //    HandlePacmanMovement();
-                //}
-                //if (_movementTimerService.EnemyCanMove())
-                //{
-                //    HandleGhostMovement();
-                //}
-
-                // #NEW
-                // if (onInitialLevel2)
-                // {
-                //     _levelFactory = new LevelTwoFactory();
-                //     ItemList = _levelFactory.CreateItems(this, _gameService);
-                //     _playerService.SetPlayerFactory(_levelFactory);
-                //     _playerService.UpdatePlayers(this);
-                //     LoadLevelMap();
-                // }
-
-                if (_playerService.GetPlayerCount() > 0)
-                {
-                    Positions test = updateMapInClient();
-                    Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
-                    if (levelRestarted)
+                    _movementTimerService.UpdateElapsedTime(gameSpeed);
+                    gameTimer += gameSpeed;
+                    _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
+                    HandlePlayerInputs();
+                    if (CheckForLevelChange())
                     {
-                        test.PlayerColors = new string[1];
-                        test.PlayerColors[0] = _playerService.GetBackgroundName();
-                        test.ItemIcon = new string[1];
-                        test.ItemIcon[0] = ItemList.FirstOrDefault()?.Icon ?? " ";
-                        test.SceneChange = true;
-                        levelRestarted = false;
+                        RestartLoop();
                     }
-                    _hubContext.Clients.All.SendAsync("ReceiveMap", test);
+                    //if (_movementTimerService.PacmanCanMove())
+                    //{
+                    //    HandlePacmanMovement();
+                    //}
+                    //if (_movementTimerService.EnemyCanMove())
+                    //{
+                    //    HandleGhostMovement();
+                    //}
+
+                    // #NEW
+                    // if (onInitialLevel2)
+                    // {
+                    //     _levelFactory = new LevelTwoFactory();
+                    //     ItemList = _levelFactory.CreateItems(this, _gameService);
+                    //     _playerService.SetPlayerFactory(_levelFactory);
+                    //     _playerService.UpdatePlayers(this);
+                    //     LoadLevelMap();
+                    // }
+
+                    if (_playerService.GetPlayerCount() > 0)
+                    {
+                        Positions test = updateMapInClient();
+                        Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        if (levelRestarted)
+                        {
+                            test.PlayerColors = new string[1];
+                            test.PlayerColors[0] = _playerService.GetBackgroundName();
+                            test.ItemIcon = new string[1];
+                            test.ItemIcon[0] = ItemList.FirstOrDefault()?.Icon ?? " ";
+                            test.SceneChange = true;
+                            levelRestarted = false;
+                        }
+                        _hubContext.Clients.All.SendAsync("ReceiveMap", test);
+                    }
                 }
             }
         }
