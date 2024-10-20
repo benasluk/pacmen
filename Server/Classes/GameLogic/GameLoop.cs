@@ -75,7 +75,7 @@ namespace Server.Classes.GameLogic
         }
         public void Update(object state)
         {
-            while(!_gameService.paused) {
+            if(!_gameService.paused) {
                 if (_playerService.GetPlayerCount() >= 1)
                 {
                     _movementTimerService.UpdateElapsedTime(gameSpeed);
