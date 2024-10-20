@@ -5,6 +5,8 @@ using Server.Classes.Services;
 using Server.GameWorld;
 using SharedLibs;
 using System.Diagnostics;
+using Server.Classes.Services.Command;
+
 namespace Server.Hubs
 {
     public class GameHub : Hub
@@ -75,12 +77,14 @@ namespace Server.Hubs
         public async Task Pause()
         {
             var playerId = Context.ConnectionId;
-            _gameService.Pause(playerId);
+            ICommand command = new PauseCommand(_gameService);
+            command.Execute(playerId);
         }
         public async Task Unpause()
         {
             var playerId = Context.ConnectionId;
-            _gameService.Unpause(playerId);
+            ICommand command = new PauseCommand(_gameService);
+            command.Undo(playerId);
         }
     }
 }
