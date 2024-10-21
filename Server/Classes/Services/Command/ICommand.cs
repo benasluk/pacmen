@@ -2,7 +2,8 @@
 {
     public interface ICommand
     {
-        public void Execute(string var);
-        public void Undo(string var);
+        public bool Execute(string var);
+        public bool Undo(string var);
+        public string Initiator();
     }
 }

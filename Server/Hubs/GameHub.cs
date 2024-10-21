@@ -15,6 +15,8 @@ namespace Server.Hubs
         private readonly GameService _gameService;
         private readonly PlayerService _playerService;
         private readonly GameLoop _gameLoop;
+
+        private string pausedById;
         public GameHub (MessageService messageService, GameService gameService, PlayerService playerService, GameLoop gameLoop)
         {
             _gameService = gameService;
@@ -78,13 +80,16 @@ namespace Server.Hubs
         {
             var playerId = Context.ConnectionId;
             ICommand command = new PauseCommand(_gameService);
-            command.Execute(playerId);
+            bool wasPaused = command.Execute(playerId);
+            await Clients.All.SendAsync("SetPaused", wasPaused, command.Initiator());
+            
         }
         public async Task Unpause()
         {
             var playerId = Context.ConnectionId;
             ICommand command = new PauseCommand(_gameService);
-            command.Undo(playerId);
+            bool sucessfullyUnpaused = command.Undo(playerId);
+            await Clients.All.SendAsync("SetPaused", !sucessfullyUnpaused, command.Initiator());
         }
     }
 }

@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Atkomentuot, kai rodom demo
-builder.WebHost.UseUrls("http://192.168.0.113:7255");
+//builder.WebHost.UseUrls("http://192.168.0.113:7255");
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;

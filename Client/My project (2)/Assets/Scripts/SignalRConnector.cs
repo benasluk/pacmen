@@ -26,13 +26,23 @@ public class SignalRConnector : MonoBehaviour
     [SerializeField] private GameObject clientPacman;
     [SerializeField] private LeaderboardScript leaderboard;
     [SerializeField] private GameObject changeLevelButton;
+    [SerializeField] private GameObject pausedOverlayCanvas;
 
     private int currLevel;
     private HubConnection connection;
+    private bool pausedByThis;
 
     private void OnApplicationQuit()
     {
         connection.StopAsync();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyUp(KeyCode.Escape))
+        {
+            PauseUnpause(true);
+        }
     }
     public async void ConnectToServer(bool isDefault)
     {
@@ -40,7 +50,7 @@ public class SignalRConnector : MonoBehaviour
 
         string serverIP;
 
-        currLevel = 1;
+        currLevel = 0;
 
         if (isDefault) serverIP = "http://127.0.0.1:5076/Server";
         else serverIP = serverField.text.Trim((char)8203);
@@ -57,6 +67,7 @@ public class SignalRConnector : MonoBehaviour
         connection.On<string>("HandshakeFailed", HandshakeFailed);
         connection.On<int>("UpdatePlayerCount", UpdatePlayerCount);
         connection.On<int>("UpdateTimer", UpdateTimer);
+        connection.On<bool, string>("SetPaused", SetPaused);
 
         await connection.StartAsync();
         await connection.SendAsync("Handshake", handshake);
@@ -173,6 +184,43 @@ public class SignalRConnector : MonoBehaviour
 
     public void ChangeLevel()
     {
-        connection.SendAsync("LevelChange", (++currLevel % 2) + 1);
+        connection.SendAsync("LevelChange", ++currLevel % 2);
+        Debug.Log("Sending change level signal for level " + (currLevel % 2) + 1);
+    }
+
+    public void PauseUnpause(bool pause)
+    {
+        Debug.Log("Triggering pause/unpause action");
+        if(pause)
+        {
+            connection.SendAsync("Pause");
+        }
+        else if(!pause) 
+        {
+            connection.SendAsync("Unpause");
+        }
+    }
+
+    private void SetPaused(bool paused, string pausedById)
+    {
+        if (paused)
+        {
+            MainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                pausedOverlayCanvas.SetActive(true);
+                if(pausedById == connection.ConnectionId)
+                {
+                    pausedOverlayCanvas.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+                }
+            });
+        }
+        else
+        {
+            MainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                pausedOverlayCanvas.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+                pausedOverlayCanvas.SetActive(false);
+            });
+        }
     }
 }

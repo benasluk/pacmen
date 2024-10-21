@@ -7,14 +7,18 @@
         {
             _gameService = gameService;
         }
-        public void Execute(string playerId)
+        public bool Execute(string playerId)
         {
-            _gameService.Pause(playerId);
+            return _gameService.Pause(playerId);
         }
 
-        public void Undo(string playerId)
+        public bool Undo(string playerId)
         {
-            _gameService.Unpause(playerId);
+            return _gameService.Unpause(playerId);
+        }
+        public string Initiator()
+        {
+            return _gameService.PausedBy();
         }
     }
 }

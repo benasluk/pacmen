@@ -75,7 +75,7 @@ namespace Server.Classes.Services
             string[] playerId = new string[_players.Count];
             foreach (var player in _players)
             {
-                playerId[index] = player.Key;
+                playerId[index++] = player.Key;
                 player.Value.Destroy();
             }
             _players.Clear();

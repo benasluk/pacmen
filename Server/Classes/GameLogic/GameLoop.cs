@@ -52,7 +52,7 @@ namespace Server.Classes.GameLogic
 
             // #NEW
 
-            int whatLevel = new Random(DateTime.Now.Millisecond).Next() % 2;
+            int whatLevel = 0; // new Random(DateTime.Now.Millisecond).Next() % 2;
             if (whatLevel % 2 == 0) _levelFactory = new LevelOneFactory();
             else _levelFactory = new LevelTwoFactory();
             _playerService.SetPlayerFactory(_levelFactory);
@@ -66,6 +66,7 @@ namespace Server.Classes.GameLogic
             int level = _messageService.GetLevel();
             if (level % 2 == 0) _levelFactory = new LevelOneFactory();
             else _levelFactory = new LevelTwoFactory();
+            Console.WriteLine("Current level set to " +  level);
             _playerService.SetPlayerFactory(_levelFactory);
             LevelRestartEvent?.Invoke();
             levelRestarted = true;
@@ -84,7 +85,9 @@ namespace Server.Classes.GameLogic
                     HandlePlayerInputs();
                     if (CheckForLevelChange())
                     {
+                        Console.WriteLine("Restarting loop");
                         RestartLoop();
+                        _messageService.ResetLevel();
                     }
                     //if (_movementTimerService.PacmanCanMove())
                     //{
@@ -108,7 +111,7 @@ namespace Server.Classes.GameLogic
                     if (_playerService.GetPlayerCount() > 0)
                     {
                         Positions test = updateMapInClient();
-                        Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        //Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
                         if (levelRestarted)
                         {
                             test.PlayerColors = new string[1];
@@ -129,7 +132,7 @@ namespace Server.Classes.GameLogic
         }
         private void HandlePlayerInputs()
         {
-            Console.WriteLine("Handling inputs");
+            //Console.WriteLine("Handling inputs");
             var inputs = _messageService.GetPlayerInputs();
             foreach (var input in inputs)
             {

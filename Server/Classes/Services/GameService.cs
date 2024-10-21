@@ -27,19 +27,26 @@ namespace Server.Classes.Services
         {
             RestartMap();
         }
-        public void Pause(string playerId)
+        public string PausedBy()
+        {
+            return _pauser;
+        }
+        public bool Pause(string playerId)
         {
             _pauser = playerId;
             paused = true;
+            return true;
         }
 
-        public void Unpause(string playerId)
+        public bool Unpause(string playerId)
         {
             if (playerId.Equals(_pauser))
             {
                 paused = false;
                 _pauser = null;
+                return true;
             }
+            else return false;
         }
     }
 }
