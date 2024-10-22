@@ -19,6 +19,11 @@ namespace Server.Classes.Services.Strategy
             return GetRandomDirection(currRow, currCol, gameMap);
         }
 
+        public override object Clone()
+        {
+            return new RandomChaseStrategy();
+        }
+
         private bool IsPacmanNearby(int currRow, int currCol, GameMap gameMap, out (int pacmanRow, int pacmanCol) pacmanPosition)
         {
             pacmanPosition = (currRow, currCol);
@@ -78,5 +83,7 @@ namespace Server.Classes.Services.Strategy
 
             return Direction.None;
         }
+        
+        
     }
 }

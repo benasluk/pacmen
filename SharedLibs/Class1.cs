@@ -42,7 +42,11 @@ namespace SharedLibs
         Pacman1,
         Pacman2,
         Pacman3,
-        Pacman4 
+        Pacman4,
+        Ghost1,
+        Ghost2,
+        Ghost3,
+        Ghost4
     }
     public class Positions
     {

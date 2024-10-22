@@ -36,4 +36,9 @@ public class RandomStrategy : MovementStrategy
 
         return chosenDirection;
     }
+
+    public override object Clone()
+    {
+        return new RandomStrategy();
+    }
 }

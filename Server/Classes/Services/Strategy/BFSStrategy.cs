@@ -72,4 +72,9 @@ public class BFSStrategy : MovementStrategy
 
         return Direction.None;
     }
+
+    public override object Clone()
+    {
+        return new BFSStrategy();
+    }
 }

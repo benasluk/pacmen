@@ -26,6 +26,11 @@ public class WallFollowingStrategy : MovementStrategy
         return _currentDirection;
     }
 
+    public override object Clone()
+    {
+        return new WallFollowingStrategy();
+    }
+
     private bool IsWallOrOutOfBounds(int currRow, int currCol, Direction direction, GameMap gameMap)
     {
         int newY = currRow, newX = currCol;

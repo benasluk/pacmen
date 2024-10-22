@@ -3,7 +3,7 @@ using SharedLibs;
 
 namespace Server.Classes.Services.Strategy;
 
-public abstract class MovementStrategy
+public abstract class MovementStrategy : ICloneable
 {
     protected static bool IsInBounds(int y, int x)
     {
@@ -26,4 +26,5 @@ public abstract class MovementStrategy
     }
 
     public abstract Direction FindMovementDirection(GameMap gameMap, int currRow, int currCol);
+    public abstract object Clone();
 }

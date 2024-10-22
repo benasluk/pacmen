@@ -5,14 +5,13 @@ using SharedLibs;
 
 namespace Server.Classes.GameObjects;
 
-public class Ghost : GameObject
+public class Ghost : GameObject, ICloneable
 {
     public string Color;
+    public TileStatus ghostNo = TileStatus.Empty;
     private MovementStrategy _movementStrategy;
-    public Ghost(GameLoop gameLoop, GameService gameService, string color) : base(gameLoop, gameService)
+    public Ghost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {
-        Color = color;
-        _movementStrategy = new BFSStrategy();
     }
 
     public override void HandleMovement()
@@ -53,5 +52,48 @@ public class Ghost : GameObject
         _movementStrategy = movementStrategy;
     }
 
+    public void SetCoordinates(int col, int row)
+    {
+        this.col = col;
+        this.row = row;
+    }
 
+    // shallow copy
+    public object Clone()
+    {
+        return this.MemberwiseClone();
+    }
+
+    public Ghost DeepCopy()
+    {
+        Ghost clonedGhost = new Ghost(_gameLoop, _gameService);
+
+        clonedGhost.Color = Color;
+        clonedGhost.ghostNo = ghostNo;
+        clonedGhost.SetCoordinates(col, row);
+        clonedGhost.UpdateDirection(direction);
+
+        if (_movementStrategy is not null)
+        {
+            clonedGhost._movementStrategy = (MovementStrategy)_movementStrategy.Clone();
+        }
+
+        return clonedGhost;
+    }
+    
+    public override bool Equals(object obj)
+    {
+        if (obj is not Ghost other)
+            return false;
+
+        return Color == other.Color &&
+               ghostNo == other.ghostNo &&
+               col == other.col &&
+               row == other.row;
+    }
+    
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Color, ghostNo, col, row);
+    }
 }
