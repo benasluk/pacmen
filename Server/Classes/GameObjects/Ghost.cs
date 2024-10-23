@@ -12,6 +12,13 @@ public class Ghost : GameObject, ICloneable
     private MovementStrategy _movementStrategy;
     public Ghost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {
+        _gameLoop.GhostMovevement += HandleMovement;
+    }
+
+    public override void Destroy()
+    {
+        _gameLoop.GhostMovevement -= HandleMovement;
+        base.Destroy();
     }
 
     public override void HandleMovement()
@@ -42,9 +49,13 @@ public class Ghost : GameObject, ICloneable
             default:
                 throw new ArgumentOutOfRangeException();
         }
+        
+        gameMap.UpdateTile(row, col, TileStatus.Empty);
 
         col = projectedX;
         row = projectedY;
+        
+        gameMap.UpdateTile(row, col, ghostNo);
     }
 
     public void SetMovementStrategy(MovementStrategy movementStrategy)

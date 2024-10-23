@@ -20,6 +20,7 @@ builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 builder.Services.AddSingleton<GameLoop>();
 builder.Services.AddSingleton<GameHub>();
 builder.Services.AddSingleton<PlayerService>();
+builder.Services.AddSingleton<GhostService>();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<MessageService>();
 builder.Services.AddCors(options =>

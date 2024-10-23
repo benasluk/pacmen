@@ -15,6 +15,7 @@ namespace Server.Classes.GameLogic
     {
         private readonly GameService _gameService;
         private readonly PlayerService _playerService;
+        private readonly GhostService _ghostService;
         private readonly MessageService _messageService;
         private readonly IHubContext<GameHub> _hubContext;
         private readonly MovementTimerServiceSingleton _movementTimerService;
@@ -29,28 +30,25 @@ namespace Server.Classes.GameLogic
         public event LevelRestart LevelRestartEvent;
         private bool levelRestarted = false;
 
-        // #NEW
         private AbstractLevelFactory _levelFactory;
         private List<Item> ItemList;
 
         private int gameSpeed = 1000 / 10;
 
-        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext)
+        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService)
         {
             _gameService = gameService;
             _playerService = playerService;
             _messageService = messageService;
             _hubContext = hubContext;
+            _ghostService = ghostService;
             _movementTimerService = MovementTimerServiceSingleton.getInstance();
             gameTimer = 0;
-            // #NEW
             ItemList = new List<Item>();
         }
         public void Start()
         {
             _timer = new Timer(Update, null, 0, gameSpeed);
-
-            // #NEW
 
             int whatLevel = 0; // new Random(DateTime.Now.Millisecond).Next() % 2;
             if (whatLevel % 2 == 0) _levelFactory = new LevelOneFactory();
@@ -59,6 +57,7 @@ namespace Server.Classes.GameLogic
             ItemList = _levelFactory.CreateItems(this, _gameService);
             levelRestarted = true;
             LoadLevelMap();
+            _ghostService.AddGhosts(this);
         }
         public void RestartLoop()
         {
@@ -97,16 +96,10 @@ namespace Server.Classes.GameLogic
                     //{
                     //    HandleGhostMovement();
                     //}
-
-                    // #NEW
-                    // if (onInitialLevel2)
-                    // {
-                    //     _levelFactory = new LevelTwoFactory();
-                    //     ItemList = _levelFactory.CreateItems(this, _gameService);
-                    //     _playerService.SetPlayerFactory(_levelFactory);
-                    //     _playerService.UpdatePlayers(this);
-                    //     LoadLevelMap();
-                    // }
+                    if (_movementTimerService.EnemyCanMove())
+                    {
+                        _ghostService.UpdateGhostsLocations();
+                    }
 
                     if (_playerService.GetPlayerCount() > 0)
                     {
@@ -159,7 +152,6 @@ namespace Server.Classes.GameLogic
             gameTimer = 0;
         }
 
-        // #NEW
         private void LoadLevelMap()
         {
             GameMap map = _levelFactory.CreateMap();
