@@ -53,7 +53,6 @@ namespace Server.Hubs
             }
             var playerid = Context.ConnectionId;
 
-            // #NEW
             _playerService.AddPlayer(playerid, _gameLoop);
 
             Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());

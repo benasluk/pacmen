@@ -3,7 +3,6 @@ using Server.Classes.Services;
 
 namespace Server.Classes.GameObjects;
 
-// #NEW
 public class Item : GameObject
 {
     public string Icon;

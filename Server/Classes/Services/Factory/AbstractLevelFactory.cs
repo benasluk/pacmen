@@ -4,7 +4,6 @@ using Server.GameWorld;
 
 namespace Server.Classes.Services.Factory;
 
-// #NEW
 public abstract class AbstractLevelFactory
 {
     public abstract GameMap CreateMap();

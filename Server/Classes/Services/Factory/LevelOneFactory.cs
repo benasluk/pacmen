@@ -6,7 +6,6 @@ using Server.GameWorld.LevelMap;
 
 namespace Server.Classes.Services.Factory;
 
-// #NEW
 public class LevelOneFactory : AbstractLevelFactory
 {
     public override GameMap CreateMap()

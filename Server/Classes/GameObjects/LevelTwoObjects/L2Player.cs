@@ -3,7 +3,6 @@ using Server.Classes.Services;
 
 namespace Server.Classes.GameObjects.LevelTwoObjects;
 
-// #NEW
 public class L2Player : Player
 {
     public string BackgroundColor;

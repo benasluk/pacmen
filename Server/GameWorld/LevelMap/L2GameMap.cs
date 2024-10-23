@@ -2,7 +2,6 @@
 
 namespace Server.GameWorld.LevelMap;
 
-// #NEW
 public class L2GameMap : GameMap
 {
     public L2GameMap(int rowC, int colC) : base(rowC, colC)

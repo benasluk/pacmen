@@ -13,7 +13,6 @@ namespace Server.Classes.Services
             return _gameMap;
         }
 
-        // #NEW
         public void SetGameMap(GameMap map)
         {
             _gameMap = map;

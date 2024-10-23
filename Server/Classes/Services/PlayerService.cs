@@ -8,15 +8,12 @@ namespace Server.Classes.Services
 {
     public class PlayerService : IResetabbleLoop
     {
-        // #NEW
         private AbstractLevelFactory _levelFactory;
-        //private readonly GameLoop _gameLoop;
         private readonly GameService _gameService;
         private GameLoop _gameLoop;
 
         private Dictionary<string, Player> _players = new Dictionary<string, Player>();
 
-        // #NEW
         public PlayerService(GameService gameService)
         {
             _gameService = gameService;
@@ -44,7 +41,6 @@ namespace Server.Classes.Services
         }
         public void AddPlayer(string playerId, GameLoop gameLoop)
         {
-            // #NEW
             Player player = _levelFactory.CreatePacman(gameLoop, _gameService);
             var dictionaryCount = _players.Count;
             player.pacmanNo = (TileStatus)(dictionaryCount + 5);
@@ -113,7 +109,6 @@ namespace Server.Classes.Services
             return _players.Count;
         }
 
-        // #NEW
         public void UpdatePlayers(GameLoop gameLoop)
         {
             foreach (var (playerId, _) in _players)
