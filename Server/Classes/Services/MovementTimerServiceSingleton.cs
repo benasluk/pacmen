@@ -19,30 +19,33 @@ public class MovementTimerServiceSingleton : IResetabbleLoop
         return SingletonHolder.instance;
     }
     
-    private int _elapsedTime = 0;
+    private int _pacmanElapsedTime = 0;
+    private int _ghostsElapsedTime = 0;
     private readonly int _pacmanMovementInterval = 500;
     private readonly int _enemyMovementInterval = 500;
 
     public void UpdateElapsedTime(int period)
     {
-        _elapsedTime += period;
+        _pacmanElapsedTime += period;
+        _ghostsElapsedTime += period;
     }
 
     public bool PacmanCanMove()
     {
-        if (_elapsedTime < _pacmanMovementInterval) return false;
-        _elapsedTime = 0;
+        if (_pacmanElapsedTime < _pacmanMovementInterval) return false;
+        _pacmanElapsedTime = 0;
         return true;
     }
     public bool EnemyCanMove()
     {
-        if (_elapsedTime < _enemyMovementInterval) return false;
-        _elapsedTime = 0;
+        if (_ghostsElapsedTime < _enemyMovementInterval) return false;
+        _ghostsElapsedTime = 0;
         return true;
     }
 
     public void ResetAfterLevelChange()
     {
-        _elapsedTime = 0;
+        _pacmanElapsedTime = 0;
+        _ghostsElapsedTime = 0;
     }
 }
