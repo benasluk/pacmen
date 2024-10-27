@@ -41,25 +41,7 @@ namespace Server.Hubs
             Console.WriteLine("Changing level");
             _messageService.StoreLevelChange(num);
         }
-        public async Task Handshake(HandShake handshake)
-        {
-
-            if (string.IsNullOrEmpty(handshake.PlayerName) || handshake.PlayerName.Length < 4)
-            {
-                await Clients.Caller.SendAsync("HandshakeFailed", "Invalid player name.");
-                return;
-
-            }
-            var playerid = Context.ConnectionId;
-
-
-            Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
-
-
-            await Clients.Caller.SendAsync("HandshakeReceived", $"Welcome, {handshake.PlayerName}");
-            var thisPlayerPacman = _playerService.GetPlayerById(playerid).pacmanNo;
-            await Clients.Caller.SendAsync("ReceivePacman", thisPlayerPacman);
-        }
+        
         public override Task OnDisconnectedAsync(Exception? exception)
         {
             var playerId = Context.ConnectionId;
@@ -68,7 +50,6 @@ namespace Server.Hubs
             Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
             if (_playerService.GetPlayerCount() == 0)
             {
-                _gameService.RestartMap();
                 _gameLoop.RestartTimer();
             }
             return base.OnDisconnectedAsync(exception);

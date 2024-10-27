@@ -16,15 +16,8 @@ namespace Server.Classes.Services
         {
             _gameMap = map;
         }
-        public void RestartMap()
-        {
-            _gameMap.RestartMap();
-        }
 
-        public void ResetAfterLevelChange()
-        {
-            RestartMap();
-        }
+
         public string PausedBy()
         {
             return _pauser;
@@ -46,5 +39,10 @@ namespace Server.Classes.Services
             }
             else return false;
         }
+
+        /*public static implicit operator global::Moq.Mock<object>(GameService v)
+        {
+            throw new NotImplementedException();
+        }*/
     }
 }

@@ -27,7 +27,10 @@ namespace Server
         {
             this.direction = newDirection;
         }
-
+        public Direction GetDirection()
+        {
+            return direction;
+        }
         protected GameService GetGameService()
         {
             return _gameService;
