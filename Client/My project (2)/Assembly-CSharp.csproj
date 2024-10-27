@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\PacmanScript.cs" />
     <Compile Include="Assets\Test.cs" />
+    <Compile Include="Assets\Scripts\LeaderboardScript.cs" />
     <Compile Include="Assets\Scripts\MainThreadDispatcher.cs" />
     <Compile Include="Assets\Scripts\SignalRConnector.cs" />
     <Compile Include="Assets\Scripts\BoardScript.cs" />

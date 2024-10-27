@@ -23,6 +23,7 @@ builder.Services.AddSingleton<PlayerService>();
 builder.Services.AddSingleton<GhostService>();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<MessageService>();
+builder.Services.AddSingleton<CommandHandler>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>

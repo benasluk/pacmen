@@ -48,6 +48,16 @@ namespace SharedLibs
         Ghost3,
         Ghost4
     }
+    public enum CommandType
+    {
+        Move,
+        Pause
+    }
+    public enum CommandAction
+    {
+        Execute,
+        Undo
+    }
     public class Positions
     {
         public TileStatus[,] Grid { get; set; }

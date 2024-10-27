@@ -29,13 +29,14 @@ namespace Server.Classes.GameLogic
         public delegate void LevelRestart();
         public event LevelRestart LevelRestartEvent;
         private bool levelRestarted = false;
+        private readonly CommandHandler _commandHandler;
 
         private AbstractLevelFactory _levelFactory;
         private List<Item> ItemList;
 
         private int gameSpeed = 1000 / 10;
 
-        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService)
+        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService, CommandHandler commandHandler)
         {
             _gameService = gameService;
             _playerService = playerService;
@@ -43,6 +44,7 @@ namespace Server.Classes.GameLogic
             _hubContext = hubContext;
             _ghostService = ghostService;
             _movementTimerService = MovementTimerServiceSingleton.getInstance();
+            _commandHandler = commandHandler;
             gameTimer = 0;
             ItemList = new List<Item>();
         }
@@ -78,6 +80,7 @@ namespace Server.Classes.GameLogic
             if(!_gameService.paused) {
                 if (_playerService.GetPlayerCount() >= 1)
                 {
+                    _commandHandler.HandleMessages();
                     _movementTimerService.UpdateElapsedTime(gameSpeed);
                     gameTimer += gameSpeed;
                     _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);

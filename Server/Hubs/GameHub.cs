@@ -17,7 +17,7 @@ namespace Server.Hubs
         private readonly GameLoop _gameLoop;
 
         private string pausedById;
-        public GameHub (MessageService messageService, GameService gameService, PlayerService playerService, GameLoop gameLoop)
+        public GameHub(MessageService messageService, GameService gameService, PlayerService playerService, GameLoop gameLoop)
         {
             _gameService = gameService;
             _messageService = messageService;
@@ -29,6 +29,15 @@ namespace Server.Hubs
             await Console.Out.WriteLineAsync(movement.PlayerId);
             await Console.Out.WriteLineAsync(movement.Direction.ToString());
             _messageService.StorePlayerInput(Context.ConnectionId, movement);
+        }
+        public async Task ReceiveCommand(CommandType type, CommandAction action)
+        {
+            switch (type)
+            {
+                case CommandType.Pause:
+                    _messageService.StoreCommand(new PauseCommand(_gameService),action, Context.ConnectionId);// ??????????????????? I am so sorry
+                    break;
+            }
         }
         public override Task OnConnectedAsync()
         {
@@ -81,7 +90,7 @@ namespace Server.Hubs
             ICommand command = new PauseCommand(_gameService);
             bool wasPaused = command.Execute(playerId);
             await Clients.All.SendAsync("SetPaused", wasPaused, command.Initiator());
-            
+
         }
         public async Task Unpause()
         {
