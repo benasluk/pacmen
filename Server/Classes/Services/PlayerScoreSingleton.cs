@@ -1,12 +1,9 @@
-﻿using Server.Classes.Services.Observer;
-
-namespace Server.Classes.Services.Factory
+﻿namespace Server.Classes.Services.Factory
 {
-    public class PlayerScoreSingleton : IResetabbleLoop
+    public class PlayerScoreSingleton 
     {
         public PlayerScoreSingleton() 
         {
-            ((IResetabbleLoop)this).SubscriberToLevelChange();
 
         }
         private static class SingletonHolder

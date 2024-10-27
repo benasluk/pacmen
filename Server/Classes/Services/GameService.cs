@@ -1,9 +1,8 @@
-﻿using Server.Classes.Services.Observer;
-using Server.GameWorld;
+﻿using Server.GameWorld;
 
 namespace Server.Classes.Services
 {
-    public class GameService : IResetabbleLoop
+    public class GameService
     {
         private GameMap _gameMap;
         string _pauser;

@@ -1,6 +1,5 @@
 ﻿using Server.Classes.GameLogic;
 using Server.Classes.Services;
-using Server.Classes.Services.Strategy;
 using SharedLibs;
 
 namespace Server.Classes.GameObjects;
@@ -9,7 +8,6 @@ public class Ghost : GameObject, ICloneable
 {
     public string Color;
     public TileStatus ghostNo = TileStatus.Empty;
-    private MovementStrategy _movementStrategy;
     public Ghost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {
         _gameLoop.GhostMovevement += HandleMovement;
@@ -24,8 +22,6 @@ public class Ghost : GameObject, ICloneable
     public override void HandleMovement()
     {
         var gameMap = GetGameService().GetGameMap();
-        var newDirection = _movementStrategy.FindMovementDirection(gameMap, row, col);
-        UpdateDirection(newDirection);
 
         int projectedX = col;
         int projectedY = row;
@@ -58,11 +54,6 @@ public class Ghost : GameObject, ICloneable
         gameMap.UpdateTile(row, col, ghostNo);
     }
 
-    public void SetMovementStrategy(MovementStrategy movementStrategy)
-    {
-        _movementStrategy = movementStrategy;
-    }
-
     public void SetCoordinates(int col, int row)
     {
         this.col = col;
@@ -83,11 +74,6 @@ public class Ghost : GameObject, ICloneable
         clonedGhost.ghostNo = ghostNo;
         clonedGhost.SetCoordinates(col, row);
         clonedGhost.UpdateDirection(direction);
-
-        if (_movementStrategy is not null)
-        {
-            clonedGhost._movementStrategy = (MovementStrategy)_movementStrategy.Clone();
-        }
 
         return clonedGhost;
     }

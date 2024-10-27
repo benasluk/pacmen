@@ -2,7 +2,6 @@
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Factory;
-using Server.Classes.Services.Observer;
 using Server.GameWorld;
 using SharedLibs;
 

@@ -5,7 +5,6 @@ using Server.Classes.Services;
 using Server.GameWorld;
 using SharedLibs;
 using System.Diagnostics;
-using Server.Classes.Services.Command;
 
 namespace Server.Hubs
 {
@@ -53,7 +52,6 @@ namespace Server.Hubs
             }
             var playerid = Context.ConnectionId;
 
-            _playerService.AddPlayer(playerid, _gameLoop);
 
             Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
 
@@ -74,21 +72,6 @@ namespace Server.Hubs
                 _gameLoop.RestartTimer();
             }
             return base.OnDisconnectedAsync(exception);
-        }
-        public async Task Pause()
-        {
-            var playerId = Context.ConnectionId;
-            ICommand command = new PauseCommand(_gameService);
-            bool wasPaused = command.Execute(playerId);
-            await Clients.All.SendAsync("SetPaused", wasPaused, command.Initiator());
-            
-        }
-        public async Task Unpause()
-        {
-            var playerId = Context.ConnectionId;
-            ICommand command = new PauseCommand(_gameService);
-            bool sucessfullyUnpaused = command.Undo(playerId);
-            await Clients.All.SendAsync("SetPaused", !sucessfullyUnpaused, command.Initiator());
         }
     }
 }

@@ -1,13 +1,10 @@
-﻿using Server.Classes.Services.Observer;
+﻿namespace Server.Classes.Services;
 
-namespace Server.Classes.Services;
-
-public class MovementTimerServiceSingleton : IResetabbleLoop
+public class MovementTimerServiceSingleton 
 {
     private MovementTimerServiceSingleton()
     {
-        ((IResetabbleLoop)this).SubscriberToLevelChange();
-
+       
     }
     private static class SingletonHolder
     {

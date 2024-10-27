@@ -1,10 +1,9 @@
-﻿using Server.Classes.Services.Observer;
-using Server.GameWorld;
+﻿using Server.GameWorld;
 using SharedLibs;
 
 namespace Server.Classes.Services
 {
-    public class MessageService : IResetabbleLoop
+    public class MessageService 
     {
         private readonly Dictionary<string, PacmanMovement> _playerInputs = new Dictionary<string, PacmanMovement>();
         private GameMap _gameMap = null;
@@ -14,7 +13,6 @@ namespace Server.Classes.Services
         public MessageService(GameService gameService, PlayerService playerService) {
             lockObj = new object();
             levelChangeLock = new object();
-            ((IResetabbleLoop)this).SubscriberToLevelChange();
 
         }
         public void StoreLevelChange(int level)
