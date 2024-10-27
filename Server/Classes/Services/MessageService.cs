@@ -19,6 +19,7 @@ namespace Server.Classes.Services
         {
             lockObj = new object();
             levelChangeLock = new object();
+            commandLock = new object();
             ((IResetabbleLoop)this).SubscriberToLevelChange();
 
         }
@@ -79,12 +80,12 @@ namespace Server.Classes.Services
         {
             lock (commandLock)
             {
-                commands.Append((newCommand, action, connectionId));
+                commands.Push((newCommand, action, connectionId));
             }
         }
         public Stack<(Command.ICommand, CommandAction, string)> GetAndClearCommand()
         {
-            Stack<(Command.ICommand, CommandAction, string)> returnCommands = commands;
+            Stack<(Command.ICommand, CommandAction, string)> returnCommands = new Stack<(Command.ICommand, CommandAction, string)>(commands);
             commands = new Stack<(Command.ICommand, CommandAction, string)>();
             return returnCommands;
         }

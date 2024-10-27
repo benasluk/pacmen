@@ -77,10 +77,10 @@ namespace Server.Classes.GameLogic
         }
         public void Update(object state)
         {
+            _commandHandler.HandleMessages();
             if(!_gameService.paused) {
                 if (_playerService.GetPlayerCount() >= 1)
                 {
-                    _commandHandler.HandleMessages();
                     _movementTimerService.UpdateElapsedTime(gameSpeed);
                     gameTimer += gameSpeed;
                     _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);

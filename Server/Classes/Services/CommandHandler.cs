@@ -24,6 +24,7 @@ namespace Server.Classes.Services
         {
             foreach (var command in commands)
             {
+                Console.WriteLine(command.Item1.ToString());
                 if (command.Item2 == CommandAction.Execute) {
                     command.Item1.Execute(command.Item3);
                     continue;
@@ -31,6 +32,7 @@ namespace Server.Classes.Services
                 if (command.Item2 == CommandAction.Undo)
                 {
                     command.Item1.Undo(command.Item3);
+                    continue;
                 }
             }
         }

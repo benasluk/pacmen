@@ -9,6 +9,7 @@ public class Ghost : GameObject, ICloneable
 {
     public string Color;
     public TileStatus ghostNo = TileStatus.Empty;
+    private TileStatus lastVisitedTile = TileStatus.Empty;
     private MovementStrategy _movementStrategy;
     public Ghost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {

@@ -47,16 +47,28 @@ public class BoardScript : MonoBehaviour
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Wall")));
                         break;
                     case TileStatus.Pacman1:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Green")));
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Green_pac")));
                         break;
                     case TileStatus.Pacman2:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Red")));
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Red_pac")));
                         break;
                     case TileStatus.Pacman3:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Yellow")));
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Yellow_pac")));
                         break;
                     case TileStatus.Pacman4:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Purple")));
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Purple_pac")));
+                        break;
+                    case TileStatus.Ghost1:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Ghost_R")));
+                        break;
+                    case TileStatus.Ghost2:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Ghost_P")));
+                        break;
+                    case TileStatus.Ghost3:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Ghost_C")));
+                        break;
+                    case TileStatus.Ghost4:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Ghost_O")));
                         break;
                 }
             }

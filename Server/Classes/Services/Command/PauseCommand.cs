@@ -1,20 +1,34 @@
-﻿namespace Server.Classes.Services.Command
+﻿using Microsoft.AspNetCore.SignalR;
+using Server.Hubs;
+
+namespace Server.Classes.Services.Command
 {
     public class PauseCommand : ICommand
     {
         private GameService _gameService;
-        public PauseCommand(GameService gameService)
+        private GameHub _gameHub;
+        public PauseCommand(GameService gameService, GameHub gameHub)
         {
             _gameService = gameService;
+            _gameHub = gameHub;
         }
         public bool Execute(string playerId)
         {
-            return _gameService.Pause(playerId);
+            bool isPaused = _gameService.Pause(playerId);
+            _gameHub.Clients.All.SendAsync("SetPaused", isPaused, playerId);
+            return isPaused;
         }
 
+        /// <summary>
+        /// Krc, cia bad
+        /// </summary>
+        /// <param name="playerId">Kas inicijuoja</param>
+        /// <returns>TRUE, jei zaidimas liko uzpausintas, FALSE, jei atsipausino</returns>
         public bool Undo(string playerId)
         {
-            return _gameService.Unpause(playerId);
+            bool wasUnpaused = _gameService.Unpause(playerId);
+            _gameHub.Clients.All.SendAsync("SetPaused", !wasUnpaused, playerId);
+            return !wasUnpaused;
         }
         public string Initiator()
         {

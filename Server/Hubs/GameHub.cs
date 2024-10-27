@@ -35,7 +35,7 @@ namespace Server.Hubs
             switch (type)
             {
                 case CommandType.Pause:
-                    _messageService.StoreCommand(new PauseCommand(_gameService),action, Context.ConnectionId);// ??????????????????? I am so sorry
+                    _messageService.StoreCommand(new PauseCommand(_gameService, this),action, Context.ConnectionId);
                     break;
             }
         }
@@ -83,21 +83,6 @@ namespace Server.Hubs
                 _gameLoop.RestartTimer();
             }
             return base.OnDisconnectedAsync(exception);
-        }
-        public async Task Pause()
-        {
-            var playerId = Context.ConnectionId;
-            ICommand command = new PauseCommand(_gameService);
-            bool wasPaused = command.Execute(playerId);
-            await Clients.All.SendAsync("SetPaused", wasPaused, command.Initiator());
-
-        }
-        public async Task Unpause()
-        {
-            var playerId = Context.ConnectionId;
-            ICommand command = new PauseCommand(_gameService);
-            bool sucessfullyUnpaused = command.Undo(playerId);
-            await Clients.All.SendAsync("SetPaused", !sucessfullyUnpaused, command.Initiator());
         }
     }
 }

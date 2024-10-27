@@ -193,11 +193,11 @@ public class SignalRConnector : MonoBehaviour
         Debug.Log("Triggering pause/unpause action");
         if(pause)
         {
-            connection.SendAsync("Pause");
+            connection.SendAsync("ReceiveCommand", CommandType.Pause, CommandAction.Execute);
         }
         else if(!pause) 
         {
-            connection.SendAsync("Unpause");
+            connection.SendAsync("ReceiveCommand", CommandType.Pause, CommandAction.Undo);
         }
     }
 
