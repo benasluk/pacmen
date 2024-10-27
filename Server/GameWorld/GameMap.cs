@@ -28,9 +28,11 @@ namespace Server.GameWorld
         public (int rows, int col) GetMapSize() => (rows, cols);
         
         public Positions GetAllTiles() { return new Positions(_tileStatus); }
-        public void UpdateTile(int row, int col, TileStatus status)
+        public TileStatus UpdateTile(int row, int col, TileStatus status)
         {
+            TileStatus overwrittenTile = _tileStatus[row, col];
             _tileStatus[row, col] = status;
+            return overwrittenTile;
         }
         public void RestartMap()
         {

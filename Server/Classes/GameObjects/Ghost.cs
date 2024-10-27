@@ -1,6 +1,7 @@
 ﻿using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Strategy;
+using Server.GameWorld;
 using SharedLibs;
 
 namespace Server.Classes.GameObjects;
@@ -51,12 +52,23 @@ public class Ghost : GameObject, ICloneable
                 throw new ArgumentOutOfRangeException();
         }
         
-        gameMap.UpdateTile(row, col, TileStatus.Empty);
+        if(ValidMove(gameMap, projectedX, projectedY))
+        {
+            gameMap.UpdateTile(row, col, lastVisitedTile);
 
-        col = projectedX;
-        row = projectedY;
-        
-        gameMap.UpdateTile(row, col, ghostNo);
+            col = projectedX;
+            row = projectedY;
+
+            lastVisitedTile = gameMap.UpdateTile(row, col, ghostNo);
+        }
+
+    }
+
+    private static bool ValidMove(GameMap map, int x, int y)
+    {
+        List<TileStatus> invalidTiles = new List<TileStatus>([TileStatus.Wall, TileStatus.Ghost1, TileStatus.Ghost2, TileStatus.Ghost3, TileStatus.Ghost4]);
+        var tile = map.GetTileStatus(y, x);
+        return !invalidTiles.Contains(tile);
     }
 
     public void SetMovementStrategy(MovementStrategy movementStrategy)

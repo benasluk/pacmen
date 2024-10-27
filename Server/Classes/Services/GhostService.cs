@@ -35,7 +35,7 @@ public class GhostService : IResetabbleLoop
         
         List<GhostBuilder> builders = new List<GhostBuilder>
         {
-            new BlueGhostBuilder(),
+            new OrangeGhostBuilder(),
             new RedGhostBuilder(),
             new PinkGhostBuilder(),
             new CyanGhostBuilder()
@@ -60,6 +60,8 @@ public class GhostService : IResetabbleLoop
         Console.WriteLine($"Pink Ghost hashcode: Hash={_ghosts[2].GetHashCode()}");
         Console.WriteLine($"Cyan Ghost hashcode: Hash={_ghosts[3].GetHashCode()}");
         Console.WriteLine($"Shallow copy Ghost hashcode: Hash={_ghosts[4].GetHashCode()} copy ghost Hash={_ghosts[2].GetHashCode()}");
+
+        _ghosts.RemoveAt(4);
     }
 
     private void ResetGhosts()

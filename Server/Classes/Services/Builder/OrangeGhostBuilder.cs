@@ -3,11 +3,11 @@ using SharedLibs;
 
 namespace Server.Classes.Services.Builder;
 
-public class BlueGhostBuilder : GhostBuilder
+public class OrangeGhostBuilder : GhostBuilder
 {
     public override GhostBuilder SetColor()
     {
-        _ghost.Color = "Blue";
+        _ghost.Color = "Orange";
         return this;
     }
 
@@ -19,7 +19,7 @@ public class BlueGhostBuilder : GhostBuilder
 
     public override GhostBuilder SetStartingCoordinates()
     {
-        _ghost.SetCoordinates(11, 17);
+        _ghost.SetCoordinates(12, 17);
         return this;
     }
 

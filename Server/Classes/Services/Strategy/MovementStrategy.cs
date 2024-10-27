@@ -18,11 +18,12 @@ public abstract class MovementStrategy : ICloneable
                || tileStatus.Equals(TileStatus.Pacman3)
                || tileStatus.Equals(TileStatus.Pacman4);
     }
-    
+
     protected static bool ValidMove(GameMap map, int x, int y)
     {
+        List<TileStatus> invalidTiles = new List<TileStatus>([TileStatus.Wall, TileStatus.Ghost1, TileStatus.Ghost2, TileStatus.Ghost3, TileStatus.Ghost4]);
         var tile = map.GetTileStatus(y, x);
-        return !tile.Equals(TileStatus.Wall);
+        return !invalidTiles.Contains(tile);
     }
 
     public abstract Direction FindMovementDirection(GameMap gameMap, int currRow, int currCol);

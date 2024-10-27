@@ -19,7 +19,7 @@ public class CyanGhostBuilder : GhostBuilder
 
     public override GhostBuilder SetStartingCoordinates()
     {
-        _ghost.SetCoordinates(13, 17);
+        _ghost.SetCoordinates(14, 17);
         return this;
     }
 

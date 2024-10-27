@@ -34,7 +34,6 @@ public class LeaderboardScript : MonoBehaviour
             UpdateScore(panels[i], newScores[i]);
         }
 
-        Debug.Log(panels[0].GetComponentInChildren<TextMeshProUGUI>().text.Split(' ')[1]);
         order = panels.OrderByDescending(p => p.GetComponentInChildren<TextMeshProUGUI>().text.Split(' ')[1]).Select(p => p.name).ToList();
 
         UpdatePositions();

@@ -71,8 +71,6 @@ namespace Server.Classes.GameObjects
         private static bool ValidMove(GameMap map, int x, int y)
         {
             var tile = map.GetTileStatus(y, x);
-            Console.WriteLine($"Tile pacman wants to move to is row {y} and column {x} and is ${tile}");
-            Console.WriteLine("Tile is " + TileStatus.Wall);
             return !tile.Equals(TileStatus.Wall);
         }
 

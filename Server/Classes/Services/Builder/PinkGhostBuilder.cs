@@ -19,7 +19,7 @@ public class PinkGhostBuilder : GhostBuilder
 
     public override GhostBuilder SetStartingCoordinates()
     {
-        _ghost.SetCoordinates(14, 17);
+        _ghost.SetCoordinates(15, 17);
         return this;
     }
 
