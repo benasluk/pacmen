@@ -25,12 +25,16 @@ public class GameObjectTests
         public override void HandleMovement() { }
     }
 
-    [Fact]
-    public void UpdateDirection_ChangesDirectionCorrectly()
+    [Theory]
+    [InlineData(Direction.Right)]
+    [InlineData(Direction.Left)]
+    [InlineData(Direction.Up)]
+    [InlineData(Direction.Down)]
+    public void UpdateDirection_ChangesDirectionCorrectly(Direction direction)
     {
         var gameObject = new TestGameObject(_provider.GetService<GameLoop>(), _provider.GetService<GameService>());
-        gameObject.UpdateDirection(Direction.Right);
-        Assert.Equal(Direction.Right, gameObject.GetDirection());
+        gameObject.UpdateDirection(direction);
+        Assert.Equal(direction, gameObject.GetDirection());
     }
 
     [Fact]

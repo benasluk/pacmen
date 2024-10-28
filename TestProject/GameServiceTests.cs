@@ -21,10 +21,11 @@ public class GameServiceTests
         Assert.Equal(_gameMapMock.Object, _gameService.GetGameMap());
     }
 
-    [Fact]
-    public void Pause_SetsPausedStateAndPauser()
+    [Theory]
+    [InlineData("player1")]
+    [InlineData("player2")]
+    public void Pause_SetsPausedStateAndPauser(string playerId)
     {
-        string playerId = "player1";
         _gameService.Pause(playerId);
         Assert.True(_gameService.paused);
         Assert.Equal(playerId, _gameService.PausedBy());
@@ -40,13 +41,14 @@ public class GameServiceTests
         Assert.Null(_gameService.PausedBy());
     }
 
-    [Fact]
-    public void Unpause_DoesNotChangePausedState_WhenCalledByDifferentPlayer()
+    [Theory]
+    [InlineData("player1", "player2")]
+    [InlineData("player1", "player3")]
+    public void Unpause_DoesNotChangePausedState_WhenCalledByDifferentPlayer(string pauserId, string callerId)
     {
-        string playerId = "player1";
-        _gameService.Pause(playerId);
-        Assert.False(_gameService.Unpause("player2"));
+        _gameService.Pause(pauserId);
+        Assert.False(_gameService.Unpause(callerId));
         Assert.True(_gameService.paused);
-        Assert.Equal(playerId, _gameService.PausedBy());
+        Assert.Equal(pauserId, _gameService.PausedBy());
     }
 }
