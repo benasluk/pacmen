@@ -15,7 +15,7 @@ public class GhostTests
     private readonly Ghost _ghost;
     private readonly ServiceProvider _provider;
 
-    private static IServiceProvider Provider () 
+    /*private static IServiceProvider Provider () 
     {
         var services = new ServiceCollection();
         services.AddScoped<Mock<GameLoop>>().AddScoped<Mock<GameService>>();
@@ -23,7 +23,7 @@ public class GhostTests
         _ghost = new TestGhost(_provider.GetService<GameLoop>(), _provider.GetService<GameService>());
         services.AddScoped<Ghost>();
         return services.BuildServiceProvider();
-    }
+    }*/
     private class TestGhost : Ghost
     {
         public TestGhost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService) { }
@@ -33,13 +33,13 @@ public class GhostTests
 
     public GhostTests()
     {
-        /*var services = new ServiceCollection();
+        var services = new ServiceCollection();
         services.AddSingleton(_gameLoopMock);
         services.AddSingleton(_gameServiceMock);
         _provider = services.BuildServiceProvider();
         _ghost = new TestGhost(_provider.GetService<GameLoop>(), _provider.GetService<GameService>());
         services.AddSingleton(_ghost);
-        _provider = services.BuildServiceProvider();*/
+        _provider = services.BuildServiceProvider();
     }
 
     [Fact]
