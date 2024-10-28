@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
@@ -13,23 +14,34 @@ namespace TestProject
 {
     public class GameIntegrationTests
     {
+        private readonly Mock<GameService> _gameServiceMock = new Mock<GameService>();
+        private readonly Mock<MessageService> _messageServiceMock = new Mock<MessageService>();
+        private readonly PlayerService _playerService;
+        private readonly ServiceProvider _provider;
+
+        public GameIntegrationTests() 
+        {
+            var services = new ServiceCollection();
+            services.AddSingleton(_gameServiceMock);
+            services.AddSingleton(_messageServiceMock);
+            _provider = services.BuildServiceProvider();
+            _playerService = new PlayerService(_provider.GetService<GameService>());
+        }
+
         [Fact]
         public async Task PlayerDisconnects_GameResetsIfNoPlayersLeft()
         {
-            var messageService = new Mock<MessageService>();
-            var gameService = new Mock<GameService>();
-            var playerService = new Mock<PlayerService>();
-            var gameLoop = new GameLoop(gameService.Object, playerService.Object, messageService.Object, null, null);
+            var gameLoop = new GameLoop(_provider.GetService<GameService>(), _playerService, _provider.GetService<MessageService>(), null, null);
             var hubContext = new Mock<IHubContext<GameHub>>();
 
-            var gameHub = new GameHub(messageService.Object, gameService.Object, playerService.Object, gameLoop);
+            var gameHub = new GameHub(_provider.GetService<MessageService>(), _provider.GetService<GameService>(), _playerService, gameLoop);
 
             // Simulate player disconnection
-            playerService.Setup(p => p.GetPlayerCount()).Returns(0);
-            gameHub.OnDisconnectedAsync(null).Wait();
+            //_playerService.Setup(p => p.GetPlayerCount()).Returns(0);
+            await gameHub.OnDisconnectedAsync(null);
 
             // Verify game reset methods were called
-            Assert.Equal(0, playerService.Object.GetPlayerCount());
+            Assert.Equal(0, _playerService.GetPlayerCount());
         }
     }
 }

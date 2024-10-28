@@ -54,7 +54,7 @@ namespace Server.Classes.Services
             return player.GetCurrentLocation();
         }
 
-        public int GetPlayerCount()
+        public virtual int GetPlayerCount()
         {
             return _players.Count;
         }

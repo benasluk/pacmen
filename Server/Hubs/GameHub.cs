@@ -44,10 +44,9 @@ namespace Server.Hubs
         
         public override Task OnDisconnectedAsync(Exception? exception)
         {
-            var playerId = Context.ConnectionId;
-            _playerService.RemovePlayer(playerId);
-            Console.WriteLine("Connection stopped from " + playerId + " !");
-            Clients.All.SendAsync("UpdatePlayerCount", _playerService.GetPlayerCount());
+            //var playerId = Context.ConnectionId;
+            //_playerService.RemovePlayer(playerId);
+            //Console.WriteLine("Connection stopped from " + playerId + " !");
             if (_playerService.GetPlayerCount() == 0)
             {
                 _gameLoop.RestartTimer();
