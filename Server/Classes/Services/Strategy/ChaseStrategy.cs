@@ -13,7 +13,7 @@ namespace Server.Classes.Services.Strategy
         {
             if (IsPacmanNearby(currRow, currCol, gameMap, out (int pacmanRow, int pacmanCol) pacmanPosition))
             {
-                return GetDirectionTowards(currRow, currCol, pacmanPosition.pacmanRow, pacmanPosition.pacmanCol);
+                return GetDirectionTowards(currRow, currCol, pacmanPosition.pacmanRow, pacmanPosition.pacmanCol, gameMap);
             }
 
             return GetRandomDirection(currRow, currCol, gameMap);
@@ -24,14 +24,17 @@ namespace Server.Classes.Services.Strategy
             return new RandomChaseStrategy();
         }
 
-        private bool IsPacmanNearby(int currRow, int currCol, GameMap gameMap, out (int pacmanRow, int pacmanCol) pacmanPosition)
+        private bool IsPacmanNearby(int currRow, int currCol, GameMap gameMap,
+            out (int pacmanRow, int pacmanCol) pacmanPosition)
         {
             pacmanPosition = (currRow, currCol);
             (int mapRows, int mapCol) = gameMap.GetMapSize();
 
-            for (int y = Math.Max(0, currRow - ChaseRadius); y <= Math.Min(mapRows- 1, currRow + ChaseRadius); y++)
+            for (int y = Math.Max(0, currRow - ChaseRadius); y <= Math.Min(mapRows - 1, currRow + ChaseRadius); y++)
             {
-                for (int x = Math.Max(0, currCol - ChaseRadius); x <= Math.Min(mapCol - 1, currCol + ChaseRadius); x++)
+                for (int x = Math.Max(0, currCol - ChaseRadius);
+                     x <= Math.Min(mapCol - 1, currCol + ChaseRadius);
+                     x++)
                 {
                     if (IsPacman(x, y, gameMap))
                     {
@@ -68,22 +71,21 @@ namespace Server.Classes.Services.Strategy
                         newX += 1;
                         break;
                 }
-            }
-            while (!IsInBounds(newX, newY) || gameMap.GetTileStatus(newY, newX).Equals(TileStatus.Wall));
+            } while (!IsInBounds(newX, newY) || gameMap.GetTileStatus(newY, newX).Equals(TileStatus.Wall));
 
             return chosenDirection;
         }
 
-        private Direction GetDirectionTowards(int currRow, int currCol, int targetRow, int targetCol)
+        private Direction GetDirectionTowards(int currRow, int currCol, int targetRow, int targetCol, GameMap map)
         {
-            if (currRow < targetRow) return Direction.Down;
-            if (currRow > targetRow) return Direction.Up;
-            if (currCol < targetCol) return Direction.Right;
-            if (currCol > targetCol) return Direction.Left;
+            if (currRow < targetRow && ValidMove(map, currCol, currRow + 1)) return Direction.Down;
+            if (currRow > targetRow && ValidMove(map, currCol, currRow - 1)) return Direction.Up;
+            if (currCol < targetCol && ValidMove(map, currCol + 1, currRow)) return Direction.Right;
+            if (currCol > targetCol && ValidMove(map, currCol - 1, currRow)) return Direction.Left;
 
             return Direction.None;
         }
-        
-        
+
+
     }
 }

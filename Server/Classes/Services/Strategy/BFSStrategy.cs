@@ -7,8 +7,11 @@ public class BFSStrategy : MovementStrategy
 {
     public override Direction FindMovementDirection(GameMap gameMap, int currRow, int currCol)
     {
-        Queue<(int yc, int xc, List<(int, int)> path)> queue = new();
-        queue.Enqueue((currRow, currCol, new List<(int, int)>{(currRow, currCol)}));
+        Queue<(int yc, int xc, LinkedList<(int, int)> path)> queue = new();
+
+        var startingPath = new LinkedList<(int, int)>();
+        startingPath.AddLast((currRow, currCol));
+        queue.Enqueue((currRow, currCol, startingPath));
 
         bool[,] visited = new bool[36, 28];
         visited[currRow, currCol] = true;
@@ -19,30 +22,24 @@ public class BFSStrategy : MovementStrategy
 
             if (IsPacman(currentX, currentY, gameMap))
             {
-                (int projectedY, int projectedX) = path.First();
+                path.RemoveFirst();
 
-                switch (projectedX - currCol)
-                {
-                    case > 0:
-                        return Direction.Right;
-                    case < 0:
-                        return Direction.Left;
-                }
+                if (path.Count == 0)
+                    return Direction.None;
 
-                switch (projectedY - currRow)
-                {
-                    case > 0:
-                        return Direction.Up;
-                    case < 0:
-                        return Direction.Down;
-                }
+                (int projectedY, int projectedX) = path.First!.ValueRef;
+
+                if (currRow < projectedY && ValidMove(gameMap, currCol, currRow + 1)) return Direction.Down;
+                if (currRow > projectedY && ValidMove(gameMap, currCol, currRow - 1)) return Direction.Up;
+                if (currCol < projectedX && ValidMove(gameMap, currCol + 1, currRow)) return Direction.Right;
+                if (currCol > projectedX && ValidMove(gameMap, currCol - 1, currRow)) return Direction.Left;
             }
 
             for (int i = 1; i < 5; i++)
             {
                 int newX = currentX;
                 int newY = currentY;
-                
+
                 switch ((Direction)i)
                 {
                     case Direction.Up:
@@ -59,13 +56,14 @@ public class BFSStrategy : MovementStrategy
                         break;
                 }
 
-                if (IsInBounds(newY, newX) 
-                    && !visited[newY, newX] 
+                if (IsInBounds(newY, newX)
+                    && !visited[newY, newX]
                     && !gameMap.GetTileStatus(newY, newX).Equals(TileStatus.Wall))
                 {
-                    visited[newY, newX] = true; 
-                    var newPath = new List<(int, int)>(path) { (newY, newX) };
-                    queue.Enqueue((newY, newX, newPath)); 
+                    visited[newY, newX] = true;
+                    var newPath = new LinkedList<(int, int)>(path);
+                    newPath.AddLast((newY, newX));
+                    queue.Enqueue((newY, newX, newPath));
                 }
             }
         }

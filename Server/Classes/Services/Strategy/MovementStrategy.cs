@@ -21,7 +21,14 @@ public abstract class MovementStrategy : ICloneable
 
     protected static bool ValidMove(GameMap map, int x, int y)
     {
-        List<TileStatus> invalidTiles = new List<TileStatus>([TileStatus.Wall, TileStatus.Ghost1, TileStatus.Ghost2, TileStatus.Ghost3, TileStatus.Ghost4]);
+        List<TileStatus> invalidTiles = new List<TileStatus>()
+        {
+            TileStatus.Ghost1,
+            TileStatus.Ghost2,
+            TileStatus.Ghost3,
+            TileStatus.Ghost4,
+            TileStatus.Wall
+        };
         var tile = map.GetTileStatus(y, x);
         return !invalidTiles.Contains(tile);
     }

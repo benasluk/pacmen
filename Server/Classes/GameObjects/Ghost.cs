@@ -37,10 +37,10 @@ public class Ghost : GameObject, ICloneable
             case Direction.None:
                 break;
             case Direction.Up:
-                projectedY += 1;
+                projectedY -= 1;
                 break;
             case Direction.Down:
-                projectedY -= 1;
+                projectedY += 1;
                 break;
             case Direction.Left:
                 projectedX -= 1;
@@ -61,12 +61,18 @@ public class Ghost : GameObject, ICloneable
 
             lastVisitedTile = gameMap.UpdateTile(row, col, ghostNo);
         }
-
     }
 
     private static bool ValidMove(GameMap map, int x, int y)
     {
-        List<TileStatus> invalidTiles = new List<TileStatus>([TileStatus.Wall, TileStatus.Ghost1, TileStatus.Ghost2, TileStatus.Ghost3, TileStatus.Ghost4]);
+        List<TileStatus> invalidTiles = new List<TileStatus>()
+        {
+            TileStatus.Wall, 
+            TileStatus.Ghost1, 
+            TileStatus.Ghost2, 
+            TileStatus.Ghost3, 
+            TileStatus.Ghost4
+        };
         var tile = map.GetTileStatus(y, x);
         return !invalidTiles.Contains(tile);
     }

@@ -9,17 +9,13 @@ public class WallFollowingStrategy : MovementStrategy
 
     public override Direction FindMovementDirection(GameMap gameMap, int currRow, int currCol)
     {
-        // Check if the current direction is blocked or out of bounds
         if (IsWallOrOutOfBounds(currRow, currCol, _currentDirection, gameMap))
         {
-            // Try to turn right (clockwise direction change)
             _currentDirection = TurnRight(_currentDirection);
         }
 
-        // Check if we can keep moving in the new direction
         if (IsWallOrOutOfBounds(currRow, currCol, _currentDirection, gameMap))
         {
-            // Try turning right again if still blocked
             _currentDirection = TurnRight(_currentDirection);
         }
 
