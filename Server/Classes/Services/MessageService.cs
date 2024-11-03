@@ -62,11 +62,6 @@ namespace Server.Classes.Services
             }
             return inputs;
         }
-        public GameMap StoreMap(GameMap map)
-        {
-            _gameMap = map;
-            return _gameMap;
-        }
 
         public void ResetAfterLevelChange()
         {

@@ -18,9 +18,6 @@ namespace Server
             _gameLoop = gameLoop;
             _gameService = gameService;
         }
-        public virtual void Destroy()
-        {
-        }
         public abstract void HandleMovement();
 
         public void UpdateDirection(Direction newDirection)
@@ -30,10 +27,6 @@ namespace Server
         public Direction GetDirection()
         {
             return direction;
-        }
-        protected GameService GetGameService()
-        {
-            return _gameService;
         }
 
         public (int col, int row) GetCurrentLocation()

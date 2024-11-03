@@ -40,9 +40,5 @@ namespace Server.Classes.Services
             else return false;
         }
 
-        /*public static implicit operator global::Moq.Mock<object>(GameService v)
-        {
-            throw new NotImplementedException();
-        }*/
     }
 }
