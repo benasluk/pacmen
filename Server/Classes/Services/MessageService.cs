@@ -1,4 +1,5 @@
 ﻿using Server.Classes.Services.Command;
+using Server.Classes.Services.Logging;
 using Server.Classes.Services.Observer;
 using Server.GameWorld;
 using SharedLibs;
@@ -15,12 +16,16 @@ namespace Server.Classes.Services
         private object levelChangeLock; //None of the methods using this lock can be accessed if atleast one method using this is locked
         private int newLevel = -1;
         private object commandLock;
+        private Ilogger textLogger;
+        private Ilogger databaseLogger;
         public MessageService(GameService gameService, PlayerService playerService)
         {
             lockObj = new object();
             levelChangeLock = new object();
             commandLock = new object();
             ((IResetabbleLoop)this).SubscriberToLevelChange();
+            textLogger = new TextFileLogger();
+            databaseLogger = new DatabaseWriter(new DatabaseLoggerToWriterAdapter(new DatabaseLogger()));
 
         }
         public void StoreLevelChange(int level)
@@ -58,6 +63,8 @@ namespace Server.Classes.Services
         {
             lock (lockObj)
             {
+                databaseLogger.LogInput(input.Direction);
+                textLogger.LogInput(input.Direction);
                 _playerInputs[playerId] = input;
             }
         }

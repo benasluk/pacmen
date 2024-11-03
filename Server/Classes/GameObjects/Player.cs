@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
+using Server.Classes.Services.Bridge;
 using Server.Classes.Services.Factory;
 using Server.Classes.Services.Observer;
 using Server.GameWorld;
@@ -13,8 +14,10 @@ namespace Server.Classes.GameObjects
         public string color;
         public TileStatus pacmanNo = TileStatus.Empty;
         private int score = 0;
+        private readonly ScoreCalculator _scoreCalculatorFactory;
         public Player(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
         {
+            _scoreCalculatorFactory = ServiceLocator.GetService<ScoreCalculator>();
             _gameLoop.PacmanMovevement += HandleMovement;
         }
         public override void Destroy()
@@ -61,7 +64,12 @@ namespace Server.Classes.GameObjects
                 var tile = map.GetTileStatus(row, col);
                 if (tile == TileStatus.Pellet)
                 {
-                    score++;
+                    var totalScore = PlayerScoreSingleton.getInstance().GetScore().Sum();
+                    var currScore = PlayerScoreSingleton.getInstance().GetScore()[(int)pacmanNo - 5];
+                    var time = _gameLoop.gameTimer;
+                    var res = 1 + _scoreCalculatorFactory.CalculateScore(totalScore, currScore, time);
+                    Console.WriteLine(res);
+                    score += res;
                 }
                 PlayerScoreSingleton.getInstance().SetScore((int)pacmanNo-5, score);
                 map.UpdateTile(row, col, pacmanNo);
