@@ -11,6 +11,27 @@ namespace SharedLibs
         Left,
         Right
     }
+    public enum WallColor
+    {
+        Default,
+        Blue,
+        Red,
+        Green
+    }
+    public enum PelletColor
+    {
+        Default,
+        Green,
+        Red,
+        White
+    }
+    public enum PelletShape
+    {
+        Default,
+        Hexagon,
+        Square,
+        Triangle
+    }
     public class PacmanMovement
     {
         public string PlayerId { get; set; }
