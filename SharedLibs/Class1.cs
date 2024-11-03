@@ -79,6 +79,47 @@ namespace SharedLibs
         Execute,
         Undo
     }
+    public class MapWall : Addon
+    {
+        public WallColor color;
+        public override void SetValueFromString(string value)
+        {
+            if(Enum.TryParse(typeof(WallColor), value, false, out object result)) color = (WallColor)result;
+        }
+        public override string GetValue()
+        {
+            return color.ToString();
+        }
+    }
+    public class MapPelletColor : Addon
+    {
+        public PelletColor color;
+        public override void SetValueFromString(string value)
+        {
+            if (Enum.TryParse(typeof(PelletColor), value, false, out object result)) color = (PelletColor)result;
+        }
+        public override string GetValue()
+        {
+            return color.ToString();
+        }
+    }
+    public class MapPelletShape : Addon
+    {
+        public PelletShape shape;
+        public override void SetValueFromString(string value)
+        {
+            if (Enum.TryParse(typeof(PelletShape), value, false, out object result)) shape = (PelletShape)result;
+        }
+        public override string GetValue()
+        {
+            return shape.ToString();
+        }
+    }
+    public abstract class Addon
+    {
+        public abstract void SetValueFromString(string value);
+        public abstract string GetValue(); 
+    }
     public class Positions
     {
         public TileStatus[,] Grid { get; set; }
@@ -86,6 +127,7 @@ namespace SharedLibs
         public int secondsElapsed { get; set; } = 0;
         public int[] Scores { get; set; }
         public bool SceneChange = false;
+        public List<Addon> Addons { get; set; }
         public string[] PlayerColors { get; set; }
         public string[] ItemIcon { get; set; }
 
