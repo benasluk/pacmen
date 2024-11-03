@@ -1,7 +1,9 @@
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Factory;
+using Server.Classes.Services.Logging;
 using Server.Hubs;
+using SharedLibs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,7 @@ builder.Services.AddSingleton<GhostService>();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<MessageService>();
 builder.Services.AddSingleton<CommandHandler>();
+builder.Services.AddSingleton<DatabaseWriter>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
@@ -36,7 +39,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
+using var db = new GameDbContext();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -48,7 +51,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapHub<GameHub>("/Server");
 app.MapControllers();
-
+Console.WriteLine(db.DbPath);
+MapLog test = new MapLog();
+test.LoggedAt = DateTime.Now;
 var gameLoop = app.Services.GetRequiredService<GameLoop>();
 gameLoop.Start();
 app.Run();
