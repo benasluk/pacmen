@@ -31,6 +31,7 @@ public class MapDecorator : MonoBehaviour
     }
     public void SetAddons(List<Addon> addons)
     {
+        Debug.Log(addons.Count);
         foreach(var addon in addons)
         {
             Addons.Find(a => a.GetType() == addon.GetType()).SetValueFromString(addon.GetValue());

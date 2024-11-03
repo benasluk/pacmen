@@ -81,7 +81,7 @@ namespace Server.Classes.GameLogic
             LoadLevelMap();
             //Console.WriteLine("Done restarting");
         }
-        public void Update(object state)
+        public async void Update(object state)
         {
             _commandHandler.HandleMessages();
             if(!_gameService.paused) {
@@ -125,7 +125,17 @@ namespace Server.Classes.GameLogic
                             test.SceneChange = true;
                             levelRestarted = false;
                         }
-                        _hubContext.Clients.All.SendAsync("ReceiveMap", test);
+                        try
+                        {
+
+                            var testSend = _hubContext.Clients.All.SendAsync("ReceiveMap", test);
+                            var dummy = JsonConvert.SerializeObject(test);
+                            await Console.Out.WriteLineAsync(dummy);
+                            await testSend;
+                        }
+                        catch(Exception ex) {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                 }
             }
