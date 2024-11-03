@@ -1,6 +1,5 @@
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
-using Server.Classes.Services.Factory;
 using Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,8 +18,6 @@ builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 });
 builder.Services.AddSingleton<GameLoop>();
 builder.Services.AddSingleton<GameHub>();
-builder.Services.AddSingleton<PlayerService>();
-builder.Services.AddSingleton<GhostService>();
 builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<MessageService>();
 builder.Services.AddCors(options =>

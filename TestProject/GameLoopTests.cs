@@ -12,9 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 public class GameLoopTests
 {
     private readonly Mock<GameService> _gameServiceMock = new Mock<GameService>();
-    private readonly Mock<PlayerService> _playerServiceMock = new Mock<PlayerService>();
     private readonly Mock<MessageService> _messageServiceMock = new Mock<MessageService>();
-    private readonly Mock<GhostService> _ghostServiceMock = new Mock<GhostService>();
     private readonly Mock<IHubContext<GameHub>> _hubContextMock = new Mock<IHubContext<GameHub>>();
     private readonly ServiceProvider _provider;
 
@@ -24,21 +22,17 @@ public class GameLoopTests
     {
         var services = new ServiceCollection();
         services.AddSingleton(_gameServiceMock);
-        services.AddSingleton(_playerServiceMock);
         services.AddSingleton(_messageServiceMock);
-        services.AddSingleton(_ghostServiceMock);
         services.AddSingleton(_hubContextMock);
         _provider = services.BuildServiceProvider();
-        _gameLoop = new GameLoop(_provider.GetService<GameService>(), _provider.GetService<PlayerService>(), 
-            _provider.GetService<MessageService>(), _provider.GetService<IHubContext<GameHub>>(), 
-            _provider.GetService<GhostService>());
+        _gameLoop = new GameLoop(_provider.GetService<Mock<GameService>>().Object, _provider.GetService<Mock<MessageService>>().Object, 
+            _provider.GetService<Mock<IHubContext<GameHub>>>().Object);
     }
 
     [Fact]
     public void Start_SetsUpGameCorrectly()
     {
         _gameLoop.Start();
-        _ghostServiceMock.Verify(g => g.AddGhosts(It.IsAny<GameLoop>()), Times.Once);
     }
 
     [Fact]

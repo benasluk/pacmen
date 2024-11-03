@@ -10,10 +10,9 @@ namespace Server.Classes.Services
         private object lockObj;
         private object levelChangeLock; //None of the methods using this lock can be accessed if atleast one method using this is locked
         private int newLevel = -1;
-        public MessageService(GameService gameService, PlayerService playerService) {
+        public MessageService() {
             lockObj = new object();
             levelChangeLock = new object();
-
         }
         public void StoreLevelChange(int level)
         {
@@ -39,14 +38,14 @@ namespace Server.Classes.Services
                 return newLevel != -1;
             }
         }
-        public int GetLevel()
+        public virtual int GetLevel()
         {
             lock (levelChangeLock)
             {
                 return newLevel;
             }
         }
-        public void StorePlayerInput(string playerId, PacmanMovement input)
+        public virtual void StorePlayerInput(string playerId, PacmanMovement input)
         {
             lock (lockObj)
             {

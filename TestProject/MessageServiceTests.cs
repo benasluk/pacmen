@@ -12,8 +12,7 @@ public class MessageServiceTests
     public MessageServiceTests()
     {
         var gameServiceMock = new Mock<GameService>();
-        var playerServiceMock = new Mock<PlayerService>(gameServiceMock.Object);
-        _messageService = new MessageService(gameServiceMock.Object, playerServiceMock.Object);
+        _messageService = new MessageService();
     }
 
     [Fact]

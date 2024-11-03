@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using Server.Classes.GameObjects;
 using Server.Classes.Services;
-using Server.Classes.Services.Factory;
 using Server.GameWorld;
 using Server.Hubs;
 using SharedLibs;
@@ -13,8 +12,6 @@ namespace Server.Classes.GameLogic
     public class GameLoop
     {
         private readonly GameService _gameService;
-        private readonly PlayerService _playerService;
-        private readonly GhostService _ghostService;
         private readonly MessageService _messageService;
         private readonly IHubContext<GameHub> _hubContext;
         private readonly MovementTimerServiceSingleton _movementTimerService;
@@ -27,30 +24,27 @@ namespace Server.Classes.GameLogic
         private bool _gameStarted = false;
         public delegate void LevelRestart();
         public event LevelRestart LevelRestartEvent;
-        private bool levelRestarted = false;
+        public bool levelRestarted = false;
 
         private List<Item> ItemList;
 
         private int gameSpeed = 1000 / 10;
 
-        public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService)
+        public GameLoop(GameService gameService, MessageService messageService, IHubContext<GameHub> hubContext)
         {
             _gameService = gameService;
-            _playerService = playerService;
             _messageService = messageService;
             _hubContext = hubContext;
-            _ghostService = ghostService;
             _movementTimerService = MovementTimerServiceSingleton.getInstance();
             gameTimer = 0;
             ItemList = new List<Item>();
+            levelRestarted = false;
         }
         public void Start()
         {
-            _timer = new Timer(Update, null, 0, gameSpeed);
 
             int whatLevel = 0; 
             levelRestarted = true;
-            _ghostService.AddGhosts(this);
         }
         public void RestartLoop()
         {
@@ -59,54 +53,9 @@ namespace Server.Classes.GameLogic
             LevelRestartEvent?.Invoke();
             levelRestarted = true;
         }
-        public void Update(object state)
-        {
-            if(!_gameService.paused) {
-                if (_playerService.GetPlayerCount() >= 1)
-                {
-                    _movementTimerService.UpdateElapsedTime(gameSpeed);
-                    gameTimer += gameSpeed;
-                    _hubContext.Clients.All.SendAsync("UpdateTimer", gameTimer);
-                    HandlePlayerInputs();
-                    if (CheckForLevelChange())
-                    {
-                        Console.WriteLine("Restarting loop");
-                        RestartLoop();
-                        _messageService.ResetLevel();
-                    }
-                    if (_movementTimerService.EnemyCanMove())
-                    {
-                        _ghostService.UpdateGhostsLocations();
-                    }
-
-                    if (_playerService.GetPlayerCount() > 0)
-                    {
-                        Positions test = updateMapInClient();
-                        if (levelRestarted)
-                        {
-                            test.PlayerColors = new string[1];
-                            test.PlayerColors[0] = _playerService.GetBackgroundName();
-                            test.ItemIcon = new string[1];
-                            test.ItemIcon[0] = ItemList.FirstOrDefault()?.Icon ?? " ";
-                            test.SceneChange = true;
-                            levelRestarted = false;
-                        }
-                        _hubContext.Clients.All.SendAsync("ReceiveMap", test);
-                    }
-                }
-            }
-        }
         private bool CheckForLevelChange()
         {
             return _messageService.IsLevelChange();
-        }
-        private void HandlePlayerInputs()
-        {
-            var inputs = _messageService.GetPlayerInputs();
-            foreach (var input in inputs)
-            {
-                _playerService.UpdatePlayerLocation(input.Value);
-            }
         }
         private void HandlePacmanMovement()
         {
@@ -119,7 +68,6 @@ namespace Server.Classes.GameLogic
         public Positions updateMapInClient()
         {
             var resultObj = _gameService.GetGameMap().GetAllTiles();
-            resultObj.Scores = PlayerScoreSingleton.getInstance().GetScore();
             return resultObj;
         }
         public void RestartTimer()

@@ -12,15 +12,13 @@ namespace Server.Hubs
     {
         private readonly MessageService _messageService;
         private readonly GameService _gameService;
-        private readonly PlayerService _playerService;
         private readonly GameLoop _gameLoop;
 
         private string pausedById;
-        public GameHub (MessageService messageService, GameService gameService, PlayerService playerService, GameLoop gameLoop)
+        public GameHub (MessageService messageService, GameService gameService, GameLoop gameLoop)
         {
             _gameService = gameService;
             _messageService = messageService;
-            _playerService = playerService;
             _gameLoop = gameLoop;
         }
         public async Task ReceivedDirection(SharedLibs.PacmanMovement movement)
@@ -42,16 +40,5 @@ namespace Server.Hubs
             _messageService.StoreLevelChange(num);
         }
         
-        public override Task OnDisconnectedAsync(Exception? exception)
-        {
-            //var playerId = Context.ConnectionId;
-            //_playerService.RemovePlayer(playerId);
-            //Console.WriteLine("Connection stopped from " + playerId + " !");
-            if (_playerService.GetPlayerCount() == 0)
-            {
-                _gameLoop.RestartTimer();
-            }
-            return base.OnDisconnectedAsync(exception);
-        }
     }
 }

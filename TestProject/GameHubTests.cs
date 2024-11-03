@@ -12,7 +12,6 @@ public class GameHubTests
 {
     private readonly Mock<MessageService> _messageServiceMock = new Mock<MessageService>();
     private readonly Mock<GameService> _gameServiceMock = new Mock<GameService>();
-    private readonly Mock<PlayerService> _playerServiceMock = new Mock<PlayerService>();
     private readonly Mock<GameLoop> _gameLoopMock = new Mock<GameLoop>();
 
     private readonly ServiceProvider _provider;
@@ -24,11 +23,9 @@ public class GameHubTests
         var services = new ServiceCollection();
         services.AddSingleton(_messageServiceMock);
         services.AddSingleton(_gameServiceMock);
-        services.AddSingleton(_playerServiceMock);
         services.AddSingleton(_gameLoopMock);
         _provider = services.BuildServiceProvider();
-        _gameHub = new GameHub(_provider.GetService<MessageService>(), _provider.GetService<GameService>(), 
-            _provider.GetService<PlayerService>(), _provider.GetService<GameLoop>());
+        _gameHub = new GameHub(_provider.GetService<Mock<MessageService>>().Object, _provider.GetService<Mock<GameService>>().Object, _provider.GetService<GameLoop>());
     }
 
     [Fact]
