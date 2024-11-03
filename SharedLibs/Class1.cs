@@ -14,7 +14,7 @@ namespace SharedLibs
     public enum WallColor
     {
         Default,
-        Blue,
+        Yellow,
         Red,
         Green
     }

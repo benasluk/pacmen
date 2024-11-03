@@ -27,6 +27,7 @@ public class SignalRConnector : MonoBehaviour
     [SerializeField] private LeaderboardScript leaderboard;
     [SerializeField] private GameObject changeLevelButton;
     [SerializeField] private GameObject pausedOverlayCanvas;
+    [SerializeField] private MapDecorator decoratorScript;
 
     private int currLevel;
     private HubConnection connection;
@@ -95,7 +96,7 @@ public class SignalRConnector : MonoBehaviour
             tileMap.GetComponent<BoardScript>().UpdateMap(map);
             clientPacman.GetComponent<PacmanScript>().SnapToMapLocation();
             leaderboard.UpdateScoreboard(map.Scores);
-
+            decoratorScript.SetAddons(map.Addons);
         });
     }
 
@@ -160,6 +161,12 @@ public class SignalRConnector : MonoBehaviour
                 });
                 break;
         }
+    }
+
+    public async void SetAddonInServer(Addon toSet)
+    {
+        Debug.Log("Setting map addon " + toSet.GetType().ToString() + " in server");
+        await connection.SendAsync("UpdateGameMapAddons", toSet.GetType(), toSet.GetValue());
     }
 
     public async void HandshakeFailed(string error)

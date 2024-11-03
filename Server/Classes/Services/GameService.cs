@@ -1,5 +1,6 @@
 ﻿using Server.Classes.Services.Observer;
 using Server.GameWorld;
+using SharedLibs;
 
 namespace Server.Classes.Services
 {
@@ -20,6 +21,10 @@ namespace Server.Classes.Services
         public void RestartMap()
         {
             _gameMap.RestartMap();
+        }
+        public void HandleMapAddon(Addon addon)
+        {
+            _gameMap.UpdateAddon(addon);
         }
 
         public void ResetAfterLevelChange()

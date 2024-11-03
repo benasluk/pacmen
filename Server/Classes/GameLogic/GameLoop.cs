@@ -146,7 +146,7 @@ namespace Server.Classes.GameLogic
         }
         public Positions updateMapInClient()
         {
-            var resultObj = _gameService.GetGameMap().GetAllTiles();
+            Positions resultObj = _gameService.GetGameMap().GetAllTiles();
             resultObj.Scores = PlayerScoreSingleton.getInstance().GetScore();
             return resultObj;
         }

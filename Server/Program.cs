@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Factory;
@@ -18,6 +19,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.PayloadSerializerSettings.Converters.Add(new AddonConverter());
 });
 builder.Services.AddSingleton<GameLoop>();
 builder.Services.AddSingleton<GameHub>();
