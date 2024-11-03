@@ -30,7 +30,8 @@ namespace Server.Classes.Services.Decorator
         public void UpdateAddon(Addon toUpdate)
         {
             Console.WriteLine("Currently in decorator");
-            if (Addons.Contains(toUpdate)) Addons.Find(a => a.GetType() == toUpdate.GetType()).SetValueFromString(toUpdate.GetValue());
+            var temp = Addons.Find(a => a.GetType() == toUpdate.GetType());
+            if (temp != null) temp.SetValueFromString(toUpdate.GetValue());
             else Addons.Add(toUpdate);
             Console.WriteLine("Added addon");
         }

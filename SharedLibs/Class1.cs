@@ -79,43 +79,44 @@ namespace SharedLibs
         Execute,
         Undo
     }
+
     public class MapWall : Addon
     {
-        public WallColor color;
-        public override void SetValueFromString(string value)
+        public WallColor color { get; set; }
+        public void SetValueFromString(string value)
         {
             if(Enum.TryParse(typeof(WallColor), value, false, out object result)) color = (WallColor)result;
         }
-        public override string GetValue()
+        public string GetValue()
         {
             return color.ToString();
         }
     }
     public class MapPelletColor : Addon
     {
-        public PelletColor color;
-        public override void SetValueFromString(string value)
+        public PelletColor color { get; set; }
+        public  void SetValueFromString(string value)
         {
             if (Enum.TryParse(typeof(PelletColor), value, false, out object result)) color = (PelletColor)result;
         }
-        public override string GetValue()
+        public string GetValue()
         {
             return color.ToString();
         }
     }
     public class MapPelletShape : Addon
     {
-        public PelletShape shape;
-        public override void SetValueFromString(string value)
+        public PelletShape shape { get; set; }
+        public void SetValueFromString(string value)
         {
             if (Enum.TryParse(typeof(PelletShape), value, false, out object result)) shape = (PelletShape)result;
         }
-        public override string GetValue()
+        public string GetValue()
         {
             return shape.ToString();
         }
     }
-    public abstract class Addon
+    public interface Addon
     {
         public abstract void SetValueFromString(string value);
         public abstract string GetValue(); 
