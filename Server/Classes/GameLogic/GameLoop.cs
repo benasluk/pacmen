@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Server.Classes.GameObjects;
 using Server.Classes.Services;
 using Server.Classes.Services.Factory;
+using Server.Classes.Services.Logging;
 using Server.Classes.Services.Observer;
 using Server.GameWorld;
 using Server.Hubs;
@@ -20,7 +21,7 @@ namespace Server.Classes.GameLogic
         private readonly IHubContext<GameHub> _hubContext;
         private readonly MovementTimerServiceSingleton _movementTimerService;
         private Timer _timer;
-        private int gameTimer;
+        public int gameTimer { get; private set; }
         public delegate void PacmanMovevementHandler();
         public event PacmanMovevementHandler PacmanMovevement;
         public delegate void GhostMovevementHandler();
@@ -35,6 +36,8 @@ namespace Server.Classes.GameLogic
         private List<Item> ItemList;
 
         private int gameSpeed = 1000 / 10;
+        private Ilogger textLogger;
+        private Ilogger databaseLogger;
 
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService, CommandHandler commandHandler)
         {
@@ -47,6 +50,9 @@ namespace Server.Classes.GameLogic
             _commandHandler = commandHandler;
             gameTimer = 0;
             ItemList = new List<Item>();
+            textLogger = new TextFileLogger();
+            databaseLogger = new DatabaseWriter(new DatabaseLoggerToWriterAdapter(new DatabaseLogger()));
+
         }
         public void Start()
         {
@@ -108,6 +114,8 @@ namespace Server.Classes.GameLogic
                     {
                         Positions test = updateMapInClient();
                         //Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        textLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        databaseLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
                         if (levelRestarted)
                         {
                             test.PlayerColors = new string[1];
@@ -158,8 +166,11 @@ namespace Server.Classes.GameLogic
         private void LoadLevelMap()
         {
             GameMap map = _levelFactory.CreateMap();
-            Console.WriteLine(_levelFactory.GetType());
+            //Console.WriteLine(_levelFactory.GetType());
+            textLogger.LogMap(map.GetAllTiles().Grid);
+            databaseLogger.LogMap(map.GetAllTiles().Grid);
             _gameService.SetGameMap(map);
+
         }
     }
 }

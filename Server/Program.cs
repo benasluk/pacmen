@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
+using Server.Classes.Services.Bridge;
 using Server.Classes.Services.Factory;
 using Server.Classes.Services.Logging;
 using Server.Hubs;
@@ -19,6 +21,8 @@ builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
 });
+//builder.Services.AddDbContext<GameDbContext>(options =>
+//        options.UseSqlite($"Data Source={Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/game.db"));
 builder.Services.AddSingleton<GameLoop>();
 builder.Services.AddSingleton<GameHub>();
 builder.Services.AddSingleton<PlayerService>();
@@ -27,6 +31,10 @@ builder.Services.AddSingleton<GameService>();
 builder.Services.AddSingleton<MessageService>();
 builder.Services.AddSingleton<CommandHandler>();
 builder.Services.AddSingleton<DatabaseWriter>();
+builder.Services.AddSingleton<DatabaseLoggerToWriterAdapter>();
+builder.Services.AddSingleton<DatabaseLogger>();
+builder.Services.AddTransient<ScoreCalculator,TimeBasedCalculator>();
+builder.Services.AddTransient<ICalculationMethod, CatchupMethod>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
@@ -39,7 +47,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-using var db = new GameDbContext();
+ServiceLocator.Instance = app.Services;
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -51,9 +59,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapHub<GameHub>("/Server");
 app.MapControllers();
-Console.WriteLine(db.DbPath);
-MapLog test = new MapLog();
-test.LoggedAt = DateTime.Now;
 var gameLoop = app.Services.GetRequiredService<GameLoop>();
 gameLoop.Start();
 app.Run();
