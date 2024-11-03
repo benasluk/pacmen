@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using static UnityEngine.Rendering.DebugUI.Table;
@@ -31,6 +32,25 @@ public class BoardScript : MonoBehaviour
 
     public void UpdateMap(SharedLibs.Positions newMap)
     {
+        string tempPelletColor = "Default";
+        string tempWallColor = "Default";
+        string tempPelletShape = "Default";
+        foreach (var addon in newMap.Addons)
+        {
+            switch (addon)
+            {
+                case MapPelletColor:
+                    tempPelletColor = addon.GetValue();
+                    break;
+                case MapPelletShape:
+                    tempPelletShape = addon.GetValue();
+                    break;
+                case MapWall:
+                    tempWallColor = addon.GetValue();
+                    break;
+            }
+        }
+
         for (int i = 0; i < 36; i++)
         {
             for (int j = 0; j < 28; j++)
@@ -41,10 +61,10 @@ public class BoardScript : MonoBehaviour
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Nothing")));
                         break;
                     case TileStatus.Pellet:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet")));
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet") && t.name.Contains(tempPelletShape + "_" + tempPelletColor)));
                         break;
                     case TileStatus.Wall:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Wall")));
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Wall") && t.name.Contains(tempWallColor)));
                         break;
                     case TileStatus.Pacman1:
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Green_pac")));

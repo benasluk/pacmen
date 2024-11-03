@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: Wall_Placeholder
+  m_Name: Pellet_Placeholder_Hexagon_Default
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: e151595ce0799994a92b0549da98cda5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d73dc053b1ca27843b7e99ae6b0da7c5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1

@@ -1,4 +1,6 @@
-﻿using SharedLibs;
+﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Server.Classes.Services.Decorator;
+using SharedLibs;
 
 namespace Server.GameWorld
 {
@@ -7,11 +9,13 @@ namespace Server.GameWorld
         protected TileStatus[,] _tileStatus;
         protected int rows;
         protected int cols;
+        protected MapDecorator decorator;
         public GameMap(int rowC, int colC)
         {
             rows= rowC;
             cols= colC;
             _tileStatus = new TileStatus[rows, cols];
+            decorator = new MapDecorator();
         }
 
         protected abstract void InitializeMap();
@@ -27,7 +31,20 @@ namespace Server.GameWorld
 
         public (int rows, int col) GetMapSize() => (rows, cols);
         
-        public Positions GetAllTiles() { return new Positions(_tileStatus); }
+        public Positions GetAllTiles() 
+        { 
+            var toReturn = new Positions(_tileStatus);
+            toReturn.Addons = decorator.GetAllAddons();
+            return toReturn;
+        }
+        public void UpdateAddon(Addon toUpdate)
+        {
+            decorator.UpdateAddon(toUpdate);
+        }
+        public void RemoveAddon(Addon toRemove)
+        {
+            decorator.Remove(toRemove);
+        }
         public TileStatus UpdateTile(int row, int col, TileStatus status)
         {
             TileStatus overwrittenTile = _tileStatus[row, col];

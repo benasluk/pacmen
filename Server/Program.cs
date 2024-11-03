@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
@@ -20,6 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.PayloadSerializerSettings.Converters.Add(new AddonConverter());
 });
 //builder.Services.AddDbContext<GameDbContext>(options =>
 //        options.UseSqlite($"Data Source={Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/game.db"));
