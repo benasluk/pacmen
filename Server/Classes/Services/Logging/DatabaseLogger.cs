@@ -24,7 +24,7 @@ namespace Server.Classes.Services.Logging
             }
         }
 
-        public void LogMap(TileStatus[,] tiles)
+        public void LogMap(string tiles)
         {
             using (var context = new GameDbContext())
             {
@@ -32,7 +32,7 @@ namespace Server.Classes.Services.Logging
                 var mapLog = new MapLog
                 {
                     LoggedAt = DateTime.UtcNow,
-                    Map = Utility.TileMapToString(tiles)
+                    Map = tiles
                 };
 
                 context.MapLogs.Add(mapLog);
