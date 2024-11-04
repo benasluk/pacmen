@@ -31,13 +31,11 @@ public class MapDecorator : MonoBehaviour
     }
     public void SetAddons(List<Addon> addons)
     {
-        Debug.Log(addons.Count);
         foreach(var addon in addons)
         {
             var currentAddon = Addons.Find(a => a.GetType() == addon.GetType());
             currentAddon.SetValueFromString(addon.GetValue());
             int index = Addons.IndexOf(currentAddon);
-            Debug.Log(index);
             MainThreadDispatcher.Instance().Enqueue(() =>
             {
                 AddonTexts[index].text = addon.GetValue();
