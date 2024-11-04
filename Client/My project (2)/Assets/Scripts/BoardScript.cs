@@ -50,6 +50,8 @@ public class BoardScript : MonoBehaviour
                     break;
             }
         }
+        Debug.Log(tempPelletColor);
+        Debug.Log(tiles.First(t => t.name.EndsWith(tempPelletShape + "_" + tempPelletColor)).name);
 
         for (int i = 0; i < 36; i++)
         {
@@ -61,7 +63,8 @@ public class BoardScript : MonoBehaviour
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Nothing")));
                         break;
                     case TileStatus.Pellet:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet") && t.name.Contains(tempPelletShape + "_" + tempPelletColor)));
+                        
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet") && t.name.EndsWith(tempPelletShape + "_" + tempPelletColor)));
                         break;
                     case TileStatus.Wall:
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Wall") && t.name.Contains(tempWallColor)));

@@ -175,7 +175,7 @@ public class SignalRConnector : MonoBehaviour
     public async void SetAddonInServer(Addon toSet)
     {
         Debug.Log("Setting map addon " + toSet.GetType().ToString() + " in server");
-        await connection.SendAsync("UpdateGameMapAddons", toSet.GetType(), toSet.GetValue());
+        await connection.SendAsync("UpdateGameMapAddons", toSet);
     }
 
     public async void HandshakeFailed(string error)

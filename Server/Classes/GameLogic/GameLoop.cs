@@ -130,7 +130,7 @@ namespace Server.Classes.GameLogic
 
                             var testSend = _hubContext.Clients.All.SendAsync("ReceiveMap", test);
                             var dummy = JsonConvert.SerializeObject(test);
-                            await Console.Out.WriteLineAsync(dummy);
+                            //await Console.Out.WriteLineAsync(dummy);
                             await testSend;
                         }
                         catch(Exception ex) {
