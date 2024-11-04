@@ -1,7 +1,9 @@
 ﻿using Xunit;
 using Server.GameWorld;
 using SharedLibs;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class GameMapTests
 {
     // Mock class to test GameMap, since GameMap is abstract

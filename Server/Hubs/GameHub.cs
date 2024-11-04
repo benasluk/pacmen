@@ -27,18 +27,6 @@ namespace Server.Hubs
             await Console.Out.WriteLineAsync(movement.Direction.ToString());
             _messageService.StorePlayerInput(Context.ConnectionId, movement);
         }
-        public override Task OnConnectedAsync()
-        {
-            var playerid = Context.ConnectionId;
-            Console.WriteLine("Got a connection from Player ID " + playerid + " !");
-
-            return base.OnConnectedAsync();
-        }
-        public async Task LevelChange(int num)
-        {
-            Console.WriteLine("Changing level");
-            _messageService.StoreLevelChange(num);
-        }
         
     }
 }

@@ -2,7 +2,9 @@
 using Moq;
 using Server.GameWorld;
 using Server.Classes.Services;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class GameServiceTests
 {
     private readonly GameService _gameService;

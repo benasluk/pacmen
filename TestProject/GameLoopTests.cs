@@ -8,7 +8,9 @@ using SharedLibs;
 using System.Collections.Generic;
 using Server.Hubs;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class GameLoopTests
 {
     private readonly Mock<GameService> _gameServiceMock = new Mock<GameService>();

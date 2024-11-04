@@ -1,6 +1,8 @@
 ﻿using Xunit;
 using Server.Classes.Services;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class ItemSingletonTests
 {
     [Fact]

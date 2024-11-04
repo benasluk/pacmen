@@ -6,12 +6,14 @@ using Server.Classes.Services;
 using Server.Hubs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TestProject
 {
+    [ExcludeFromCodeCoverage]
     public class GameIntegrationTests
     {
         private readonly Mock<GameService> _gameServiceMock = new Mock<GameService>();

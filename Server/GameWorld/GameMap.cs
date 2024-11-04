@@ -27,7 +27,6 @@ namespace Server.GameWorld
 
         public (int rows, int col) GetMapSize() => (rows, cols);
         
-        public Positions GetAllTiles() { return new Positions(_tileStatus); }
         public void UpdateTile(int row, int col, TileStatus status)
         {
             _tileStatus[row, col] = status;
@@ -35,18 +34,6 @@ namespace Server.GameWorld
         public void RestartMap()
         {
             InitializeMap();
-        }
-        private void SetupForDemo()
-        {
-            //Pirmas kiekvieno entry skaicius - row, einantys is paskos - columns
-            List<List<int>> toReplace = [[8, 13, 14], [12, 6, 12, 15, 21], [22, 6, 9, 18, 21], [26, 13, 14], [32, 13, 14]];
-            for (int i = 0; i < toReplace.Count; i++)
-            {
-                for (int j = 1; j < toReplace[i].Count; j++)
-                {
-                    _tileStatus[toReplace[i][0], toReplace[i][j]] = TileStatus.Wall;
-                }
-            }
         }
     }
 }

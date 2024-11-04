@@ -50,29 +50,7 @@ namespace Server.Classes.GameLogic
         {
             ItemList = new List<Item>();
             int level = _messageService.GetLevel();
-            LevelRestartEvent?.Invoke();
             levelRestarted = true;
-        }
-        private bool CheckForLevelChange()
-        {
-            return _messageService.IsLevelChange();
-        }
-        private void HandlePacmanMovement()
-        {
-            PacmanMovevement?.Invoke();
-        }
-        private void HandleGhostMovement()
-        {
-            GhostMovevement?.Invoke();
-        }
-        public Positions updateMapInClient()
-        {
-            var resultObj = _gameService.GetGameMap().GetAllTiles();
-            return resultObj;
-        }
-        public void RestartTimer()
-        {
-            gameTimer = 0;
         }
 
     }

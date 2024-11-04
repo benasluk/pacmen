@@ -4,7 +4,9 @@ using Server.Classes.Services;
 using Server.GameWorld;
 using SharedLibs;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class MessageServiceTests
 {
     private readonly MessageService _messageService;
@@ -21,6 +23,15 @@ public class MessageServiceTests
         _messageService.StoreLevelChange(1);
         Assert.True(_messageService.IsLevelChange());
         Assert.Equal(1, _messageService.GetLevel());
+    }
+
+    [Fact]
+    public void StoreLevelChange_SetsNewLevelCorrectly2()
+    {
+        int currLevel = _messageService.GetLevel();
+        _messageService.StoreLevelChange(-1);
+        Assert.False(_messageService.IsLevelChange());
+        Assert.Equal(currLevel, _messageService.GetLevel());
     }
 
     [Fact]

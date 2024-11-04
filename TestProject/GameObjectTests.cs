@@ -6,7 +6,9 @@ using Moq;
 using SharedLibs;
 using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class GameObjectTests
 {
     private readonly Mock<GameLoop> _gameLoopMock = new Mock<GameLoop>();

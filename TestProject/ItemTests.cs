@@ -4,18 +4,20 @@ using Server.Classes.Services;
 using Server.Classes.GameObjects;
 using Moq;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class ItemTests
 {
     private readonly Mock<GameLoop> _gameLoopMock = new Mock<GameLoop>();
-    private readonly Mock<GameService> _gameServiceMock = new Mock<GameService>();
+    private readonly GameServiceStub _gameServiceStub = new GameServiceStub();
     private readonly ServiceProvider _provider;
 
     public ItemTests()
     {
         var services = new ServiceCollection();
         services.AddSingleton(_gameLoopMock);
-        services.AddSingleton(_gameServiceMock);
+        services.AddSingleton(_gameServiceStub);
         _provider = services.BuildServiceProvider();
     }
 
@@ -39,4 +41,9 @@ public class ItemTests
         var item = new Item(_provider.GetService<GameLoop>(), _provider.GetService<GameService>());
         item.HandleMovement(); // No exceptions should be thrown
     }
+}
+
+public class GameServiceStub : GameService
+{
+
 }

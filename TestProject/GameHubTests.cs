@@ -7,7 +7,9 @@ using SharedLibs;
 using System.Threading.Tasks;
 using Server.Classes.GameLogic;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
+[ExcludeFromCodeCoverage]
 public class GameHubTests
 {
     private readonly Mock<MessageService> _messageServiceMock = new Mock<MessageService>();
