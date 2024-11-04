@@ -33,7 +33,7 @@ namespace Server.Classes.Services.Decorator
             var temp = Addons.Find(a => a.GetType() == toUpdate.GetType());
             if (temp != null) temp.SetValueFromString(toUpdate.GetValue());
             else Addons.Add(toUpdate);
-            Console.WriteLine("Added addon");
+            Console.WriteLine("Added addon. New addon value: " + toUpdate.GetValue());
         }
 
     }

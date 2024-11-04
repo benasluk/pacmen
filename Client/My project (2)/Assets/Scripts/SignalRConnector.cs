@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using SharedLibs;
 using System;
 using System.Collections;
@@ -60,6 +61,13 @@ public class SignalRConnector : MonoBehaviour
         .WithUrl(serverIP).AddNewtonsoftJsonProtocol(options =>
         {
             options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            options.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
+
+            options.PayloadSerializerSettings.Error = (sender, args) => 
+            {
+                Debug.Log($"JSON Serialization Error: {args.ErrorContext.Error.Message}");
+                args.ErrorContext.Handled = true;
+            };
         }).Build();
 
         connection.On<Positions>("ReceiveMap", ReceiveMap);
@@ -86,6 +94,7 @@ public class SignalRConnector : MonoBehaviour
 
     public void ReceiveMap(SharedLibs.Positions map)
     {
+        Debug.Log("Got a new map");
         MainThreadDispatcher.Instance().Enqueue(() =>
         {
             if (!tileMap.activeInHierarchy)
@@ -166,7 +175,7 @@ public class SignalRConnector : MonoBehaviour
     public async void SetAddonInServer(Addon toSet)
     {
         Debug.Log("Setting map addon " + toSet.GetType().ToString() + " in server");
-        await connection.SendAsync("UpdateGameMapAddons", toSet.GetType(), toSet.GetValue());
+        await connection.SendAsync("UpdateGameMapAddons", toSet);
     }
 
     public async void HandshakeFailed(string error)

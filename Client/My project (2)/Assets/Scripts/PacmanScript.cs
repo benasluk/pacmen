@@ -110,7 +110,7 @@ public class PacmanScript : MonoBehaviour
         foreach (var pos in tileMap.cellBounds.allPositionsWithin)
         {
             TileBase tile = tileMap.GetTile(pos);
-            if (tile.name.Contains(pacmanColor))
+            if (tile.name.Contains(pacmanColor + "_pacman"))
             {
                 transform.position = tileMap.CellToWorld(pos) + tileMap.layoutGrid.transform.lossyScale / 2;
                 RotatePacman();

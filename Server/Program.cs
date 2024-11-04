@@ -21,7 +21,12 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    options.PayloadSerializerSettings.Converters.Add(new AddonConverter());
+    options.PayloadSerializerSettings.TypeNameHandling = TypeNameHandling.Objects;
+    options.PayloadSerializerSettings.Error = (sender, args) =>
+    {
+        Console.WriteLine($"JSON Serialization Error: {args.ErrorContext.Error.Message}");
+        args.ErrorContext.Handled = true;
+    };
 });
 //builder.Services.AddDbContext<GameDbContext>(options =>
 //        options.UseSqlite($"Data Source={Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/game.db"));

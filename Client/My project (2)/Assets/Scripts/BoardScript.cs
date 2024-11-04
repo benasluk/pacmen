@@ -50,6 +50,8 @@ public class BoardScript : MonoBehaviour
                     break;
             }
         }
+        Debug.Log(tempPelletColor);
+        Debug.Log(tiles.First(t => t.name.EndsWith(tempPelletShape + "_" + tempPelletColor)).name);
 
         for (int i = 0; i < 36; i++)
         {
@@ -60,13 +62,14 @@ public class BoardScript : MonoBehaviour
                     case TileStatus.Empty:
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Nothing")));
                         break;
-                    case TileStatus.Pellet:
-                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet") && t.name.Contains(tempPelletShape + "_" + tempPelletColor)));
+                    case TileStatus.Pellet:           
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet") && t.name.EndsWith(tempPelletShape + "_" + tempPelletColor)));
                         break;
                     case TileStatus.Wall:
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Wall") && t.name.Contains(tempWallColor)));
                         break;
                     case TileStatus.Pacman1:
+                        Debug.Log("Setting green pacman to " + j + " " + -i + " position.");
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Green_pac")));
                         break;
                     case TileStatus.Pacman2:

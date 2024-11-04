@@ -37,15 +37,10 @@ namespace Server.Hubs
                     break;
             }
         }
-        public async Task UpdateGameMapAddons(Type addonType, string value)
+        public async Task UpdateGameMapAddons(Addon addon)
         {
             Console.WriteLine("Received Addon Update");
-
-            if (Activator.CreateInstance(addonType) is Addon addonToUpdate)
-            {
-                Console.WriteLine("Going to gameservice");
-                _gameService.HandleMapAddon(addonToUpdate);
-            }
+            _gameService.HandleMapAddon(addon);
         }
         public override Task OnConnectedAsync()
         {

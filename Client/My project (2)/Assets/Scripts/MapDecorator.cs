@@ -26,17 +26,19 @@ public class MapDecorator : MonoBehaviour
         Addons.ForEach(x => x.SetValueFromString("Default"));
         WallColors = new List<string> { "Default", "Red", "Green", "Yellow" };
         PelletColors = new List<string> { "Default", "Red", "Green", "White" };
-        PelletShapes = new List<string> { "Default", "Red", "Green", "Yellow" };
+        PelletShapes = new List<string> { "Default", "Hexagon", "Square", "Triangle" };
         Indices = new List<int> { 0, 0, 0 };
     }
     public void SetAddons(List<Addon> addons)
     {
         foreach(var addon in addons)
         {
-            Addons.Find(a => a.GetType() == addon.GetType()).SetValueFromString(addon.GetValue());
+            var currentAddon = Addons.Find(a => a.GetType() == addon.GetType());
+            currentAddon.SetValueFromString(addon.GetValue());
+            int index = Addons.IndexOf(currentAddon);
             MainThreadDispatcher.Instance().Enqueue(() =>
             {
-                AddonTexts[Addons.IndexOf(addon)].text = addon.GetValue();
+                AddonTexts[index].text = addon.GetValue();
             });
         }
     }
@@ -45,9 +47,10 @@ public class MapDecorator : MonoBehaviour
     {
         Indices[whichField] = (Indices[whichField] + 1) % 4;
         string newValue;
-        if (whichField == 0) newValue = PelletColors[Indices[whichField]];
-        else if (whichField == 1) newValue = PelletShapes[Indices[whichField]];
-        else newValue = WallColors[Indices[whichField]];
+        if (whichField == 0) newValue = PelletColors[Indices[whichField]].ToString();
+        else if (whichField == 1) newValue = PelletShapes[Indices[whichField]].ToString();
+        else newValue = WallColors[Indices[whichField]].ToString();
+        Debug.Log("Setting new value for " + whichField + ". The value: " + newValue);
         Addons[whichField].SetValueFromString(newValue);
         GameObject.Find("SignalR").GetComponent<SignalRConnector>().SetAddonInServer(Addons[whichField]);
         
@@ -56,9 +59,9 @@ public class MapDecorator : MonoBehaviour
     {
         Indices[whichField] = (Indices[whichField] - 1) % 4;
         string newValue;
-        if (whichField == 0) newValue = PelletColors[Indices[whichField]];
-        else if (whichField == 1) newValue = PelletShapes[Indices[whichField]];
-        else newValue = WallColors[Indices[whichField]];
+        if (whichField == 0) newValue = PelletColors[Indices[whichField]].ToString();
+        else if (whichField == 1) newValue = PelletShapes[Indices[whichField]].ToString();
+        else newValue = WallColors[Indices[whichField]].ToString();
         Addons[whichField].SetValueFromString(newValue);
         GameObject.Find("SignalR").GetComponent<SignalRConnector>().SetAddonInServer(Addons[whichField]);
     }
