@@ -1,15 +1,12 @@
 ﻿using Server.Classes.GameLogic;
+using Server.Classes.GameObjects;
 using Server.Classes.Services;
 using SharedLibs;
 
 namespace Server
 {
-    public abstract class GameObject //Update constructor logic or something
+    public abstract class GameObject : UnityObject
     {
-        protected int ID;
-        protected int col;
-        protected int row;
-        protected Direction direction = Direction.Up;
         protected readonly GameLoop _gameLoop;
         protected readonly GameService _gameService;
         
@@ -18,12 +15,8 @@ namespace Server
             _gameLoop = gameLoop;
             _gameService = gameService;
         }
-        public virtual void Destroy()
-        {
-        }
-        public abstract void HandleMovement();
 
-        public void UpdateDirection(Direction newDirection)
+        public sealed override void UpdateDirection(Direction newDirection)
         {
             this.direction = newDirection;
         }
@@ -33,7 +26,7 @@ namespace Server
             return _gameService;
         }
 
-        public (int col, int row) GetCurrentLocation()
+        public sealed override (int col, int row) GetCurrentLocation()
         {
             return (col, row);
         }
