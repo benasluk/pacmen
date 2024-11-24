@@ -93,6 +93,15 @@ public class BoardScript : MonoBehaviour
                     case TileStatus.Ghost4:
                         tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Ghost_P")));
                         break;
+                    case TileStatus.PelletSmall:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet") && t.name.EndsWith("Square" + "_" + tempPelletColor)));
+                        break;
+                    case TileStatus.PelletLarge:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Pellet") && t.name.EndsWith("Hexagon" + "_" + tempPelletColor)));
+                        break;
+                    default:
+                        tileMap.SetTile(topLeftCellPosition + new Vector3Int(j, -i, 0), tiles.First(t => t.name.Contains("Nothing")));
+                        break;
                 }
             }
         }

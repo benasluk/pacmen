@@ -3,6 +3,7 @@ using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Bridge;
 using Server.Classes.Services.Factory;
+using Server.Classes.Services.Flyweight;
 using Server.Classes.Services.Observer;
 using Server.GameWorld;
 using SharedLibs;
@@ -62,12 +63,12 @@ namespace Server.Classes.GameObjects
                 col = projectedX;
                 row = projectedY;
                 var tile = map.GetTileStatus(row, col);
-                if (tile == TileStatus.Pellet)
+                if (Pellet.Collides(tile))
                 {
                     var totalScore = PlayerScoreSingleton.getInstance().GetScore().Sum();
                     var currScore = PlayerScoreSingleton.getInstance().GetScore()[(int)pacmanNo - 5];
                     var time = _gameLoop.gameTimer;
-                    var res = 1 + _scoreCalculatorFactory.CalculateScore(totalScore, currScore, time);
+                    var res = Pellet.GetPelletScore(tile) + _scoreCalculatorFactory.CalculateScore(totalScore, currScore, time);
                     Console.WriteLine(res);
                     score += res;
                 }

@@ -67,7 +67,9 @@ namespace SharedLibs
         Ghost1,
         Ghost2,
         Ghost3,
-        Ghost4
+        Ghost4,
+        PelletSmall,
+        PelletLarge
     }
     public enum CommandType
     {
