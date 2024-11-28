@@ -1,4 +1,5 @@
-﻿using Server.GameWorld;
+﻿using Server.Classes.Services.Iterator;
+using Server.GameWorld;
 using SharedLibs;
 
 namespace Server.Classes.Services.Strategy;
@@ -8,6 +9,8 @@ public class BFSStrategy : MovementStrategy
     public override Direction FindMovementDirection(GameMap gameMap, int currRow, int currCol)
     {
         Queue<(int yc, int xc, LinkedList<(int, int)> path)> queue = new();
+        Iterator<(int yc, int xc, LinkedList<(int, int)> path)> queueIterator =
+            new QueueIterator<(int yc, int xc, LinkedList<(int, int)> path)>(queue);
 
         var startingPath = new LinkedList<(int, int)>();
         startingPath.AddLast((currRow, currCol));
@@ -16,18 +19,24 @@ public class BFSStrategy : MovementStrategy
         bool[,] visited = new bool[36, 28];
         visited[currRow, currCol] = true;
 
-        while (queue.Count > 0)
+        while (queueIterator.HasNext())
         {
-            var (currentY, currentX, path) = queue.Dequeue();
+            var (currentY, currentX, path) = queueIterator.Next();
+
+            Iterator<(int, int)> linkedListIterator = new LinkedListIterator<(int, int)>(path);
 
             if (IsPacman(currentX, currentY, gameMap))
             {
-                path.RemoveFirst();
+                if (linkedListIterator.HasNext())
+                {
+                    linkedListIterator.Next();
+                    linkedListIterator.RemoveCurrent();
+                }
 
-                if (path.Count == 0)
+                if (!linkedListIterator.HasNext())
                     return Direction.None;
 
-                (int projectedY, int projectedX) = path.First!.ValueRef;
+                var (projectedY, projectedX) = linkedListIterator.Next();
 
                 if (currRow < projectedY && ValidMove(gameMap, currCol, currRow + 1)) return Direction.Down;
                 if (currRow > projectedY && ValidMove(gameMap, currCol, currRow - 1)) return Direction.Up;
