@@ -85,7 +85,12 @@ async Task Test()
 {
     Console.WriteLine("Started analysis");
 
-
+    var excludedFolders = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    {
+        "migrations",
+        "bin",
+        "obj"
+    };
 
     var instance = MSBuildLocator.QueryVisualStudioInstances().FirstOrDefault();
     if (instance != null)
@@ -97,8 +102,6 @@ async Task Test()
     {
         Console.WriteLine("No MSBuild instance found.");
     }
-
-    //MSBuildLocator.RegisterDefaults();
 
     if (!MSBuildLocator.IsRegistered)
     {
@@ -135,18 +138,44 @@ async Task Test()
     foreach (var project in solution.Projects)
     {
         Console.WriteLine($"Analyzing project: {project.Name}");
+        if (project.Name == "PacmanTests") continue;
         foreach (var document in project.Documents)
         {
+            var filePath = document.FilePath;
+
+            if (filePath != null && IsInExcludedFolder(filePath, excludedFolders))
+            {
+                Console.WriteLine($"Skipping file in excluded folder: {filePath}");
+                continue;
+            }
+
             var syntaxTree = await document.GetSyntaxTreeAsync();
             if (syntaxTree != null)
             {
-                AnalyzeSyntaxTree(syntaxTree);
+                AnalyzeSyntaxTree(document, syntaxTree);
             }
         }
     }
 }
 
-static void AnalyzeSyntaxTree(SyntaxTree syntaxTree)
+static bool IsInExcludedFolder(string filePath, HashSet<string> excludedFolders)
+{
+    var directorySegments = Path.GetDirectoryName(filePath)?.Split(Path.DirectorySeparatorChar);
+
+    if (directorySegments != null)
+    {
+        foreach (var segment in directorySegments)
+        {
+            if (excludedFolders.Contains(segment))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static void AnalyzeSyntaxTree(Document document, SyntaxTree syntaxTree)
 {
     var root = syntaxTree.GetRoot();
 
@@ -155,6 +184,9 @@ static void AnalyzeSyntaxTree(SyntaxTree syntaxTree)
 
     // Use a HashSet to keep track of lines already reported
     var reportedLines = new HashSet<int>();
+
+    // Get the file name from the document
+    var fileName = document.FilePath;
 
     foreach (var literal in literals)
     {
@@ -171,8 +203,9 @@ static void AnalyzeSyntaxTree(SyntaxTree syntaxTree)
             // Get the full line of code
             var lineText = literal.SyntaxTree.GetText().Lines[lineNumber].ToString();
 
-            // Print the line containing the hardcoded value
-            Console.WriteLine($"Hardcoded value found on line {lineNumber + 1}: {lineText}");
+            // Print the file name, line number, and line containing the hardcoded value
+            Console.WriteLine($"File: {fileName.Split('\\').Last()}, Line {lineNumber + 1}: {lineText}");
         }
     }
 }
+
