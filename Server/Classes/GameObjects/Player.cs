@@ -2,6 +2,7 @@
 using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Bridge;
+using Server.Classes.Services.Chain_Of_Command;
 using Server.Classes.Services.Factory;
 using Server.Classes.Services.Flyweight;
 using Server.Classes.Services.Observer;
@@ -14,7 +15,7 @@ namespace Server.Classes.GameObjects
     {
         public string color;
         public TileStatus pacmanNo = TileStatus.Empty;
-        private int score = 0;
+        public int score { get; set; } = 0;
         private readonly ScoreCalculator _scoreCalculatorFactory;
         public Player(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
         {
@@ -63,16 +64,21 @@ namespace Server.Classes.GameObjects
                 col = projectedX;
                 row = projectedY;
                 var tile = map.GetTileStatus(row, col);
-                if (Pellet.Collides(tile))
-                {
-                    var totalScore = PlayerScoreSingleton.getInstance().GetScore().Sum();
-                    var currScore = PlayerScoreSingleton.getInstance().GetScore()[(int)pacmanNo - 5];
-                    var time = _gameLoop.gameTimer;
-                    var res = Pellet.GetPelletScore(tile) + _scoreCalculatorFactory.CalculateScore(totalScore, currScore, time);
-                    Console.WriteLine(res);
-                    score += res;
-                }
-                PlayerScoreSingleton.getInstance().SetScore((int)pacmanNo-5, score);
+                var collisionEvent = new CollisionEvent(this, tile, gameMap, _gameLoop,col,row);
+                var collisionVerifier = CreateCollisionHandlerChain();
+
+                /*                if (Pellet.Collides(tile))
+                                {
+                                    var totalScore = PlayerScoreSingleton.getInstance().GetScore().Sum();
+                                    var currScore = PlayerScoreSingleton.getInstance().GetScore()[(int)pacmanNo - 5];
+                                    var time = _gameLoop.gameTimer;
+                                    var res = Pellet.GetPelletScore(tile) + _scoreCalculatorFactory.CalculateScore(totalScore, currScore, time);
+                                    Console.WriteLine(res);
+                                    score += res;
+                                }
+                                PlayerScoreSingleton.getInstance().SetScore((int)pacmanNo-5, score);*/
+
+                collisionVerifier.HandleCollision(collisionEvent);
                 map.UpdateTile(row, col, pacmanNo);
             }
         }
@@ -87,6 +93,19 @@ namespace Server.Classes.GameObjects
         {
             col = columnToSet;
             row = rowToSet;
+        }
+        private CollisionHandler CreateCollisionHandlerChain()
+        {
+            var collisionVerifier = new CollisionVerifier();
+            var healthHandler = new CollsionHealthHandler();
+            var scoreHandler = new CollisionScoreHandler();
+            var deletionHandler = new CollisionDeletionHandler();
+
+            collisionVerifier.SetNext(healthHandler);
+            healthHandler.SetNext(scoreHandler);
+            scoreHandler.SetNext(deletionHandler);
+
+            return collisionVerifier;
         }
     }
 }
