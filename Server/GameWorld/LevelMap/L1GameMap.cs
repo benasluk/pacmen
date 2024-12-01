@@ -1,16 +1,29 @@
-﻿using SharedLibs;
+﻿using Server.Classes.Services.Composite;
+using SharedLibs;
 
 namespace Server.GameWorld.LevelMap;
 
 public class L1GameMap : GameMap
 {
+    private PelletGroup allPellets = new PelletGroup();
+    private PelletComponent regularPellets = new PelletGroup();
+    private PelletComponent bigPellets = new PelletGroup();
+    private PelletComponent smallPellets = new PelletGroup();
     public L1GameMap(int rowC, int colC) : base(rowC, colC)
     {
+        PelletComponent pellet1 = new PelletLeaf(TileStatus.Pellet);
+        PelletComponent pellet2 = new PelletLeaf(TileStatus.PelletSmall);
+        PelletComponent pellet3 = new PelletLeaf(TileStatus.PelletLarge);
+
         InitializeMap();
     }
 
     protected sealed override void InitializeMap()
     {
+        PelletComponent pellet1 = new PelletLeaf(TileStatus.Pellet);
+        PelletComponent pellet2 = new PelletLeaf(TileStatus.PelletSmall);
+        PelletComponent pellet3 = new PelletLeaf(TileStatus.PelletLarge);
+
         int[,] pacmanLayout = new int[,]
             {
                 //0  empty ,1 siena, 2 pelletas
@@ -65,6 +78,8 @@ public class L1GameMap : GameMap
                         _tileStatus[i, j] = TileStatus.Empty;
                         break;
                     case 2:
+                        allPellets.Add(pellet1);
+                        regularPellets.Add(new PelletLeaf(TileStatus.Pellet));
                         _tileStatus[i, j] = TileStatus.Pellet;
                         break;
                     case 3:
@@ -95,14 +110,23 @@ public class L1GameMap : GameMap
                         _tileStatus[i, j] = TileStatus.Ghost4;
                         break;
                     case 13:
+                        allPellets.Add(pellet2);
+                        smallPellets.Add(new PelletLeaf(TileStatus.PelletSmall));
                         _tileStatus[i, j] = TileStatus.PelletSmall;
                             break;
                     case 14:
+                        allPellets.Add(pellet3);
                         _tileStatus[i, j] = TileStatus.PelletLarge;
+                        bigPellets.Add(new PelletLeaf(TileStatus.PelletLarge));
                         break;
                 }
             }
         }
+
+        Console.WriteLine($"After initializing map, the total score of all pellets is {allPellets.GetPelletScore()}");
+        Console.WriteLine($"The total score of only small pellets is {smallPellets.GetPelletScore()}");
+        Console.WriteLine($"The total score of only regular pellets is {regularPellets.GetPelletScore()}");
+        Console.WriteLine($"The total score of only big pellets is {bigPellets.GetPelletScore()}");
 
         //Remove for development
         SetupForDemo();
