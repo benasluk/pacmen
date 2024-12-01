@@ -19,7 +19,7 @@ public class LinkedListIterator<T> : Iterator<T>
     public T Next()
     {
         if (!HasNext())
-            throw new ArgumentOutOfRangeException();
+            return default;
 
         T value = _node!.Value;
         _node = _node.Next;
@@ -28,11 +28,11 @@ public class LinkedListIterator<T> : Iterator<T>
     
     public void RemoveCurrent()
     {
-        if (_node is null)
-            throw new ArgumentOutOfRangeException();
-
-        var nodeToRemove = _node.Previous ?? _list.First;
-        if (nodeToRemove != null)
-            _list.Remove(nodeToRemove);
+        if (_node is not null)
+        {
+            var nodeToRemove = _node.Previous ?? _list.First;
+            if (nodeToRemove is not null)
+                _list.Remove(nodeToRemove);
+        }
     }
 }
