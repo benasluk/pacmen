@@ -81,6 +81,17 @@ namespace Server.Classes.Services
                 AddPlayer(playerId[i], _gameLoop);
             }
         }
+        public void RemovePlayerByValue(Player playerToRemove)
+        {
+            var playerId = _players.FirstOrDefault(x => x.Value == playerToRemove).Key;
+
+            if (playerId != null)
+            {
+                playerToRemove.Destroy();
+
+                _players.Remove(playerId);
+            }
+        }
         public void RemovePlayer(string playerId)
         {
             if (_players.TryGetValue(playerId, out Player player))
