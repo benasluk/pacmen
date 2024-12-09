@@ -37,6 +37,17 @@ namespace Server.GameWorld
             toReturn.Addons = decorator.GetAllAddons();
             return toReturn;
         }
+        public bool IsFinished()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 1; j < cols; j++)
+                {
+                    if (_tileStatus[i, j] == TileStatus.PelletLarge || _tileStatus[i, j] == TileStatus.PelletSmall || _tileStatus[i, j] == TileStatus.Pellet) return false;
+                }
+            }
+            return true;
+        }
         public void UpdateAddon(Addon toUpdate)
         {
             decorator.UpdateAddon(toUpdate);

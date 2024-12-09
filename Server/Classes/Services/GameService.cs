@@ -13,7 +13,10 @@ namespace Server.Classes.Services
         {
             return _gameMap;
         }
-
+        public bool IsMapFinished()
+        {
+            return _gameMap.IsFinished();
+        }
         public void SetGameMap(GameMap map)
         {
             _gameMap = map;

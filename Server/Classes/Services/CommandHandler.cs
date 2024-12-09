@@ -10,31 +10,36 @@ namespace Server.Classes.Services
         {
             _messageService = messageService;
         }
-        public void HandleMessages()
+        public int HandleMessages(int initialState)
         {
             ReadMessages();
-            HandleCommands();
+            int toReturn = HandleCommands(initialState);
             ClearCommands();
+            return toReturn;
         }
         private void ReadMessages()
         {
             commands = _messageService.GetAndClearCommand();
         }
-        private void HandleCommands()
+        private int HandleCommands(int initialState)
         {
+            int stateToReturn = initialState;
             foreach (var command in commands)
             {
                 Console.WriteLine(command.Item1.ToString());
                 if (command.Item2 == CommandAction.Execute) {
                     command.Item1.Execute(command.Item3);
+                    stateToReturn = 2;
                     continue;
                 }
                 if (command.Item2 == CommandAction.Undo)
                 {
                     command.Item1.Undo(command.Item3);
+                    stateToReturn = 1;
                     continue;
                 }
             }
+            return stateToReturn;
         }
         private void ClearCommands()
         {

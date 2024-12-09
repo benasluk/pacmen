@@ -4,6 +4,7 @@ namespace Server.Classes.Services.Logging
 {
     public class DatabaseLogger
     {
+        private static readonly object _lock = new object();
 
         public DatabaseLogger()
         {
@@ -11,47 +12,55 @@ namespace Server.Classes.Services.Logging
 
         public void Log(string message)
         {
-            using (var context = new GameDbContext())
+            lock (_lock)
             {
-                var textLog = new TextLog
+                using (var context = new GameDbContext())
                 {
-                    LoggedAt = DateTime.UtcNow,
-                    Text = message
-                };
+                    var textLog = new TextLog
+                    {
+                        LoggedAt = DateTime.UtcNow,
+                        Text = message
+                    };
 
-                context.TextLogs.Add(textLog);
-                context.SaveChanges();
+                    context.TextLogs.Add(textLog);
+                    context.SaveChanges();
+                }
             }
         }
 
         public void LogMap(string tiles)
         {
-            using (var context = new GameDbContext())
+            lock (_lock)
             {
-
-                var mapLog = new MapLog
+                using (var context = new GameDbContext())
                 {
-                    LoggedAt = DateTime.UtcNow,
-                    Map = tiles
-                };
+                    var mapLog = new MapLog
+                    {
+                        LoggedAt = DateTime.UtcNow,
+                        Map = tiles
+                    };
 
-                context.MapLogs.Add(mapLog);
-                context.SaveChanges();
+                    context.MapLogs.Add(mapLog);
+                    context.SaveChanges();
+                }
             }
         }
 
         public void LogInput(Direction dir)
         {
-            using (var context = new GameDbContext())
+            lock (_lock)
             {
-                var inputLog = new InputLog
+                using (var context = new GameDbContext())
                 {
-                    LoggedAt = DateTime.UtcNow,
-                    Direction = dir
-                };
+                    var inputLog = new InputLog
+                    {
+                        LoggedAt = DateTime.UtcNow,
+                        Direction = dir
+                    };
 
-                context.InputLogs.Add(inputLog);
-                context.SaveChanges();
+                    context.InputLogs.Add(inputLog);
+                    context.SaveChanges();
+                }
             }
         }
     }

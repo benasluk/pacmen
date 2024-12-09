@@ -39,6 +39,12 @@ namespace Server.Classes.GameLogic
         private Ilogger textLogger;
         private Ilogger databaseLogger;
 
+        // 0 - Not started
+        // 1 - Playing
+        // 2 - Paused
+        // 3 - Finished
+        private int State = 0;
+
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService, CommandHandler commandHandler)
         {
             _gameService = gameService;
@@ -56,6 +62,7 @@ namespace Server.Classes.GameLogic
         }
         public void Start()
         {
+            State = 1;
             _timer = new Timer(Update, null, 0, gameSpeed);
 
             int whatLevel = 0; // new Random(DateTime.Now.Millisecond).Next() % 2;
@@ -69,6 +76,7 @@ namespace Server.Classes.GameLogic
         }
         public void RestartLoop()
         {
+            State = 1;
             ItemList = new List<Item>();
             int level = _messageService.GetLevel();
             if (level % 2 == 0) _levelFactory = new LevelOneFactory();
@@ -83,8 +91,8 @@ namespace Server.Classes.GameLogic
         }
         public async void Update(object state)
         {
-            _commandHandler.HandleMessages();
-            if(!_gameService.paused) {
+            State = _commandHandler.HandleMessages(State);
+            if(State == 1) {
                 if (_playerService.GetPlayerCount() >= 1)
                 {
                     _movementTimerService.UpdateElapsedTime(gameSpeed);
@@ -136,6 +144,10 @@ namespace Server.Classes.GameLogic
                         catch(Exception ex) {
                             Console.WriteLine(ex.Message);
                         }
+                    }
+                    if(_gameService.IsMapFinished())
+                    {
+                        State = 3;
                     }
                 }
             }
