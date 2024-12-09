@@ -1,6 +1,7 @@
 ﻿using Server.Classes.GameLogic;
 using Server.Classes.Services;
 using Server.Classes.Services.Strategy;
+using Server.Classes.Services.Visitor;
 using Server.GameWorld;
 using SharedLibs;
 
@@ -61,6 +62,11 @@ public class Ghost : GameObject, ICloneable
 
             lastVisitedTile = gameMap.UpdateTile(row, col, ghostNo);
         }
+    }
+
+    public override void Accept(LoggingVisitor visitor)
+    {
+        visitor.LogGhost(this);
     }
 
     private static bool ValidMove(GameMap map, int x, int y)

@@ -1,7 +1,9 @@
 ﻿using Server.Classes.GameLogic;
 using Server.Classes.GameObjects;
 using Server.Classes.Services.Factory;
+using Server.Classes.Services.Logging;
 using Server.Classes.Services.Observer;
+using Server.Classes.Services.Visitor;
 using SharedLibs;
 
 namespace Server.Classes.Services
@@ -11,6 +13,7 @@ namespace Server.Classes.Services
         private AbstractLevelFactory _levelFactory;
         private readonly GameService _gameService;
         private GameLoop _gameLoop;
+        private DataBaseLoggingVisitor _dbLoggingVisitor;
 
         private Dictionary<string, Player> _players = new Dictionary<string, Player>();
 
@@ -18,6 +21,7 @@ namespace Server.Classes.Services
         {
             _gameService = gameService;
             ((IResetabbleLoop)this).SubscriberToLevelChange();
+            _dbLoggingVisitor = new DataBaseLoggingVisitor();
         }
 
         public void SetPlayerFactory(AbstractLevelFactory levelFactory)
@@ -107,6 +111,7 @@ namespace Server.Classes.Services
             var player = GetPlayerById(input.PlayerId);
             player.UpdateDirection(input.Direction);
             player.HandleMovement();
+            player.Accept(_dbLoggingVisitor);
         }
 
         public (int x, int y) GetPlayerCoordinates(string playerId)

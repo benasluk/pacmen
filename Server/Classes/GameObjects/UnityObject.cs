@@ -1,4 +1,5 @@
 using Server.Classes.Services;
+using Server.Classes.Services.Visitor;
 using SharedLibs;
 
 namespace Server.Classes.GameObjects;
@@ -19,4 +20,6 @@ public abstract class UnityObject
     public abstract void UpdateDirection(Direction newDirection);
 
     public abstract (int col, int row) GetCurrentLocation();
+
+    public abstract void Accept(LoggingVisitor visitor);
 }

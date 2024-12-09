@@ -6,6 +6,7 @@ using Server.Classes.Services.Chain_Of_Command;
 using Server.Classes.Services.Factory;
 using Server.Classes.Services.Flyweight;
 using Server.Classes.Services.Observer;
+using Server.Classes.Services.Visitor;
 using Server.GameWorld;
 using SharedLibs;
 
@@ -81,6 +82,11 @@ namespace Server.Classes.GameObjects
                 collisionVerifier.HandleCollision(collisionEvent);
                 map.UpdateTile(row, col, pacmanNo);
             }
+        }
+
+        public override void Accept(LoggingVisitor visitor)
+        {
+            visitor.LogPlayer(this);
         }
 
         private static bool ValidMove(GameMap map, int x, int y)

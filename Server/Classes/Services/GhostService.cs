@@ -2,6 +2,7 @@ using Server.Classes.GameLogic;
 using Server.Classes.GameObjects;
 using Server.Classes.Services.Builder;
 using Server.Classes.Services.Observer;
+using Server.Classes.Services.Visitor;
 
 namespace Server.Classes.Services;
 
@@ -9,6 +10,8 @@ public class GhostService : IResetabbleLoop
 {
     private readonly GameService _gameService;
     private GameLoop _gameLoop;
+    private LoggingVisitor _consoleLoggingVisitor;
+    private LoggingVisitor _fileLoggingVisitor;
 
     private List<Ghost> _ghosts = new List<Ghost>();
 
@@ -16,6 +19,8 @@ public class GhostService : IResetabbleLoop
     {
         _gameService = gameService;
         ((IResetabbleLoop)this).SubscriberToLevelChange();
+        _consoleLoggingVisitor = new ConsoleLoggingVisitor();
+        _fileLoggingVisitor = new FileLoggingVisitor("fileLogs.txt");
     }
 
     public void AddGhosts(GameLoop gameLoop)
@@ -80,6 +85,8 @@ public class GhostService : IResetabbleLoop
         foreach (var ghost in _ghosts)
         {
             ghost.HandleMovement();
+            ghost.Accept(_consoleLoggingVisitor);
+            ghost.Accept(_fileLoggingVisitor);
         }
     }
 
