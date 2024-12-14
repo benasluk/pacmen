@@ -137,5 +137,9 @@ namespace Server.Classes.Services
         {
             ResetPlayers();
         }
+        public List<Player> GetAllPlayers()
+        {
+            return _players;
+        }
     }
 }

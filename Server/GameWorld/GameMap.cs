@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Cors.Infrastructure;
+using Server.Classes.Services;
 using Server.Classes.Services.Decorator;
 using SharedLibs;
 
@@ -32,10 +33,37 @@ namespace Server.GameWorld
         public (int rows, int col) GetMapSize() => (rows, cols);
         
         public Positions GetAllTiles() 
-        { 
+        {
+            RemovePlayersFromMap();
+            RefreshPlayers();
             var toReturn = new Positions(_tileStatus);
             toReturn.Addons = decorator.GetAllAddons();
             return toReturn;
+        }
+        private void RemovePlayersFromMap()
+        {
+            TileStatus[] pacmen = new TileStatus[] { TileStatus.Pacman1, TileStatus.Pacman2, TileStatus.Pacman3, TileStatus.Pacman4 };
+            var replacement = TileStatus.Empty;
+            for (int i = 0; i < _tileStatus.GetLength(0); i++) // Rows
+            {
+                for (int j = 0; j < _tileStatus.GetLength(1); j++) // Columns
+                {
+                    if (pacmen.Contains(_tileStatus[i, j]))
+                    {
+                        _tileStatus[i, j] = replacement;
+                    }
+                }
+            }
+        }
+        private void RefreshPlayers()
+        {
+            var playerService = ServiceLocator.GetService<PlayerService>();
+            var Players = playerService.GetAllPlayers();
+            foreach (var player in Players)
+            {
+                var pos = player.GetPos();
+                _tileStatus[pos[0], pos[1]] = player.pacmanNo;
+            }
         }
         public bool IsFinished()
         {

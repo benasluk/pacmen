@@ -28,7 +28,10 @@ namespace Server.Classes.GameObjects
             _gameLoop.PacmanMovevement -= HandleMovement;
             base.Destroy();
         }
-
+        public int[] GetPos()
+        {
+            return [row, col];
+        }
         public override void HandleMovement()
         {
             var gameMap = GetGameService().GetGameMap();
