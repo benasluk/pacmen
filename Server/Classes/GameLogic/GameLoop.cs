@@ -39,6 +39,7 @@ namespace Server.Classes.GameLogic
         private Ilogger textLogger;
         private Ilogger databaseLogger;
 
+        public bool newMessage = false;
         // 0 - Not started
         // 1 - Playing
         // 2 - Paused
@@ -159,6 +160,7 @@ namespace Server.Classes.GameLogic
         private void HandlePlayerInputs()
         {
             //Console.WriteLine("Handling inputs");
+            if (!newMessage) return;
             var inputs = _messageService.GetPlayerInputs();
             foreach (var input in inputs)
             {
@@ -166,6 +168,7 @@ namespace Server.Classes.GameLogic
                 //_playerService.UpdatePlayerLocation(input.Value);
                 //(int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
             }
+            newMessage = false;
         }
         private void HandlePacmanMovement()
         {
