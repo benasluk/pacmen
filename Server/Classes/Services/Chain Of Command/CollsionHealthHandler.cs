@@ -12,6 +12,11 @@ namespace Server.Classes.Services.Chain_Of_Command
                 Console.WriteLine("Pacman collided with a Ghost. Reducing health.");
                 ServiceLocator.GetService<PlayerService>().RemovePlayerByValue(collision.Player);
             }
+            else if(collision.CollidedTile == TileStatus.Pacman1 || collision.CollidedTile == TileStatus.Pacman2 || collision.CollidedTile == TileStatus.Pacman3 || collision.CollidedTile == TileStatus.Pacman4)
+            {
+                Console.WriteLine("Ghost collided with a Pacman. Reducing health.");
+                ServiceLocator.GetService<PlayerService>().RemovePlayerByValue(collision.Player);
+            }
             _nextHandler?.HandleCollision(collision);
         }
     }

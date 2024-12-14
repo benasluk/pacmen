@@ -15,6 +15,7 @@ namespace Server.Hubs
         private readonly GameService _gameService;
         private readonly PlayerService _playerService;
         private readonly GameLoop _gameLoop;
+        public List<string> connectedPlayerIds = new List<string>();
         public GameHub(MessageService messageService, GameService gameService, PlayerService playerService, GameLoop gameLoop)
         {
             _gameService = gameService;
@@ -42,10 +43,21 @@ namespace Server.Hubs
             Console.WriteLine("Received Addon Update");
             _gameService.HandleMapAddon(addon);
         }
+        public async Task SaveMap()
+        {
+            Console.WriteLine("Map saved");
+            _gameService.SaveMap();
+        }
+        public async Task LoadMap()
+        {
+            Console.WriteLine("Loading map");
+            _gameService.RestoreMap();
+        }
         public override Task OnConnectedAsync()
         {
             var playerid = Context.ConnectionId;
             Console.WriteLine("Got a connection from Player ID " + playerid + " !");
+            connectedPlayerIds.Add(playerid);
 
             return base.OnConnectedAsync();
         }
@@ -76,6 +88,7 @@ namespace Server.Hubs
         }
         public override Task OnDisconnectedAsync(Exception? exception)
         {
+            connectedPlayerIds.Remove(Context.ConnectionId);
             var playerId = Context.ConnectionId;
             _playerService.RemovePlayer(playerId);
             Console.WriteLine("Connection stopped from " + playerId + " !");

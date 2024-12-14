@@ -103,7 +103,7 @@ public class SignalRConnector : MonoBehaviour
                 clientPacman.SetActive(true);
             }
             tileMap.GetComponent<BoardScript>().UpdateMap(map);
-            clientPacman.GetComponent<PacmanScript>().SnapToMapLocation();
+            clientPacman.GetComponent<PacmanScript>().SnapToMapLocation(map.SceneChange);
             leaderboard.UpdateScoreboard(map.Scores);
             decoratorScript.SetAddons(map.Addons);
         });
@@ -238,5 +238,15 @@ public class SignalRConnector : MonoBehaviour
                 pausedOverlayCanvas.SetActive(false);
             });
         }
+    }
+
+    public void SaveMap()
+    {
+        connection.SendAsync("SaveMap");
+    }
+
+    public void LoadMap()
+    {
+        connection.SendAsync("LoadMap");
     }
 }

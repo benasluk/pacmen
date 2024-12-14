@@ -7,8 +7,8 @@ namespace Server.Classes.GameObjects;
 public abstract class UnityObject
 {
     protected int ID;
-    protected int col;
-    protected int row;
+    public int col;
+    public int row;
     protected Direction direction = Direction.Up;
     
     public virtual void Destroy()

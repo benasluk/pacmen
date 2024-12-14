@@ -13,7 +13,7 @@ public class GhostService : IResetabbleLoop
     private LoggingVisitor _consoleLoggingVisitor;
     private LoggingVisitor _fileLoggingVisitor;
 
-    private List<Ghost> _ghosts = new List<Ghost>();
+    public List<Ghost> _ghosts = new List<Ghost>();
 
     public GhostService(GameService gameService)
     {

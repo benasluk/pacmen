@@ -1,4 +1,5 @@
-﻿using Server.Classes.Services.Observer;
+﻿using Server.Classes.Services.Memento;
+using Server.Classes.Services.Observer;
 using Server.GameWorld;
 using SharedLibs;
 
@@ -9,6 +10,7 @@ namespace Server.Classes.Services
         private GameMap _gameMap;
         string _pauser;
         public bool paused { get; private set; }
+        public MapCaretaker _caretaker = new MapCaretaker();
         public GameMap GetGameMap()
         {
             return _gameMap;
@@ -54,6 +56,25 @@ namespace Server.Classes.Services
                 return true;
             }
             else return false;
+        }
+
+        public void SaveMap()
+        {
+            var originator = new MapOriginator();
+            originator.SetMap(_gameMap);
+            IMapMemento mapState = originator.SaveMapState();
+            _caretaker.SaveState(mapState);
+        }
+
+        public void RestoreMap()
+        {
+            var state = _caretaker.RestoreState();
+            if (state is not null)
+            {
+                var originator = new MapOriginator();
+                originator.RestoreMap(state);
+                SetGameMap(originator.GetMap());
+            }
         }
     }
 }
