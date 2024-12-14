@@ -44,6 +44,7 @@ namespace Server.GameWorld
         {
             RemovePlayersFromMap();
             RefreshPlayers();
+            RemoveGhostsFromMap();
             var toReturn = new Positions(_tileStatus);
             toReturn.Addons = decorator.GetAllAddons();
             return toReturn;
@@ -111,6 +112,24 @@ namespace Server.GameWorld
                 for (int j = 1; j < toReplace[i].Count; j++)
                 {
                     _tileStatus[toReplace[i][0], toReplace[i][j]] = TileStatus.Wall;
+                }
+            }
+        }
+        private void RemoveGhostsFromMap()
+        {
+            var ghosts = ServiceLocator.GetService<GhostService>()._ghosts;
+            for(int x = 0; x < ghosts.Count(); x++)
+            {
+                for (int i = 0; i < _tileStatus.GetLength(0); i++) // Rows
+                {
+                    for (int j = 0; j < _tileStatus.GetLength(1); j++) // Columns
+                    {
+                        if (_tileStatus[i, j] == ghosts[x].ghostNo)
+                        {
+                            _tileStatus[i, j] = ghosts[x].lastVisitedTile;
+                            _tileStatus[ghosts[x].row, ghosts[x].col] = ghosts[x].ghostNo;
+                        }
+                    }
                 }
             }
         }

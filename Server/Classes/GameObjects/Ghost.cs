@@ -1,5 +1,6 @@
 ﻿using Server.Classes.GameLogic;
 using Server.Classes.Services;
+using Server.Classes.Services.Chain_Of_Command;
 using Server.Classes.Services.Strategy;
 using Server.Classes.Services.Visitor;
 using Server.GameWorld;
@@ -11,7 +12,7 @@ public class Ghost : GameObject, ICloneable
 {
     public string Color;
     public TileStatus ghostNo = TileStatus.Empty;
-    private TileStatus lastVisitedTile = TileStatus.Empty;
+    public TileStatus lastVisitedTile = TileStatus.Empty;
     private MovementStrategy _movementStrategy;
     public Ghost(GameLoop gameLoop, GameService gameService) : base(gameLoop, gameService)
     {
@@ -59,6 +60,10 @@ public class Ghost : GameObject, ICloneable
 
             col = projectedX;
             row = projectedY;
+
+            var collisionEvent = new CollisionEvent(ServiceLocator.GetService<PlayerService>().GetPlayerByTile(row, col), GetGameService().GetGameMap().GetTileStatus(row, col), gameMap, _gameLoop, col, row);
+            var collisionVerifier = CreateCollisionHandlerChain();
+            collisionVerifier.HandleCollision(collisionEvent);
 
             lastVisitedTile = gameMap.UpdateTile(row, col, ghostNo);
         }
@@ -131,5 +136,15 @@ public class Ghost : GameObject, ICloneable
     public override int GetHashCode()
     {
         return HashCode.Combine(Color, ghostNo, col, row);
+    }
+
+    private CollisionHandler CreateCollisionHandlerChain()
+    {
+        var collisionVerifier = new CollisionVerifier();
+        var healthHandler = new CollsionHealthHandler();
+
+        collisionVerifier.SetNext(healthHandler);
+
+        return collisionVerifier;
     }
 }

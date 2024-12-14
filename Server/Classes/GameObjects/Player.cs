@@ -70,18 +70,6 @@ namespace Server.Classes.GameObjects
                 var tile = map.GetTileStatus(row, col);
                 var collisionEvent = new CollisionEvent(this, tile, gameMap, _gameLoop,col,row);
                 var collisionVerifier = CreateCollisionHandlerChain();
-
-                /*                if (Pellet.Collides(tile))
-                                {
-                                    var totalScore = PlayerScoreSingleton.getInstance().GetScore().Sum();
-                                    var currScore = PlayerScoreSingleton.getInstance().GetScore()[(int)pacmanNo - 5];
-                                    var time = _gameLoop.gameTimer;
-                                    var res = Pellet.GetPelletScore(tile) + _scoreCalculatorFactory.CalculateScore(totalScore, currScore, time);
-                                    Console.WriteLine(res);
-                                    score += res;
-                                }
-                                PlayerScoreSingleton.getInstance().SetScore((int)pacmanNo-5, score);*/
-
                 collisionVerifier.HandleCollision(collisionEvent);
                 map.UpdateTile(row, col, pacmanNo);
             }

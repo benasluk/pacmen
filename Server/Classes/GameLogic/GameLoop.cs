@@ -105,19 +105,6 @@ namespace Server.Classes.GameLogic
                         RestartLoop();
                         _messageService.ResetLevel();
                     }
-                    //if (_movementTimerService.PacmanCanMove())
-                    //{
-                    //    HandlePacmanMovement();
-                    //}
-                    //if (_movementTimerService.EnemyCanMove())
-                    //{
-                    //    HandleGhostMovement();
-                    //}
-                    if (_movementTimerService.EnemyCanMove())
-                    {
-                        _ghostService.UpdateGhostsLocations();
-                    }
-
                     if (_playerService.GetPlayerCount() > 0)
                     {
                         Positions test = updateMapInClient();
@@ -145,6 +132,19 @@ namespace Server.Classes.GameLogic
                             Console.WriteLine(ex.Message);
                         }
                     }
+                    if (_movementTimerService.PacmanCanMove())
+                    {
+                        HandlePacmanMovement();
+                    }
+                    //if (_movementTimerService.EnemyCanMove())
+                    //{
+                    //    HandleGhostMovement();
+                    //}
+                    if (_movementTimerService.EnemyCanMove())
+                    {
+                        _ghostService.UpdateGhostsLocations();
+                    }
+
                     if(_gameService.IsMapFinished())
                     {
                         State = 3;
@@ -162,7 +162,8 @@ namespace Server.Classes.GameLogic
             var inputs = _messageService.GetPlayerInputs();
             foreach (var input in inputs)
             {
-                _playerService.UpdatePlayerLocation(input.Value);
+                _playerService.SetDirection(input.Value.PlayerId, input.Value.Direction);
+                //_playerService.UpdatePlayerLocation(input.Value);
                 //(int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
             }
         }

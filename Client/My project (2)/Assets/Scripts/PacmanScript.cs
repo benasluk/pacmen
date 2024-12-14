@@ -22,12 +22,19 @@ public class PacmanScript : MonoBehaviour
     private string pacmanColor;
     private Quaternion rotation;
     private bool canMove;
+    private bool isPlayerDead;
 
     private void Start()
     {
         signalRConnector = FindObjectOfType<SignalRConnector>();
         rotation = transform.rotation;
         canMove = false;
+        isPlayerDead = false;
+    }
+
+    public void SetPlayerDead(bool isDead)
+    {
+        isPlayerDead = isDead;
     }
 
     private void Update()
@@ -105,16 +112,27 @@ public class PacmanScript : MonoBehaviour
         pacmanColorText.GetComponent<TextMeshProUGUI>().color = (Color)typeof(Color).GetProperty(pacmanColor.ToLowerInvariant()).GetValue(null, null); //Stack overflow magic
     }
 
-    public void SnapToMapLocation()
+    public void SnapToMapLocation(bool isSceneChange)
     {
-        foreach (var pos in tileMap.cellBounds.allPositionsWithin)
+        if (isSceneChange)
         {
-            TileBase tile = tileMap.GetTile(pos);
-            if (tile.name.Contains(pacmanColor + "_pacman"))
+            isPlayerDead = false;
+            GetComponent<SpriteRenderer>().enabled = true;
+        }
+        if(!isPlayerDead)
+        {
+            foreach (var pos in tileMap.cellBounds.allPositionsWithin)
             {
-                transform.position = tileMap.CellToWorld(pos) + tileMap.layoutGrid.transform.lossyScale / 2;
-                RotatePacman();
+                TileBase tile = tileMap.GetTile(pos);
+                if (tile.name.Contains(pacmanColor + "_pacman"))
+                {
+                    transform.position = tileMap.CellToWorld(pos) + tileMap.layoutGrid.transform.lossyScale / 2;
+                    RotatePacman();
+                    return;
+                }
             }
+            isPlayerDead = true;
+            GetComponent<SpriteRenderer>().enabled = false;
         }
     }
 }

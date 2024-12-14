@@ -4,6 +4,7 @@ using Server.Classes.Services.Factory;
 using Server.Classes.Services.Logging;
 using Server.Classes.Services.Observer;
 using Server.Classes.Services.Visitor;
+using Server.Hubs;
 using SharedLibs;
 
 namespace Server.Classes.Services
@@ -43,6 +44,14 @@ namespace Server.Classes.Services
             //Console.WriteLine("Returning player id as null");
             return null;
         }
+        public Player GetPlayerByTile(int row, int col)
+        {
+            foreach (var item in _players)
+            {
+                if (item.Value.row == row && item.Value.col == col) return item.Value; 
+            }
+            return null;
+        }
         public void AddPlayer(string playerId, GameLoop gameLoop)
         {
             Player player = _levelFactory.CreatePacman(gameLoop, _gameService);
@@ -71,13 +80,11 @@ namespace Server.Classes.Services
         }
         private void ResetPlayers()
         {
-            int index = 0;
-            string[] playerId = new string[_players.Count];
             foreach (var player in _players)
             {
-                playerId[index++] = player.Key;
                 player.Value.Destroy();
             }
+            string[] playerId = ServiceLocator.GetService<GameHub>().connectedPlayerIds.ToArray();
             _players.Clear();
             //Console.WriteLine("lenght is " + playerId.Length);
             for (int i = 0; i < playerId.Length; i++)
@@ -109,6 +116,7 @@ namespace Server.Classes.Services
         public void UpdatePlayerLocation(PacmanMovement input)
         {
             var player = GetPlayerById(input.PlayerId);
+            if (player is null) return;
             player.UpdateDirection(input.Direction);
             player.HandleMovement();
             player.Accept(_dbLoggingVisitor);
@@ -139,7 +147,11 @@ namespace Server.Classes.Services
         }
         public List<Player> GetAllPlayers()
         {
-            return _players;
+            return _players.Values.ToList();
+        }
+        public void SetDirection(string playerId, Direction newDirection)
+        {
+            if(_players.ContainsKey(playerId)) _players[playerId].UpdateDirection(newDirection);
         }
     }
 }
