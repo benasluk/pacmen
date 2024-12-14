@@ -2,6 +2,7 @@
 using Server.Classes.Services;
 using Server.Classes.Services.Decorator;
 using SharedLibs;
+using System.Diagnostics.Contracts;
 
 namespace Server.GameWorld
 {
@@ -17,6 +18,13 @@ namespace Server.GameWorld
             cols= colC;
             _tileStatus = new TileStatus[rows, cols];
             decorator = new MapDecorator();
+        }
+        public object Clone()
+        {
+            GameMap copy = (GameMap)MemberwiseClone();
+            TileStatus[,] copiedMap = (TileStatus[,])_tileStatus.Clone();
+            copy._tileStatus = copiedMap;
+            return copy;
         }
 
         protected abstract void InitializeMap();

@@ -239,4 +239,14 @@ public class SignalRConnector : MonoBehaviour
             });
         }
     }
+
+    public void SaveMap()
+    {
+        connection.SendAsync("SaveMap");
+    }
+
+    public void LoadMap()
+    {
+        connection.SendAsync("LoadMap");
+    }
 }

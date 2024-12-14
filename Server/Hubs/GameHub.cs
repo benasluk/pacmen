@@ -42,6 +42,16 @@ namespace Server.Hubs
             Console.WriteLine("Received Addon Update");
             _gameService.HandleMapAddon(addon);
         }
+        public async Task SaveMap()
+        {
+            Console.WriteLine("Map saved");
+            _gameService.SaveMap();
+        }
+        public async Task LoadMap()
+        {
+            Console.WriteLine("Loading map");
+            _gameService.RestoreMap();
+        }
         public override Task OnConnectedAsync()
         {
             var playerid = Context.ConnectionId;

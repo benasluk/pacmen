@@ -13,7 +13,7 @@ public class MapOriginator
 
     public void SetMap(GameMap map)
     {
-        _map = map;
+        _map = (GameMap)map.Clone();
     }
 
     public GameMap GetMap()

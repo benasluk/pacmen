@@ -8,7 +8,7 @@ public class MapMemento : IMapMemento
 
     public MapMemento(GameMap map)
     {
-        _map = map;
+        _map = (GameMap)map.Clone();
     }
 
     public void GetMap(MapOriginator originator)
