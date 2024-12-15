@@ -2,6 +2,6 @@
 {
     public interface IInterpreter
     {
-        public void Interpret(CommandContext context);
+        public bool Interpret(CommandContext context);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Server.Classes.Services.Interpreter;
+using Server.Classes.Services.Proxy;
 using Server.Hubs;
 
 namespace Server.Classes.Services.Command
@@ -36,15 +37,15 @@ namespace Server.Classes.Services.Command
             return _gameService.PausedBy();
         }
 
-        public void Interpret(CommandContext context)
+        public bool Interpret(CommandContext context)
         {
             if (context.Undo)
             {
-                Undo(context.Sender);
+                return !Undo(context.Sender);
             }
             else
             {
-                Execute(context.Sender);
+                return Execute(context.Sender);
             }
         }
     }

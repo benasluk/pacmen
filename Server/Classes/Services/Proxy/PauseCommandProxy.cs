@@ -1,4 +1,5 @@
 ﻿using Server.Classes.Services.Command;
+using Server.Classes.Services.Interpreter;
 
 namespace Server.Classes.Services.Proxy
 {
@@ -33,6 +34,15 @@ namespace Server.Classes.Services.Proxy
         {
             return _pauseCommand.Initiator();
         }
+
+        public bool Interpret(CommandContext context)
+        {
+            if(context.Undo)
+            {
+                if (context.Sender.Equals(_adminId) || context.Sender.Equals(Initiator())) return _pauseCommand.Interpret(context);
+            }
+            if (!context.Undo) return _pauseCommand.Interpret(context);
+            else return false;
+        }
     }
-}
 }

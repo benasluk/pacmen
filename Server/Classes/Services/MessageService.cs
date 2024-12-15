@@ -67,6 +67,7 @@ namespace Server.Classes.Services
                 databaseLogger.LogInput(input.Direction);
                 textLogger.LogInput(input.Direction);
                 _playerInputs[playerId] = input;
+                Notify();
             }
         }
         public Dictionary<string, PacmanMovement> GetPlayerInputs()

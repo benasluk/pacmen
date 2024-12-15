@@ -9,6 +9,7 @@ namespace Server.Classes.Services
     {
         private GameMap _gameMap;
         string _pauser;
+        string adminId;
         public bool paused { get; private set; }
         public MapCaretaker _caretaker = new MapCaretaker();
         public GameMap GetGameMap()
@@ -46,10 +47,18 @@ namespace Server.Classes.Services
             paused = true;
             return true;
         }
+        public void SetAdmin(string id)
+        {
+            adminId = id;
+        }
+        public string GetAdmin() 
+        {
+            return adminId;        
+        }
 
         public bool Unpause(string playerId)
         {
-            if (playerId.Equals(_pauser))
+            if (playerId.Equals(_pauser) || playerId == adminId)
             {
                 paused = false;
                 _pauser = null;

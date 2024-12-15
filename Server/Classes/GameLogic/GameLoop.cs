@@ -42,11 +42,6 @@ namespace Server.Classes.GameLogic
         private Ilogger databaseLogger;
 
         public bool newMessage = false;
-        // 0 - Not started
-        // 1 - Playing
-        // 2 - Paused
-        // 3 - Finished
-        private int State = 0;
 
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService, CommandHandler commandHandler)
         {
@@ -61,6 +56,7 @@ namespace Server.Classes.GameLogic
             ItemList = new List<Item>();
             textLogger = new TextFileLogger();
             databaseLogger = new DatabaseWriter(new DatabaseLoggerToWriterAdapter(new DatabaseLogger()));
+            stateHandler = new StateHandler();
 
         }
         public void Start()
@@ -94,7 +90,9 @@ namespace Server.Classes.GameLogic
         }
         public async void Update(object state)
         {
-            stateHandler.SetState(_commandHandler.HandleMessages(stateHandler.GetState()));
+            int currState = stateHandler.GetState();
+            stateHandler.SetState(_commandHandler.HandleMessages(currState));
+            Console.WriteLine($"Set state to {stateHandler.GetState()}");
             if(stateHandler.GetState() == 1) {
                 if (_playerService.GetPlayerCount() >= 1)
                 {

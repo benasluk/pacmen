@@ -6,6 +6,7 @@ using Server.GameWorld;
 using SharedLibs;
 using System.Diagnostics;
 using Server.Classes.Services.Command;
+using Server.Classes.Services.Proxy;
 
 namespace Server.Hubs
 {
@@ -34,7 +35,7 @@ namespace Server.Hubs
             switch (type)
             {
                 case CommandType.Pause:
-                    _messageService.StoreCommand(new PauseCommand(_gameService, this),action, Context.ConnectionId);
+                    _messageService.StoreCommand(new PauseCommandProxy(new PauseCommand(_gameService, this), _gameService.GetAdmin()),action, Context.ConnectionId);
                     break;
             }
         }
@@ -56,6 +57,7 @@ namespace Server.Hubs
         public override Task OnConnectedAsync()
         {
             var playerid = Context.ConnectionId;
+            if(connectedPlayerIds.Count == 0 ) _gameService.SetAdmin(playerid);
             Console.WriteLine("Got a connection from Player ID " + playerid + " !");
             connectedPlayerIds.Add(playerid);
 

@@ -6,7 +6,7 @@ namespace Server.Classes.Services.Command
     {
         public bool Execute(string var);
         public bool Undo(string var);
-        public void Interpret(CommandContext context)
+        public bool Interpret(CommandContext context);
         public string Initiator();
     }
 }
