@@ -123,10 +123,10 @@ public class L1GameMap : GameMap
             }
         }
 
-        Console.WriteLine($"After initializing map, the total score of all pellets is {allPellets.GetPelletScore()}");
+/*        Console.WriteLine($"After initializing map, the total score of all pellets is {allPellets.GetPelletScore()}");
         Console.WriteLine($"The total score of only small pellets is {smallPellets.GetPelletScore()}");
         Console.WriteLine($"The total score of only regular pellets is {regularPellets.GetPelletScore()}");
-        Console.WriteLine($"The total score of only big pellets is {bigPellets.GetPelletScore()}");
+        Console.WriteLine($"The total score of only big pellets is {bigPellets.GetPelletScore()}");*/
 
         //Remove for development
         SetupForDemo();

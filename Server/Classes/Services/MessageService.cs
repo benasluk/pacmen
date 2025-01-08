@@ -64,8 +64,9 @@ namespace Server.Classes.Services
         {
             lock (lockObj)
             {
-                databaseLogger.LogInput(input.Direction);
-                textLogger.LogInput(input.Direction);
+                /*                databaseLogger.LogInput(input.Direction);
+                                textLogger.LogInput(input.Direction);*/
+                Console.WriteLine($"Got inpurt from player {playerId} it was {input}");
                 _playerInputs[playerId] = input;
                 Notify();
             }

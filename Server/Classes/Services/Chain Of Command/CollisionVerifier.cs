@@ -8,12 +8,12 @@ namespace Server.Classes.Services.Chain_Of_Command
         {
             if (collision.CollidedTile != TileStatus.Empty)
             {
-                Console.WriteLine($"Collision detected: {collision.CollidedTile}");
+                //Console.WriteLine($"Collision detected: {collision.CollidedTile}");
                 _nextHandler?.HandleCollision(collision);
             }
             else
             {
-                Console.WriteLine("No collision detected. Stopping chain.");
+                //Console.WriteLine("No collision detected. Stopping chain.");
             }
         }
     }

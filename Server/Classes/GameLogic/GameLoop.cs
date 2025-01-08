@@ -110,8 +110,8 @@ namespace Server.Classes.GameLogic
                     {
                         Positions test = updateMapInClient();
                         //Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
-                        textLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
-                        databaseLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        //textLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        //databaseLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
                         if (levelRestarted)
                         {
                             test.PlayerColors = new string[1];
