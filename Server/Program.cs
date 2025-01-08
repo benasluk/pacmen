@@ -16,8 +16,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-//Atkomentuot, kai rodom demo
-//builder.WebHost.UseUrls("http://192.168.0.113:7255");
+if(builder.Configuration["Port"] != "") builder.WebHost.UseUrls("http://0.0.0.0:" + builder.Configuration["Port"]);
 builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
 {
     options.PayloadSerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -28,8 +27,8 @@ builder.Services.AddSignalR().AddNewtonsoftJsonProtocol(options =>
         args.ErrorContext.Handled = true;
     };
 });
-//builder.Services.AddDbContext<GameDbContext>(options =>
-//        options.UseSqlite($"Data Source={Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/game.db"));
+if(bool.Parse(builder.Configuration["UseDatabase"])) builder.Services.AddDbContext<GameDbContext>(options =>
+        options.UseSqlite($"Data Source={Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}/game.db"));
 builder.Services.AddSingleton<GameLoop>();
 builder.Services.AddSingleton<GameHub>();
 builder.Services.AddSingleton<PlayerService>();

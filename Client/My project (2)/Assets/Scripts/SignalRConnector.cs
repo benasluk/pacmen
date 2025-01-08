@@ -55,7 +55,7 @@ public class SignalRConnector : MonoBehaviour
         currLevel = 0;
 
         if (isDefault) serverIP = "http://127.0.0.1:5076/Server";
-        else serverIP = serverField.text.Trim((char)8203);
+        else serverIP = "http://" + serverField.text.Trim((char)8203) + "/Server";
 
         connection = new HubConnectionBuilder()
         .WithUrl(serverIP).AddNewtonsoftJsonProtocol(options =>
