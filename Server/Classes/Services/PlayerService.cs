@@ -151,7 +151,14 @@ namespace Server.Classes.Services
         }
         public void SetDirection(string playerId, Direction newDirection)
         {
-            if(_players.ContainsKey(playerId)) _players[playerId].UpdateDirection(newDirection);
+            if (_players.ContainsKey(playerId))
+            {
+                _players[playerId].UpdateDirection(newDirection);
+            }
+            else
+            {
+                Console.WriteLine("Missing player key while handling inputs");
+            }
         }
     }
 }

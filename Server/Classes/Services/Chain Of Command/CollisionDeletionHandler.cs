@@ -8,7 +8,7 @@ namespace Server.Classes.Services.Chain_Of_Command
         {
             if (collision.CollidedTile == TileStatus.Pellet || collision.CollidedTile == TileStatus.PelletSmall || collision.CollidedTile == TileStatus.PelletLarge)
             {
-                Console.WriteLine($"Deleting {collision.CollidedTile} from the map.");
+                //Console.WriteLine($"Deleting {collision.CollidedTile} from the map.");
                 collision.GameMap.UpdateTile(collision.row, collision.col, TileStatus.Empty);
             }
 
