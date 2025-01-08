@@ -32,7 +32,7 @@ public class SignalRConnector : MonoBehaviour
 
     private int currLevel;
     private HubConnection connection;
-    private bool pausedByThis;
+    string adminConnectionId;
 
     private void OnApplicationQuit()
     {
@@ -146,6 +146,7 @@ public class SignalRConnector : MonoBehaviour
         switch (pacman)
         {
             case TileStatus.Pacman1:
+                adminConnectionId = connection.ConnectionId;
                 MainThreadDispatcher.Instance().Enqueue(() =>
                 {
                     clientPacman.GetComponent<PacmanScript>().SetPacmanNumber(1);
@@ -224,7 +225,7 @@ public class SignalRConnector : MonoBehaviour
             MainThreadDispatcher.Instance().Enqueue(() =>
             {
                 pausedOverlayCanvas.SetActive(true);
-                if(pausedById == connection.ConnectionId)
+                if(pausedById == connection.ConnectionId || clientPacman.GetComponent<PacmanScript>().pacmanColor == "Green")
                 {
                     pausedOverlayCanvas.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
                 }

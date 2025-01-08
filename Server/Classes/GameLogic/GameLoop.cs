@@ -5,6 +5,7 @@ using Server.Classes.Services;
 using Server.Classes.Services.Factory;
 using Server.Classes.Services.Logging;
 using Server.Classes.Services.Observer;
+using Server.Classes.Services.State;
 using Server.GameWorld;
 using Server.Hubs;
 using SharedLibs;
@@ -31,6 +32,7 @@ namespace Server.Classes.GameLogic
         public event LevelRestart LevelRestartEvent;
         private bool levelRestarted = false;
         private readonly CommandHandler _commandHandler;
+        private StateHandler stateHandler;
 
         private AbstractLevelFactory _levelFactory;
         private List<Item> ItemList;
@@ -39,11 +41,7 @@ namespace Server.Classes.GameLogic
         private Ilogger textLogger;
         private Ilogger databaseLogger;
 
-        // 0 - Not started
-        // 1 - Playing
-        // 2 - Paused
-        // 3 - Finished
-        private int State = 0;
+        public bool newMessage = false;
 
         public GameLoop(GameService gameService, PlayerService playerService, MessageService messageService, IHubContext<GameHub> hubContext, GhostService ghostService, CommandHandler commandHandler)
         {
@@ -58,11 +56,12 @@ namespace Server.Classes.GameLogic
             ItemList = new List<Item>();
             textLogger = new TextFileLogger();
             databaseLogger = new DatabaseWriter(new DatabaseLoggerToWriterAdapter(new DatabaseLogger()));
+            stateHandler = new StateHandler();
 
         }
         public void Start()
         {
-            State = 1;
+            stateHandler.SetState(1);
             _timer = new Timer(Update, null, 0, gameSpeed);
 
             int whatLevel = 0; // new Random(DateTime.Now.Millisecond).Next() % 2;
@@ -76,7 +75,7 @@ namespace Server.Classes.GameLogic
         }
         public void RestartLoop()
         {
-            State = 1;
+            stateHandler.SetState(1);
             ItemList = new List<Item>();
             int level = _messageService.GetLevel();
             if (level % 2 == 0) _levelFactory = new LevelOneFactory();
@@ -91,8 +90,10 @@ namespace Server.Classes.GameLogic
         }
         public async void Update(object state)
         {
-            State = _commandHandler.HandleMessages(State);
-            if(State == 1) {
+            int currState = stateHandler.GetState();
+            stateHandler.SetState(_commandHandler.HandleMessages(currState));
+            Console.WriteLine($"Set state to {stateHandler.GetState()}");
+            if(stateHandler.GetState() == 1) {
                 if (_playerService.GetPlayerCount() >= 1)
                 {
                     _movementTimerService.UpdateElapsedTime(gameSpeed);
@@ -147,7 +148,7 @@ namespace Server.Classes.GameLogic
 
                     if(_gameService.IsMapFinished())
                     {
-                        State = 3;
+                        stateHandler.SetState(3);
                     }
                 }
             }
@@ -159,6 +160,7 @@ namespace Server.Classes.GameLogic
         private void HandlePlayerInputs()
         {
             //Console.WriteLine("Handling inputs");
+            if (!newMessage) return;
             var inputs = _messageService.GetPlayerInputs();
             foreach (var input in inputs)
             {
@@ -166,6 +168,7 @@ namespace Server.Classes.GameLogic
                 //_playerService.UpdatePlayerLocation(input.Value);
                 //(int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
             }
+            newMessage = false;
         }
         private void HandlePacmanMovement()
         {

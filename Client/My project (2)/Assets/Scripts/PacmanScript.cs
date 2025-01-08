@@ -19,7 +19,7 @@ public class PacmanScript : MonoBehaviour
     [SerializeField] private float speed = 0.5f;
     private SignalRConnector signalRConnector;
     private GameObject spawnPoint;
-    private string pacmanColor;
+    public string pacmanColor;
     private Quaternion rotation;
     private bool canMove;
     private bool isPlayerDead;

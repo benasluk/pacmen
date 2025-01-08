@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Server.Classes.Services.Interpreter;
+using Server.Classes.Services.Proxy;
 using Server.Hubs;
 
 namespace Server.Classes.Services.Command
 {
-    public class PauseCommand : ICommand
+    public class PauseCommand : ICommand, IInterpreter
     {
         private GameService _gameService;
         private GameHub _gameHub;
@@ -33,6 +35,18 @@ namespace Server.Classes.Services.Command
         public string Initiator()
         {
             return _gameService.PausedBy();
+        }
+
+        public bool Interpret(CommandContext context)
+        {
+            if (context.Undo)
+            {
+                return !Undo(context.Sender);
+            }
+            else
+            {
+                return Execute(context.Sender);
+            }
         }
     }
 }

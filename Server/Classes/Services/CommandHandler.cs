@@ -1,4 +1,6 @@
-﻿using SharedLibs;
+﻿using Server.Classes.Services.Command;
+using Server.Classes.Services.Interpreter;
+using SharedLibs;
 
 namespace Server.Classes.Services
 {
@@ -24,20 +26,14 @@ namespace Server.Classes.Services
         private int HandleCommands(int initialState)
         {
             int stateToReturn = initialState;
+            int otherState = initialState == 1 ? 2 : 1;
             foreach (var command in commands)
             {
                 Console.WriteLine(command.Item1.ToString());
-                if (command.Item2 == CommandAction.Execute) {
-                    command.Item1.Execute(command.Item3);
-                    stateToReturn = 2;
-                    continue;
-                }
-                if (command.Item2 == CommandAction.Undo)
-                {
-                    command.Item1.Undo(command.Item3);
-                    stateToReturn = 1;
-                    continue;
-                }
+                var isUndo = false;
+                if (command.Item2 == CommandAction.Undo) isUndo = true;
+                CommandContext context = new CommandContext(command.Item3, isUndo);
+                if(command.Item1.Interpret(context)) stateToReturn = otherState;
             }
             return stateToReturn;
         }
