@@ -16,7 +16,7 @@ namespace Server.Classes.Services.Decorator
         }
         public List<Addon> GetAllAddons()
         {
-            Console.WriteLine(Addons.Count);
+            //Console.WriteLine(Addons.Count);
             return Addons;
         }
         public void Remove(Addon addon)

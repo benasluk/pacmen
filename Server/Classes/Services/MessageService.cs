@@ -1,5 +1,4 @@
-﻿using Server.Classes.GameLogic;
-using Server.Classes.Services.Command;
+﻿using Server.Classes.Services.Command;
 using Server.Classes.Services.Logging;
 using Server.Classes.Services.Observer;
 using Server.GameWorld;
@@ -8,7 +7,7 @@ using System.Windows.Input;
 
 namespace Server.Classes.Services
 {
-    public class MessageService : IResetabbleLoop, IMediator
+    public class MessageService : IResetabbleLoop
     {
         private readonly Dictionary<string, PacmanMovement> _playerInputs = new Dictionary<string, PacmanMovement>();
         private Stack<(Command.ICommand, CommandAction, string)> commands = new Stack<(Command.ICommand, CommandAction, string)>();
@@ -64,10 +63,10 @@ namespace Server.Classes.Services
         {
             lock (lockObj)
             {
-                databaseLogger.LogInput(input.Direction);
-                textLogger.LogInput(input.Direction);
+                /*                databaseLogger.LogInput(input.Direction);
+                                textLogger.LogInput(input.Direction);*/
+                Console.WriteLine($"Got inpurt from player {playerId} it was {input}");
                 _playerInputs[playerId] = input;
-                Notify();
             }
         }
         public Dictionary<string, PacmanMovement> GetPlayerInputs()
@@ -102,11 +101,6 @@ namespace Server.Classes.Services
         {
             newLevel -= 1;
             _playerInputs.Clear();
-        }
-
-        public void Notify()
-        {
-            ServiceLocator.GetService<GameLoop>().newMessage = true;
         }
     }
 }

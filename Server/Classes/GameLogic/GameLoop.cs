@@ -92,7 +92,7 @@ namespace Server.Classes.GameLogic
         {
             int currState = stateHandler.GetState();
             stateHandler.SetState(_commandHandler.HandleMessages(currState));
-            Console.WriteLine($"Set state to {stateHandler.GetState()}");
+            //Console.WriteLine($"Set state to {stateHandler.GetState()}");
             if(stateHandler.GetState() == 1) {
                 if (_playerService.GetPlayerCount() >= 1)
                 {
@@ -110,8 +110,8 @@ namespace Server.Classes.GameLogic
                     {
                         Positions test = updateMapInClient();
                         //Console.WriteLine("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
-                        textLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
-                        databaseLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        //textLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
+                        //databaseLogger.Log("Sending new map status to " + _playerService.GetPlayerCount() + " player(s)");
                         if (levelRestarted)
                         {
                             test.PlayerColors = new string[1];
@@ -160,7 +160,7 @@ namespace Server.Classes.GameLogic
         private void HandlePlayerInputs()
         {
             //Console.WriteLine("Handling inputs");
-            if (!newMessage) return;
+            //if (!newMessage) return;
             var inputs = _messageService.GetPlayerInputs();
             foreach (var input in inputs)
             {
@@ -168,7 +168,7 @@ namespace Server.Classes.GameLogic
                 //_playerService.UpdatePlayerLocation(input.Value);
                 //(int currentX, int currentY) = _playerService.GetPlayerCoordinates(input.Key);
             }
-            newMessage = false;
+            //newMessage = false;
         }
         private void HandlePacmanMovement()
         {

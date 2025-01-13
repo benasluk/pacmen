@@ -18,7 +18,7 @@ namespace Server.Classes.Services.Chain_Of_Command
                 var calculatedScore = ServiceLocator.GetService<ScoreCalculator>().CalculateScore(totalScore, currentScore, time);
                 var newScore = pelletScore + calculatedScore;
 
-                Console.WriteLine($"Score updated: {newScore} points added.");
+                //Console.WriteLine($"Score updated: {newScore} points added.");
                 collision.Player.score += newScore; // Update the player's local score
 
                 PlayerScoreSingleton.getInstance().SetScore((int)collision.Player.pacmanNo - 5, collision.Player.score);

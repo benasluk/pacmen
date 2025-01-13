@@ -29,7 +29,7 @@ namespace Server.Classes.Services
             int otherState = initialState == 1 ? 2 : 1;
             foreach (var command in commands)
             {
-                Console.WriteLine(command.Item1.ToString());
+                //Console.WriteLine(command.Item1.ToString());
                 var isUndo = false;
                 if (command.Item2 == CommandAction.Undo) isUndo = true;
                 CommandContext context = new CommandContext(command.Item3, isUndo);
